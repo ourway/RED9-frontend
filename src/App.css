@@ -1,0 +1,429 @@
+
+
+code {
+    font-family: Inconsolata;
+	word-wrap: break-word;
+}
+
+::selection {
+  background: rgba(255, 212, 0, 0.8) !important; /* WebKit/Blink Browsers */
+}
+
+.App {
+  text-align: left;
+    background: url(/seamless-2.png);
+        background-size: 128px;
+
+
+}
+
+a {
+    color: #c5c3bc;
+}
+
+a:hover {
+    color: #efbd0c;
+}
+
+a.dark {
+    color: #313131;
+}
+
+a.disabled span {
+    color: #515151 !important;
+
+}
+
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  	background-image: url("/account-home-background.png") ;
+	background-size: contain;
+	transition: background-color 500ms linear;
+    background-color: #1f262c;
+    padding: 2px;
+    color: #fff;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+#root {
+    background-color: #131416;
+}
+
+.desktop {
+
+    background-repeat: no-repeat;
+    background-size: 30%;
+    padding-bottom: 100px;
+    background-position: 90% 99%;
+}
+
+
+.menuListItem {
+    border-bottom: 1px solid #191919;
+    padding-left: 5px;
+
+}
+
+
+
+
+.ui.buttons .or {
+    width: 0 !important;
+}
+
+.ui.buttons .or:before {
+    background-color: #41474d4f !important;
+    color: #ffffff8a !important;
+}
+
+.property > .ui input{
+
+    font-family: Inconsolata !important;
+    font-size: 14px !important;
+    background: #0d1417 !important;
+    border-color: rgba(255,255,255,0.1) !important;
+    color: rgb(255, 255, 255) !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    /* font-weight: 800; */
+}
+
+
+.property.changed > .ui input{
+
+    background: #381717 !important;
+}
+.property.small > .ui input{
+
+    font-size: 11px !important;
+}
+
+
+
+.ui.inverted.table {
+    background: transparent;
+    color: #dad7c7;
+    border: 1px solid #191c21;
+    text-shadow: 0px 2px 2px #1b2128;
+}
+
+
+.ui.inverted.menu {
+    background: #1d242b;
+}
+
+.ui.inverted.menu .item {
+    background: transparent;
+    color: #bbb;
+}
+
+
+
+.ui.inverted.menu .active.item {
+    color: #039eda !important;
+    background: #2d3841 !important;
+}
+
+.ui.inverted.pointing.menu .active.item:after {
+    background-color: #444342 !important;
+}
+
+.ui.inverted.pointing.menu .active.item:hover:after {
+    background-color: #444342 !important;
+}
+
+.ui.inverted.attached.segment {
+    border-color: transparent !important;
+}
+
+
+
+.ui.inverted.segment  {
+    background: transparent !important;
+}
+
+
+
+
+.ui.inverted.segment.grad  {
+    padding-bottom: 150px;
+    background: linear-gradient(#2d3944, transparent) !important;
+}
+
+
+img.operatorImage {
+    padding: 2px;
+    border-radius: 3px !important;
+    filter: grayscale(100%) brightness(120%) sepia(50%);
+}
+
+img.operatorImage:hover {
+    
+    background-color: rgba(255,255,255, 1) !important;
+    filter: grayscale(10%);
+    transform: scale3d(1.2,1.2,1);
+
+
+}
+tr strong.paramName {
+
+    font-family: Inconsolata;
+    font-size: 13px;
+}
+
+
+.title .companyName {
+    color: #ff6060 !important
+}
+
+
+.topStatistics .info {
+    margin-top: 12px !important;
+    font-size: 9px;
+    cursor: default;
+    padding: 0 !important;
+}
+
+
+
+.topStatistics.deactive .info {
+    opacity: 0.1;
+    filter: grayscale(90%) brightness(70%) sepia(40%);
+}
+
+.topStatistics.deactive .info:hover {
+    filter: sepia(100%);
+    opacity: 0.25;
+}
+
+.topStatistics.active .info {
+    opacity: 0.75;
+    filter: grayscale(70%) brightness(80%) sepia(50%);
+}
+
+.topStatistics.active .info:hover {
+    filter:  brightness(100%);
+    opacity: 1;
+}
+
+
+
+.ui.disabled.input {
+    opacity: 0.9 !important;
+}
+
+.mainSearch {
+}
+
+.mainSearch div.input {
+    width: 95%;
+    font-family: Inconsolata;
+    font-size: 14px;
+}
+
+
+.desktop {
+	padding: 0px !important;
+}
+
+
+footer {
+    background-image: url("/account-home-background.png");
+    padding-right: 20px;
+    padding-left:20px;
+    height: 196px;
+    background-size: cover;
+    background-color: #1c252b;
+    color: white;
+    border-top: 1px solid #41474d;
+
+}
+
+.ui.search .prompt {
+    border-radius: 0rem !important;
+}
+
+.ui.search input {
+    background: #234444 !important;
+    color: white !important;
+}
+
+.ui.input.focus input, .ui.input input:focus {
+    border-color: #443028;
+    background: #FFFFFF;
+    color: rgba(0, 0, 0, 0.8);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.ui.icon.input > i.icon:before, .ui.icon.input > i.icon:after {
+    color: wheat;
+}
+
+
+.ui.labels .label, .ui.label {
+        font-size: 11px;
+    }
+
+.ui.label {
+    line-height: 0.6;
+}
+
+.ui.grey.ribbon.label {
+        border-color: #2d3944 !important;
+}
+
+
+
+.ui.steps .step.active .title {
+        color: #b900ff;
+}
+
+
+.serviceCreationDialog label {
+    color: grey;
+}
+
+.serviceCreationDialog > div.ms-TextField--underlined {
+        border: 0px solid #eaeaea !important;
+}
+
+
+.ms-TextField--borderless  > div.ms-TextField-wrapper {
+    border-bottom: 1px solid #f2f2f2 !important;
+}
+
+.ms-TextField--borderless > div.ms-TextField-wrapper input{
+    font-family: Inconsolata;
+}
+
+
+
+.middleIcon {
+    vertical-align: middle;
+}
+
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #ccc;
+    font-size: 11px;
+    opacity: 0.75; /* Firefox */
+    font-family: Inconsolata;
+}
+
+.ui.loading.segment:before {
+    background: rgba(19, 20, 22, 0.93);
+}
+
+
+.red9form.hidden {
+    display: none;
+}
+
+
+
+.ui.items > .item > .content > .header {
+    color: rgb(201, 201, 202);
+}
+
+.ui.items > .item > .content > .description {
+    color: rgb(201, 201, 202);
+}
+
+.ui.items > .item .meta {
+    color: rgb(201, 201, 202);
+}
+
+.backtransition {
+	transition: background 500ms linear;
+    text-shadow: none;
+}
+
+
+.ui.button {
+    font-weight: 300;
+}
+
+
+.techstuff img {
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    transition: all 100ms linear;
+    filter: grayscale(100%) sepia(50%) brightness(50%)
+
+}
+
+
+
+.techstuff img:hover {
+    transform: scale3d(1.2,1.2,1);
+    border: 1px solid teal;
+    filter: brightness(80%)
+
+}
+
+.appRow td{
+   padding-left: 5px !important;
+}
+
+.ui.card {
+opacity: 0.75;
+transition: opacity 200ms linear;
+
+}
+
+
+.ui.card:hover {
+opacity: 1;
+}
+
+.ui.inverted.message, .ui.black.message {
+    background-color: #1b1c1d8f;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.appListLi {
+    list-style: none;
+    border-bottom: 1px solid teal
+}
+
+
+.ui input {
+    font-family: Inconsolata !important;
+
+}
+
+
+pre.red9_samples  {
+    padding: 5px;
+    background-color: #2a363f;
+    word-wrap: break-word
+}
+
+
+
+code.red9_samples  {
+    padding: 2px;
+    background-color: #2a363f;
+    word-wrap: break-word;
+    font-weight:100;
+    font-size: 12px;
+
+}
