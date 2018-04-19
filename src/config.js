@@ -15,7 +15,7 @@ export const env = {
   FTP_BASE: 'https://ftp.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://api.appido.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.4.0 / 09 April 2018',
+  product_version: '0.5.1 / 18 April 2018',
   logo: 'red9.png',
   copyright_logo: 'rashavas.logo',
   copyright_company: "Tose'e Ide'e Rasha Co",

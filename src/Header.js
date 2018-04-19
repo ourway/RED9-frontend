@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Grid, Image, Step, Statistic, Label, Icon } from 'semantic-ui-react';
-import { usernameAssigned, selectService$, changeColorCode$ } from './utils';
+import {
+  usernameAssigned,
+  selectService$,
+  changeColorCode$,
+  selectApp$
+} from './utils';
 import S from 'string';
 import accounting from 'accounting-js';
 import { env } from './config';
@@ -51,6 +56,7 @@ class Header extends Component {
     clearTimeout(this.timer2);
     clearTimeout(this.ftpDataTimeout);
     clearTimeout(this.ftpDataTimeout2);
+    this.appSelection.unsubscribe();
     this.clientSubscription.unsubscribe();
     this.serviceSelection.unsubscribe();
     this.colorCodeChangeSubscription.unsubscribe();
@@ -63,7 +69,7 @@ class Header extends Component {
         if (resp.status === 200) {
           resp.json().then(data => {
             this.setState({
-              stats: { ...this.state.stats, subscribers: data.total || 0 }
+              stats: { ...this.state.stats, subscribers: data.count || 0 }
             });
           });
         }
@@ -139,14 +145,21 @@ class Header extends Component {
 
     this.colorCodeChangeSubscription = changeColorCode$
       .distinctUntilChanged()
-      .debounceTime(50)
+      .debounceTime(500)
       .subscribe(c => {
         this.setState({ colorCode: c });
       });
 
+    this.appSelection = selectApp$
+      .distinctUntilChanged()
+      .debounceTime(500)
+      .subscribe(v => {
+        this.setState({ app: v });
+      });
+
     this.serviceSelection = selectService$
       .distinctUntilChanged()
-      .debounceTime(50)
+      .debounceTime(250)
       .subscribe({
         next: s => {
           this.setState({
@@ -330,9 +343,18 @@ class Header extends Component {
                       <Statistic.Label>Success Rate</Statistic.Label>
                     </Statistic>
                   </Grid.Column>
-                  <Grid.Column width={8}>
-                    {this.state.stats.subscribers !== 0 ? (
-                      <Statistic color="blue" inverted size="mini">
+                  <Grid.Column width={4}>
+                    {this.state.stats.subscribers ? (
+                      <Statistic
+                        color="blue"
+                        className={
+                          this.state.service.name !== DASH
+                            ? 'topStatistics active'
+                            : 'topStatistics deactive'
+                        }
+                        inverted
+                        size="mini"
+                      >
                         <Statistic.Value>
                           <small>{this.state.stats.subscribers}</small>
                         </Statistic.Value>
@@ -340,8 +362,17 @@ class Header extends Component {
                       </Statistic>
                     ) : null}
 
-                    {this.state.stats.chargingSubscribers !== 0 ? (
-                      <Statistic color="green" inverted size="mini">
+                    {this.state.stats.chargingSubscribers ? (
+                      <Statistic
+                        className={
+                          this.state.service.name !== DASH
+                            ? 'topStatistics active'
+                            : 'topStatistics deactive'
+                        }
+                        color="green"
+                        inverted
+                        size="mini"
+                      >
                         <Statistic.Value>
                           <small>{this.state.stats.chargingSubscribers}</small>
                         </Statistic.Value>
@@ -349,7 +380,7 @@ class Header extends Component {
                       </Statistic>
                     ) : null}
                   </Grid.Column>
-                  <Grid.Column width={8}>
+                  <Grid.Column width={12}>
                     <Step.Group
                       size="mini"
                       style={{ WebkitFilter: 'invert(90%)' }}
@@ -388,7 +419,7 @@ class Header extends Component {
                         </Step.Content>
                       </Step>
 
-                      <Step disabled>
+                      <Step disabled={this.state.app.name === DASH}>
                         <Icon name="adn" />
                         <Step.Content>
                           <Step.Title>{this.state.app.name}</Step.Title>

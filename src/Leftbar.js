@@ -7,7 +7,7 @@ import { selectService$, selectApp$, searching$ } from './utils';
 import { Link } from 'react-router-dom';
 
 import { isAdmin } from './utils';
-//import { getIp } from './utils';
+import { getIp } from './utils';
 
 class Leftbar extends Component {
   constructor(props) {
@@ -66,20 +66,20 @@ class Leftbar extends Component {
       }
     });
 
-    //    this.getIpTimeout = setTimeout(() => {
-    //      getIp().then(resp => {
-    //        resp.json().then(r => {
-    //          if (r.country_calling_code !== '+98') {
-    //            //redirectSignal.next('/451');
-    //          } else {
-    //            this.setState({
-    //              ip: r.ip,
-    //              city: r.city
-    //            });
-    //          }
-    //        });
-    //      });
-    //    }, 200);
+        this.getIpTimeout = setTimeout(() => {
+          getIp().then(resp => {
+            resp.json().then(r => {
+              if (!r.country_calling_code) {
+                //redirectSignal.next('/451');
+              } else {
+                this.setState({
+                  ip: r.ip,
+                  city: r.city
+                });
+              }
+            });
+          });
+        }, 200);
   }
 
   doSearch = (_, e) => {
@@ -116,7 +116,7 @@ class Leftbar extends Component {
     ];
 
     const need_service = [
-      'Templates',
+      'Reactions',
       'Apps',
       'Reports',
       'FTP Data',
@@ -126,7 +126,7 @@ class Leftbar extends Component {
       'Customer Care'
     ];
 
-    const need_app = ['Reactions', 'Messaging', 'Charging'];
+    const need_app = ['Messaging', 'Charging'];
     const admin_sections = [
       'Client Management',
       'Aggregated Reports',
@@ -137,15 +137,17 @@ class Leftbar extends Component {
 
     return (
       <List relaxed className="ms-slideRightIn10">
-        <Search
-          placeholder="Search for MSISDN, Correlators, ..."
-          className="mainSearch"
-          onSearchChange={this.doSearch}
-          key="search_section"
-          size="mini"
-          open={false}
-          minCharacters={4}
-        />
+        {this.state.selected_service ? (
+          <Search
+            placeholder="Search for MSISDN, Correlators, ..."
+            className="mainSearch"
+            onSearchChange={this.doSearch}
+            key="search_section"
+            size="mini"
+            open={false}
+            minCharacters={4}
+          />
+        ) : null}
         <h3 key="panel_text" className="ms-font-l ms-fontColor-white">
           Panel
         </h3>
@@ -156,9 +158,13 @@ class Leftbar extends Component {
           let is_activepath = ap === p;
 
           let mode = need_service.includes(i)
-            ? this.state.selected_service === null ? 'disabled' : ''
+            ? this.state.selected_service === null
+              ? 'disabled'
+              : ''
             : need_app.includes(i)
-              ? this.state.selected_app === null ? 'disabled' : ''
+              ? this.state.selected_app === null
+                ? 'disabled'
+                : ''
               : '';
 
           if (p.indexOf(':') > -1) {

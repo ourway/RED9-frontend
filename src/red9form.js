@@ -171,7 +171,9 @@ class Red9Form extends Component {
         value:
           this.state.attrDialogOps.type === 'string'
             ? value.toString()
-            : isNaN(parseInt(value, 10)) ? 0 : parseInt(value, 10)
+            : isNaN(parseInt(value, 10))
+              ? 0
+              : parseInt(value, 10)
       }
     });
   };

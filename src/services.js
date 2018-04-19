@@ -36,6 +36,7 @@ import {
   titleChangeSignal,
   onFilter$,
   selectService$,
+  selectApp$,
   startLoading$,
   stopLoading$,
   changeColorCode$,
@@ -168,6 +169,10 @@ class Services extends Component {
     titleChangeSignal.next(`${title} - Services`);
     onFilter$.next('');
     selectService$.next(data);
+    const app = data.meta.apps.filter(a => {
+      return true;
+    })[0] || { name: 'N/A' };
+    selectApp$.next(app);
   };
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -184,15 +189,16 @@ class Services extends Component {
           const asl = data.services.filter(s => {
             return s.meta.uuid === this.state.activeService.meta.uuid;
           });
+          selectApp$.next(
+            asl.length > 0 ? asl[0].meta.apps[0] : { name: 'N/A' }
+          );
           this.setState({
             services: data.services,
             activeService:
               asl.length > 0 ? asl[0] : { meta: { uuid: undefined } }
           });
           if (asl.length > 0) {
-            titleChangeSignal.next(
-              `${S(asl[0].name).capitalize().s} - Services`
-            );
+            titleChangeSignal.next(`${S(asl[0].name)} - Services`);
             selectService$.next(asl[0]);
             if (asl[0].meta.operator === 'MCI') {
               this.extraTimeouts = setTimeout(() => {
@@ -221,7 +227,7 @@ class Services extends Component {
   componentDidMount() {
     this.colorCodeChangeSubscription = changeColorCode$
       .distinctUntilChanged()
-      .debounceTime(50)
+      .debounceTime(250)
       .subscribe(c => {
         this.setState({ colorCode: c });
       });

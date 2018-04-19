@@ -1,4 +1,27 @@
 
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover,
+label:focus,
+.btn:active,
+.btn.active
+{
+            outline:0px !important;
+            -webkit-appearance:none;
+}
+
+
+textarea: {
+    border-top: 1px solid red !important;
+
+
+}
 
 code {
     font-family: Inconsolata;
@@ -426,4 +449,16 @@ code.red9_samples  {
     font-weight:100;
     font-size: 12px;
 
+}
+
+
+
+.formRow .deleteButton {
+    display: none
+}
+
+
+
+.formRow:hover .deleteButton {
+    display: inline-block
 }

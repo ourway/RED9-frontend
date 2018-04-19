@@ -73,7 +73,7 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
       case 200:
         if (login_mode === true) {
           store.set('uuid', btoa(uuid));
-          redirectSignal.next('/services');
+          redirectSignal.next('/?m=welcome');
           const gwr = getClientGateways(uuid);
           gwr.then(resp => {
             resp.json().then(result => {

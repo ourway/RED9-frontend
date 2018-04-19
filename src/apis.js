@@ -243,3 +243,61 @@ export const ftpGetChargingSubscribersCount = ftp_key => {
     opts
   );
 };
+
+export const getTemplates = client_key => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/templates`, opts);
+};
+
+export const updateTemplate = (client_key, t) => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'PATCH',
+    body: JSON.stringify(t),
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/template`, opts);
+};
+
+export const deleteTemplate = (client_key, name) => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'DELETE',
+    body: JSON.stringify({ name: name }),
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/template`, opts);
+};
+
+export const getReactions = (client_key, service) => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/reactions/${service}`, opts);
+};
+
+export const updateReaction = (client_key, r) => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'PATCH',
+    body: JSON.stringify(r),
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/reaction`, opts);
+};
+
+export const deleteReaction = (client_key, name) => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'DELETE',
+    body: JSON.stringify({ name: name }),
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/reaction`, opts);
+};

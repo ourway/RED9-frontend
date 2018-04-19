@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
 import { Card, Icon } from 'semantic-ui-react';
-import { browser, env } from './config';
-
 import { titleChangeSignal } from './utils';
 
 const extra = (

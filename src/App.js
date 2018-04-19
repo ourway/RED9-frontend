@@ -78,8 +78,8 @@ class App extends Component {
     });
 
     this.searchChangedSubscription = searching$
-      .debounceTime(1000)
       .distinctUntilChanged()
+      .debounceTime(1000)
       .subscribe({
         next: q => {
           if (q) {

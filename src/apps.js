@@ -16,7 +16,13 @@ import { getServiceApps, createApp, updateApp } from './apis';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import Gist from 'react-gist';
 
-import { redirectSignal, startLoading$, stopLoading$ } from './utils';
+import {
+  redirectSignal,
+  startLoading$,
+    titleChangeSignal,
+  stopLoading$,
+  selectApp$
+} from './utils';
 
 import {
   Dialog,
@@ -82,13 +88,16 @@ class Applications extends Component {
             return a.service === this.state.activeService.name;
           });
 
+          const selected_app = apps.filter(a => {
+            return a.uuid === this.props.match.params.uuid;
+          })[0] || { uuid: null, name: 'N/A' };
+
           this.setState({
             apps: apps,
             original_apps: apps,
-            selected: apps.filter(a => {
-              return a.uuid === this.props.match.params.uuid;
-            })[0] || { uuid: null }
+            selected: selected_app
           });
+          selectApp$.next(selected_app);
           stopLoading$.next(true);
         });
       }
@@ -102,6 +111,7 @@ class Applications extends Component {
     const lss = store.get('service');
     if (lss) {
       const sd = lss;
+        titleChangeSignal.next(`${sd.name} apps`);
       this.setState({ activeService: sd });
     }
   }
@@ -204,6 +214,7 @@ class Applications extends Component {
         return a.uuid === app.uuid;
       })[0]
     });
+    selectApp$.next(app);
     redirectSignal.next(`/apps/${app.uuid}`);
   };
 
@@ -218,19 +229,6 @@ class Applications extends Component {
               name="Add an application"
               onClick={this.openAddDialog}
             />
-
-            <Menu.Item>
-              <Input
-                size="tiny"
-                onChange={this.handleFilterClients}
-                value={this.state.filter}
-                transparent
-                type="search"
-                inverted
-                icon={{ name: 'filter' }}
-                placeholder="Filter applications ..."
-              />
-            </Menu.Item>
           </Menu.Menu>
         </Menu>
 
