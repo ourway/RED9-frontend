@@ -66,20 +66,20 @@ class Leftbar extends Component {
       }
     });
 
-        this.getIpTimeout = setTimeout(() => {
-          getIp().then(resp => {
-            resp.json().then(r => {
-              if (!r.country_calling_code) {
-                //redirectSignal.next('/451');
-              } else {
-                this.setState({
-                  ip: r.ip,
-                  city: r.city
-                });
-              }
+    this.getIpTimeout = setTimeout(() => {
+      getIp().then(resp => {
+        resp.json().then(r => {
+          if (!r.country_calling_code) {
+            //redirectSignal.next('/451');
+          } else {
+            this.setState({
+              ip: r.ip,
+              city: r.city
             });
-          });
-        }, 200);
+          }
+        });
+      });
+    }, 200);
   }
 
   doSearch = (_, e) => {

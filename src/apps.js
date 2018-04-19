@@ -19,7 +19,7 @@ import Gist from 'react-gist';
 import {
   redirectSignal,
   startLoading$,
-    titleChangeSignal,
+  titleChangeSignal,
   stopLoading$,
   selectApp$
 } from './utils';
@@ -111,7 +111,7 @@ class Applications extends Component {
     const lss = store.get('service');
     if (lss) {
       const sd = lss;
-        titleChangeSignal.next(`${sd.name} apps`);
+      titleChangeSignal.next(`${sd.name} apps`);
       this.setState({ activeService: sd });
     }
   }
