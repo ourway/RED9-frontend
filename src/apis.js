@@ -301,3 +301,15 @@ export const deleteReaction = (client_key, name) => {
   };
   return fetch(`${env.API_BASE}/api/client/reaction`, opts);
 };
+
+export const getFTPAggregateReport = (ftp_key, sdate, edate) => {
+  const url = `${
+    env.FTP_BASE
+  }/query/service_aggreg_detailed_info?access_token=${ftp_key}&start_date=${sdate}&end_date=${edate}`;
+
+  let opts = {
+    method: 'GET'
+  };
+
+  return fetch(url, opts);
+};

@@ -153,11 +153,15 @@ class Login extends Component {
                     <br />
                   </small>
 
-                  <Image src={`/${env.logo}`} size="tiny" inline />
+                  <Image src={`/${env.logo}-login.png`} size="tiny" inline />
                   <strong className="ms-font-l ms-fontColor-black">
                     {' '}
                     &nbsp;
-                    {env.company} {env.product} Authentication
+                    {env.company === 'SabaIdea' ? '' : env.company}
+                    <strong style={{ fontWeight: 800 }}>
+                      {env.product}
+                    </strong>{' '}
+                    Authentication
                   </strong>
 
                   <hr className="colorgraph" />

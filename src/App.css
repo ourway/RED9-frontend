@@ -42,6 +42,7 @@ code {
 
 a {
     color: #c5c3bc;
+	cursor: pointer;
 }
 
 a:hover {
@@ -387,7 +388,9 @@ footer {
 
 .techstuff img {
     border: 1px dashed #ccc;
+	background-color: #fff !important;
     border-radius: 5px;
+	height: 32px !important;
     transition: all 100ms linear;
     filter: grayscale(100%) sepia(50%) brightness(50%)
 
@@ -462,3 +465,31 @@ code.red9_samples  {
 .formRow:hover .deleteButton {
     display: inline-block
 }
+
+.ui.selection.dropdown {
+    color: lightgrey
+}
+
+.ui.dropdown .menu {
+    background: #222931;
+}
+
+.ui.selection.dropdown .menu > .item {
+        border-top: 1px solid #263037;
+  }
+
+
+.ui.dropdown .menu > .item {
+    color: rgb(242, 113, 29);
+	font-size: 11px;
+}
+
+.ui.dropdown.selected, .ui.dropdown .menu .selected.item {
+	color: lightgrey;
+}
+
+.ui.dropdown .menu > .item:hover {
+    color: rgb(242, 113, 55);
+}
+
+

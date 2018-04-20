@@ -218,13 +218,25 @@ class Header extends Component {
               <Link to="/">
                 <strong className="ms-font-xxl ms-fontColor-neutralLight">
                   <Image
-                    src={`/${env.logo}`}
+                    src={`/${env.logo}.png`}
                     size="tiny"
                     style={{ verticalAlign: 'sub' }}
                     inline
                   />
                   <div style={{ display: 'inline-block' }}>
-                    {env.company} {env.product} <br />
+                    {env.company === 'SabaIdea' ? ' ' : env.company}
+                    <strong style={{ fontWeight: 800 }}>
+                      {' '}
+                      {env.product !== 'RED9' ? (
+                        env.product
+                      ) : (
+                        <span>
+                          <span style={{ color: '#cc0000' }}>RED</span>
+                          <span style={{ color: '#fff' }}>9</span>
+                        </span>
+                      )}
+                    </strong>
+                    <br />
                     <i style={{ fontSize: 8 }}>
                       Verison <b>{env.product_version.split('/')[0]}</b>
                       <small>{env.product_version.split('/')[1]}</small>
@@ -422,7 +434,16 @@ class Header extends Component {
                       <Step disabled={this.state.app.name === DASH}>
                         <Icon name="adn" />
                         <Step.Content>
-                          <Step.Title>{this.state.app.name}</Step.Title>
+                          <Step.Title>
+                            <Link
+                              to={`/apps/${
+                                this.state.app.name ? this.state.app.uuid : ''
+                              }`}
+                              className="dark"
+                            >
+                              {S(this.state.app.name).capitalize().s}
+                            </Link>
+                          </Step.Title>
                           <Step.Description>Active App</Step.Description>
                         </Step.Content>
                       </Step>

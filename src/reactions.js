@@ -2,10 +2,25 @@ import React, { Component } from 'react';
 import swal from 'sweetalert2';
 import Rx from 'rxjs/Rx';
 import store from 'store';
-import { Table, Menu, Icon, Input, Button, Segment } from 'semantic-ui-react';
+import {
+  Dropdown,
+  Table,
+  Divider,
+  Menu,
+  Message,
+  Icon,
+  Input,
+  Button,
+  Segment
+} from 'semantic-ui-react';
 
 import { titleChangeSignal } from './utils';
-import { getReactions, updateReaction, deleteReaction } from './apis';
+import {
+  getReactions,
+  updateReaction,
+  deleteReaction,
+  getTemplates
+} from './apis';
 
 const filter$ = new Rx.Subject();
 
@@ -14,6 +29,8 @@ class Reactions extends Component {
     super(props);
     this.state = {
       reactions: [],
+      digits_reaction: `^\[\\d]\{1\}$`,
+      templates: [],
       original_reactions: [],
       ref_reactions: [],
       is_fetching: false,
@@ -27,14 +44,28 @@ class Reactions extends Component {
     const uuidKey = store.get('uuid');
     getReactions(atob(uuidKey), name).then(resp => {
       if (resp.status === 200) {
-        resp.json().then(data => {
-          this.setState({
-            reactions: data.reactions,
-            original_reactions: data.reactions,
-            ref_reactions: data.reactions,
-            is_fetching: false
+        resp
+          .json()
+          .then(data => {
+            this.setState({
+              reactions: data.reactions,
+              original_reactions: data.reactions,
+              ref_reactions: data.reactions,
+              is_fetching: false
+            });
+          })
+          .then(() => {
+            getTemplates(atob(uuidKey)).then(resp => {
+              if (resp.status === 200) {
+                resp.json().then(data => {
+                  const temps = data.templates.map((t, i) => {
+                    return { text: t.name, key: t.name, value: t.name };
+                  });
+                  this.setState({ templates: temps });
+                });
+              }
+            });
           });
-        });
       }
     });
   };
@@ -113,6 +144,16 @@ class Reactions extends Component {
       });
   };
 
+  _handleTemplateChange = (t, i, o, v) => {
+    const val = v.value;
+    let newList = [
+      ...this.state.reactions.slice(0, i),
+      { ...t, template: val },
+      ...this.state.reactions.slice(i + 1)
+    ];
+    this.setState({ reactions: newList });
+  };
+
   componentDidMount() {
     if (store.get('service')) {
       const service = store.get('service');
@@ -178,7 +219,7 @@ class Reactions extends Component {
   };
 
   _toggleReactionDeactivate = (r, i) => {
-    const newReactionData = { ...r, is_active: !r.is_acrive };
+    const newReactionData = { ...r, is_active: !r.is_active };
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
@@ -240,7 +281,6 @@ class Reactions extends Component {
           <Menu.Menu position="right">
             <Menu.Item
               icon="add"
-              disabled={true}
               title="Click to add a new reaction"
               name="Add a new reaction"
               onClick={this.openAddDialog}
@@ -261,24 +301,20 @@ class Reactions extends Component {
           </Menu.Menu>
         </Menu>
 
-        <Table
-          structured
-          inverted
-          fixed
-          singleLine
-          size="small"
-          stackable={true}
-        >
+        <Table structured inverted singleLine size="small" stackable={true}>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell width={1}>Reaction name</Table.HeaderCell>
-              <Table.HeaderCell width={2}>Target(s) regex</Table.HeaderCell>
+              <Table.HeaderCell width={3}>Target(s) regex</Table.HeaderCell>
               <Table.HeaderCell width={1}>Active/Mute</Table.HeaderCell>
               <Table.HeaderCell width={1}>Conditions</Table.HeaderCell>
               <Table.HeaderCell width={1}>Triggers</Table.HeaderCell>
               <Table.HeaderCell width={3}>Webhook</Table.HeaderCell>
+              <Table.HeaderCell width={2}>Template</Table.HeaderCell>
+              {/*
               <Table.HeaderCell width={2}>SlackID</Table.HeaderCell>
               <Table.HeaderCell width={2}>Slack Message</Table.HeaderCell>
+                */}
               <Table.HeaderCell width={2}>Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -324,10 +360,10 @@ class Reactions extends Component {
 
                   <Table.Cell>
                     <a onClick={() => this._toggleReactionDeactivate(t, i)}>
-                      {t.is_active === false ? (
-                        <Icon name="square outline" color="grey" />
-                      ) : (
+                      {t.is_active === true ? (
                         <Icon name="check square" color="green" />
+                      ) : (
+                        <Icon name="square outline" color="grey" />
                       )}
                     </a>
                     <a onClick={() => this._toggleReactionMute(t, i)}>
@@ -424,7 +460,21 @@ class Reactions extends Component {
                       value={t.webhook || ''}
                     />
                   </Table.Cell>
-
+                  <Table.Cell>
+                    <Dropdown
+                      search
+                      value={t.template}
+                      selection
+                      style={{ backgroundColor: 'transparent' }}
+                      wrapSelection={false}
+                      onChange={(o, v) =>
+                        this._handleTemplateChange(t, i, o, v)
+                      }
+                      options={this.state.templates}
+                      placeholder="Choose a template"
+                    />
+                  </Table.Cell>
+                  {/*
                   <Table.Cell collapsing>
                     <Input
                       fluid
@@ -450,7 +500,7 @@ class Reactions extends Component {
                       value={t.slack_message || ''}
                     />
                   </Table.Cell>
-
+                  */}
                   <Table.Cell>
                     <div style={{ minHeight: 32 }}>
                       <Button
@@ -481,6 +531,49 @@ class Reactions extends Component {
             })}
           </Table.Body>
         </Table>
+
+        <Divider />
+
+        <Message color="black" attached="bottom">
+          <Message.Header>
+            <h1>
+              <Icon name="lightbulb" color="yellow" />
+              Guidelines
+            </h1>
+            <small>Please read carefully before using reactions</small>
+          </Message.Header>
+          <h3>What are reactions?</h3>
+          <p>
+            <b>
+              Reactions are basicly automatic SDP response to user MO messages.
+            </b>
+            After system receives a MO, SDP will going to match the message with
+            a pre defined reation and if all conditions are true, will response
+            to user with a MT or will call a callback HTTP post.
+          </p>
+
+            <p>When you create a new service, SDP will create <b>4</b> default reactions for your service:</p>
+            <ol>
+                <li><b>Default</b> Reaction:<br/>
+                    It's a default reaction that will response to all MO messages except 1 digit MOs (<code>{this.state.digits_reaction}</code>).
+                    The target key for default reaction is <code>default</code>.  You can disactive or mute it in panel or via API.
+                </li>
+            </ol>
+
+          <h3>Use cases</h3>
+          <h3>Basic Usage</h3>
+          <h3>API docs</h3>
+          <p>
+            Please visit reactions API docs{' '}
+            <a
+              title="Reactions API docs"
+              target="new"
+              href="https://docs.red9.ir/#3f7837ab-41ae-6def-3222-879f233e6273"
+            >
+              here
+            </a>
+          </p>
+        </Message>
       </Segment>
     );
   }

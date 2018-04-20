@@ -225,6 +225,11 @@ class Services extends Component {
   }
 
   componentDidMount() {
+    const service = store.get('service');
+    if (service) {
+      this.setState({ activeService: service });
+    }
+
     this.colorCodeChangeSubscription = changeColorCode$
       .distinctUntilChanged()
       .debounceTime(250)

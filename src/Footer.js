@@ -25,7 +25,7 @@ class Footer extends Component {
               className="techstuff"
             >
               {' '}
-              <Image src="/red9.png" size="mini" inline />{' '}
+              <Image src="/logo.png" size="mini" inline />{' '}
             </a>
             <a
               href="//www.postgresql.org/about/"
@@ -64,7 +64,7 @@ class Footer extends Component {
           <div style={{ padding: 20 }}>
             <Image src="/rashavas.png" avatar size="mini" />
             <small>
-              &copy; 2016-Present |{' '}
+              &copy; 2018-Present |{' '}
               <a
                 style={{ color: 'white' }}
                 href={`mailto:${env.copyright_company_email}`}
@@ -81,8 +81,11 @@ class Footer extends Component {
               <br />
               <span style={{ opacity: 0.5, marginLeft: 32 }}>
                 {' '}
-                &nbsp; Designed and developed by
-                <a href={`mailto:${fafan}`}> Farsheed Ashouri</a>{' '}
+                &nbsp; /Designed and developed by
+                <a style={{ fontWeight: 400 }} href={`mailto:${fafan}`}>
+                  {' '}
+                  {atob(env.author)}
+                </a>/{' '}
               </span>
             </small>
           </div>

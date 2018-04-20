@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { List, Icon, Search, Label } from 'semantic-ui-react';
+import store from 'store';
 
 import { selectService$, selectApp$, searching$ } from './utils';
 //import { redirectSignal } from './utils';
@@ -35,11 +36,19 @@ class Leftbar extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.getIpTimeout);
+    clearTimeout(this.selectServiceTimeout);
     this.adminSubscription.unsubscribe();
     this.serviceSelection.unsubscribe();
   }
 
   componentDidMount() {
+    this.selectServiceTimeout = setTimeout(() => {
+      const service = store.get('service');
+      if (service) {
+        this.setState({ selected_service: service });
+      }
+    }, 250);
+
     this.serviceSelection = selectService$
       .distinctUntilChanged()
       .debounceTime(50)
@@ -100,14 +109,10 @@ class Leftbar extends Component {
       'Subscriptions',
       ':Analyze:',
       'Reports',
-      'FTP Data',
-      'Integration Panel',
-      'Logs',
       ':Help Desk:',
       'Customer Care',
       ':Development:',
       'Key.Value Database',
-      'Mock Requests',
       'API Docs',
       'Getting Started',
       ':Set:',
