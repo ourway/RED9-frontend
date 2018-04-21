@@ -9,10 +9,26 @@ import {
   Button,
   Segment
 } from 'semantic-ui-react';
-import { getTemplates, updateTemplate, deleteTemplate } from './apis';
+import {
+  createTemplate,
+  getTemplates,
+  updateTemplate,
+  deleteTemplate
+} from './apis';
 import store from 'store';
 import { titleChangeSignal } from './utils';
 
+import {
+  Dialog,
+  DialogType,
+  DialogFooter
+} from 'office-ui-fabric-react/lib/Dialog';
+import {
+  PrimaryButton,
+  DefaultButton
+} from 'office-ui-fabric-react/lib/Button';
+import { TextField } from 'office-ui-fabric-react/lib/TextField';
+import { Dropdown as MSDropdown } from 'office-ui-fabric-react/lib/Dropdown';
 const filter$ = new Rx.Subject();
 
 class Templates extends Component {
@@ -23,7 +39,14 @@ class Templates extends Component {
       original_templates: [],
       ref_templates: [],
       is_fetching: false,
-      filter: ''
+      filter: '',
+      attrDialogOps: {
+        is_hidden: true,
+        data: {
+          name: '',
+          body: ''
+        }
+      }
     };
     this._getTemplates = this._getTemplates.bind(this);
   }
@@ -150,6 +173,51 @@ class Templates extends Component {
     this.filterSubscribe.unsubscribe();
   }
 
+  openAddDialog = () => {
+    this.setState({ is_add_dialog_hidden: false });
+  };
+
+  closeAddDialog = () => {
+    this.setState({ is_add_dialog_hidden: true });
+  };
+
+  _newTemplateNameChanged = v => {
+    this.setState({
+      attrDialogOps: {
+        ...this.state.attrDialogOps,
+        data: { ...this.state.attrDialogOps.data, name: v }
+      }
+    });
+  };
+
+  _newTemplateBodyChanged = v => {
+    this.setState({
+      attrDialogOps: {
+        ...this.state.attrDialogOps,
+        data: { ...this.state.attrDialogOps.data, body: v }
+      }
+    });
+  };
+
+  doCreateNewTemplate = () => {
+    const uuidKey = store.get('uuid');
+    createTemplate(atob(uuidKey), this.state.attrDialogOps.data).then(resp => {
+      if (resp.status === 201) {
+        this.closeAddDialog();
+        swal({
+          position: 'center',
+          type: 'success',
+          title: 'Congrats!',
+          text: `Your new Template is ready to use`,
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => {
+          this._getTemplates();
+        });
+      }
+    });
+  };
+
   render() {
     return (
       <Segment inverted loading={this.state.is_fetching === true}>
@@ -157,7 +225,7 @@ class Templates extends Component {
           <Menu.Menu position="right">
             <Menu.Item
               icon="add"
-              disabled={true}
+              disabled={false}
               title="Click to add a new template"
               name="Add a new template"
               onClick={this.openAddDialog}
@@ -252,6 +320,68 @@ class Templates extends Component {
             })}
           </Table.Body>
         </Table>
+
+        <Dialog
+          hidden={this.state.is_add_dialog_hidden}
+          onDismiss={this.closeAddDialog}
+          dialogContentProps={{
+            type: DialogType.largeHeader,
+            title: 'New Template',
+            subText: (
+              <span>
+                A template has many advanced options. Look API for more info
+              </span>
+            )
+          }}
+          modalProps={{
+            titleAriaId: 'myLabelId2',
+            subtitleAriaId: 'mySubTextId2',
+            isBlocking: false,
+            containerClassName: 'ms-dialogMainOverride'
+          }}
+        >
+          {
+            null /** You can also include null values as the result of conditionals */
+          }
+
+          <TextField
+            key="nameField"
+            type="text"
+            label="Template Name"
+            borderless
+            onChanged={this._newTemplateNameChanged}
+            value={this.state.attrDialogOps.data.name}
+            title="Enter new  template name"
+            placeholder="welcome_message_template"
+            required={true}
+          />
+
+          <TextField
+            key="moField"
+            type="text"
+            label="Template Body"
+            borderless
+            multiline
+            resizable={false}
+            onChanged={this._newTemplateBodyChanged}
+            value={this.state.attrDialogOps.data.body}
+            title="Enter your template body body"
+            placeholder="Your message can be included with variables.  for ex: <%= national_number %>"
+            required={true}
+          />
+
+          <DialogFooter>
+            <PrimaryButton
+              disabled={
+                this.state.attrDialogOps.data.name === '' ||
+                this.state.attrDialogOps.data.body === ''
+              }
+              onClick={this.doCreateNewTemplate}
+              text="Create"
+            />
+            <DefaultButton onClick={this.closeAddDialog} text="Cancel" />
+          </DialogFooter>
+        </Dialog>
       </Segment>
     );
   }

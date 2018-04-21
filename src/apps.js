@@ -13,7 +13,6 @@ import {
 } from 'semantic-ui-react';
 import { getServiceApps, createApp, updateApp } from './apis';
 
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import Gist from 'react-gist';
 
 import {
@@ -33,6 +32,7 @@ import {
   PrimaryButton,
   DefaultButton
 } from 'office-ui-fabric-react/lib/Button';
+import { TextField } from 'office-ui-fabric-react/lib/TextField';
 
 class Applications extends Component {
   constructor(props) {

@@ -100,8 +100,9 @@ class Leftbar extends Component {
     const sections = [
       ':Definitions:',
       'Services',
-      'Templates',
       'Apps',
+      ':Advanced Settings:',
+      'Templates',
       'Reactions',
       ':Try:',
       'Messaging',

@@ -263,6 +263,16 @@ export const updateTemplate = (client_key, t) => {
   return fetch(`${env.API_BASE}/api/client/template`, opts);
 };
 
+export const createTemplate = (client_key, data) => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/template`, opts);
+};
+
 export const deleteTemplate = (client_key, name) => {
   const authHeaders = getClientAuthHeaders(client_key);
   let opts = {
@@ -287,6 +297,16 @@ export const updateReaction = (client_key, r) => {
   let opts = {
     method: 'PATCH',
     body: JSON.stringify(r),
+    headers: authHeaders
+  };
+  return fetch(`${env.API_BASE}/api/client/reaction`, opts);
+};
+
+export const createReaction = (client_key, data) => {
+  const authHeaders = getClientAuthHeaders(client_key);
+  let opts = {
+    method: 'POST',
+    body: JSON.stringify(data),
     headers: authHeaders
   };
   return fetch(`${env.API_BASE}/api/client/reaction`, opts);

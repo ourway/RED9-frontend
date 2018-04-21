@@ -90,6 +90,16 @@ export const serviceParams = [
   },
 
   {
+    name: 'auto_response',
+    type: 'text',
+    placeholder: `true or false`,
+    editable: true,
+    description:
+      'Are you expect SDP to response to sub notifications automaticly?',
+    gateway: ['IMI', 'IRANCELL']
+  },
+
+  {
     name: 'renewal_url',
     type: 'url',
     placeholder: `https://myserver.net/${env.company}-${
