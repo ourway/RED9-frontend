@@ -102,7 +102,7 @@ class App extends Component {
       }, 200);
       this.loginInterval = setInterval(() => {
         this.sendLoginRequest(atob(uuidKey), false, false);
-      }, 60000);
+      }, 30000);
     } else {
       redirectSignal.next('/login');
     }

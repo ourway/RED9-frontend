@@ -3,7 +3,7 @@ import { detect } from 'detect-browser';
 export const browser =
   detect() !== null ? detect() : { os: 'N/A', name: 'Unknown' };
 
-export const env ={
+export const env = {
   company: 'Rashavas',
   company_email: 'ashouri@rashavas.com',
   company_contact_gsm: '9120228207',
@@ -15,7 +15,7 @@ export const env ={
   FTP_BASE: 'https://ftp.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://api.appido.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.5.3 / 21 April 2018',
+  product_version: '0.5.4 / 25 April 2018',
   logo: 'red9',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
   copyright_logo: 'rashavas.logo',

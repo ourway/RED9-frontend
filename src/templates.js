@@ -28,7 +28,6 @@ import {
   DefaultButton
 } from 'office-ui-fabric-react/lib/Button';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { Dropdown as MSDropdown } from 'office-ui-fabric-react/lib/Dropdown';
 const filter$ = new Rx.Subject();
 
 class Templates extends Component {

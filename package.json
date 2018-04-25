@@ -11,8 +11,8 @@
     "jalaali-js": "^1.1.0",
     "jalali-date": "^1.0.2",
     "lato-font": "^3.0.0",
-    "lodash": "^4.17.5",
-    "office-ui-fabric-react": "^5.82.3",
+    "lodash": "^4.17.10",
+    "office-ui-fabric-react": "^5.88.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-gist": "^1.2.1",
@@ -25,7 +25,7 @@
     "semantic-ui-react": "^0.79.1",
     "store": "^2.0.12",
     "string": "^3.3.3",
-    "sweetalert2": "^7.19.0",
+    "sweetalert2": "^7.19.1",
     "typeface-inconsolata": "^0.0.54"
   },
   "scripts": {

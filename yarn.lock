@@ -19,7 +19,13 @@
   dependencies:
     tslib "^1.7.1"
 
-"@uifabric/styling@>=5.23.1 <6.0.0", "@uifabric/styling@>=5.24.0 <6.0.0":
+"@uifabric/merge-styles@>=5.16.0 <6.0.0":
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/@uifabric/merge-styles/-/merge-styles-5.16.0.tgz#beb1ee29f2c69161ce29b7fe8909547eb439429e"
+  dependencies:
+    tslib "^1.7.1"
+
+"@uifabric/styling@>=5.23.1 <6.0.0":
   version "5.24.0"
   resolved "https://registry.yarnpkg.com/@uifabric/styling/-/styling-5.24.0.tgz#fd0b2ff80ea2e6e8c5e7b35fa90180ed14a83ae8"
   dependencies:
@@ -28,11 +34,28 @@
     "@uifabric/utilities" ">=5.24.0 <6.0.0"
     tslib "^1.7.1"
 
+"@uifabric/styling@>=5.26.0 <6.0.0":
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/@uifabric/styling/-/styling-5.26.0.tgz#40e32ad75453d10a4042b19a18ded24dd77bf70f"
+  dependencies:
+    "@microsoft/load-themed-styles" "^1.7.13"
+    "@uifabric/merge-styles" ">=5.16.0 <6.0.0"
+    "@uifabric/utilities" ">=5.27.0 <6.0.0"
+    tslib "^1.7.1"
+
 "@uifabric/utilities@>=5.24.0 <6.0.0":
   version "5.24.0"
   resolved "https://registry.yarnpkg.com/@uifabric/utilities/-/utilities-5.24.0.tgz#436c786e290f0456ad2534deac543b835599bd01"
   dependencies:
     "@uifabric/merge-styles" ">=5.15.1 <6.0.0"
+    prop-types "^15.5.10"
+    tslib "^1.7.1"
+
+"@uifabric/utilities@>=5.27.0 <6.0.0":
+  version "5.27.0"
+  resolved "https://registry.yarnpkg.com/@uifabric/utilities/-/utilities-5.27.0.tgz#cb45418475b338065a44bbfce9af27aff535d66a"
+  dependencies:
+    "@uifabric/merge-styles" ">=5.16.0 <6.0.0"
     prop-types "^15.5.10"
     tslib "^1.7.1"
 
@@ -4445,9 +4468,13 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-"lodash@>=3.5 <5", lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@~4.17.4:
+"lodash@>=3.5 <5", lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.3.0, lodash@~4.17.4:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
+
+lodash@^4.17.10:
+  version "4.17.10"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
 loglevel@^1.4.1:
   version "1.6.1"
@@ -4927,15 +4954,15 @@ obuf@^1.0.0, obuf@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
 
-office-ui-fabric-react@^5.82.3:
-  version "5.82.3"
-  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-5.82.3.tgz#96e675083720a471dd0b3461c52b637c8c94b462"
+office-ui-fabric-react@^5.88.0:
+  version "5.88.0"
+  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-5.88.0.tgz#0005e6a9753d853ac28234c1d8a9dd42b0b5e78b"
   dependencies:
     "@microsoft/load-themed-styles" "^1.7.13"
     "@uifabric/icons" ">=5.7.1 <6.0.0"
-    "@uifabric/merge-styles" ">=5.15.2 <6.0.0"
-    "@uifabric/styling" ">=5.24.0 <6.0.0"
-    "@uifabric/utilities" ">=5.24.0 <6.0.0"
+    "@uifabric/merge-styles" ">=5.16.0 <6.0.0"
+    "@uifabric/styling" ">=5.26.0 <6.0.0"
+    "@uifabric/utilities" ">=5.27.0 <6.0.0"
     prop-types "^15.5.10"
     tslib "^1.7.1"
 
@@ -6780,9 +6807,9 @@ sw-toolbox@^3.4.0:
     path-to-regexp "^1.0.1"
     serviceworker-cache-polyfill "^4.0.0"
 
-sweetalert2@^7.19.0:
-  version "7.19.0"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-7.19.0.tgz#945e0d78582393c9b62dd8511c30d6268cdb2690"
+sweetalert2@^7.19.1:
+  version "7.19.1"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-7.19.1.tgz#ab00107fbd6f5fc051bd3941fbeb55a58c215ec1"
 
 symbol-observable@1.0.1:
   version "1.0.1"
