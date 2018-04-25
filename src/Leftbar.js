@@ -47,7 +47,7 @@ class Leftbar extends Component {
       if (service) {
         this.setState({ selected_service: service });
       }
-    }, 250);
+    }, 10);
 
     this.serviceSelection = selectService$
       .distinctUntilChanged()
@@ -79,7 +79,6 @@ class Leftbar extends Component {
       getIp().then(resp => {
         resp.json().then(r => {
           if (!r.country_calling_code) {
-            //redirectSignal.next('/451');
           } else {
             this.setState({
               ip: r.ip,
@@ -88,7 +87,7 @@ class Leftbar extends Component {
           }
         });
       });
-    }, 200);
+    }, 2);
   }
 
   doSearch = (_, e) => {

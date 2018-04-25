@@ -226,7 +226,7 @@ class Services extends Component {
 
   componentDidMount() {
     const service = store.get('service');
-    if (service) {
+    if (service && !this.state.activeService.meta.uuid) {
       this.setState({ activeService: service });
     }
 
@@ -468,9 +468,9 @@ class Services extends Component {
                 <Menu.Item
                   as="a"
                   icon={
-                    this.state.activeService.meta.uuid === s.meta.uuid
-                      ? 'chevron circle down'
-                      : 'chevron circle right'
+                    s.meta.is_active === true
+                      ? 'toggle on'
+                      : 'toggle off'
                   }
                   fitted="vertically"
                   index={i}
@@ -740,112 +740,119 @@ class Services extends Component {
                     </Header>
                   </Grid.Column>
 
-                  <Grid.Column width={15}>
-                    <Card color="blue">
-                      <Card.Content>
-                        <Card.Header>
-                          <CompoundButton
-                            onClick={this.doTestService}
-                            description={
-                              <p>
-                                {' '}
-                                Click to send a test SMS to{' '}
-                                {this.state.activeService.meta.client_gsm}
-                              </p>
-                            }
-                            disabled={this.state.testSmsIsSending === true}
-                            checked={true}
-                          >
-                            Send Test SMS
-                          </CompoundButton>
-                        </Card.Header>
-                        <Card.Meta>
-                          <span className="date" />
-                        </Card.Meta>
-                        <Card.Description>
-                          {this.state.testSmsResult.resp
-                            ? this.state.testSmsResult.status === 'error'
-                              ? [
-                                  <h4 key="header">
-                                    We tried to send a message from{' '}
-                                    <code>
-                                      {this.state.activeService.short_code}
-                                    </code>{' '}
-                                    to{' '}
-                                    <code>
-                                      {this.state.testSmsResult.msisdn}
-                                    </code>{' '}
-                                    and we got this error:
-                                  </h4>,
-                                  <ul key="errorlist">
-                                    <li>
-                                      Error ID:{' '}
-                                      <code>
-                                        {this.state.testSmsResult.resp.id}
-                                      </code>
-                                    </li>
-                                    <li>
-                                      Fault:{' '}
-                                      <code>
-                                        {this.state.testSmsResult.resp.fault}
-                                      </code>
-                                    </li>
-                                    <li>
-                                      Description:{' '}
-                                      <code>
-                                        {
-                                          this.state.testSmsResult.resp
-                                            .description
-                                        }
-                                      </code>
-                                    </li>
-                                    <li>
-                                      Correlator:{' '}
-                                      <Link
-                                        className="dark"
-                                        to={`/messaging/status/${
-                                          this.state.testSmsResult.correlator
-                                        }`}
-                                      >
-                                        <small style={{ color: 'darkgreen' }}>
-                                          {this.state.testSmsResult.correlator}
-                                        </small>
-                                      </Link>
-                                    </li>
-                                  </ul>
-                                ]
-                              : null
-                            : null}
-                        </Card.Description>
-                      </Card.Content>
-                      <Card.Content extra>
-                        {this.state.testSmsIsSending === true ? (
-                          <Icon
-                            loading
-                            size="small"
-                            name="spinner"
-                            color="blue"
-                          />
-                        ) : null}
-
-                        {this.state.testSmsResult.resp ? (
-                          <a>
-                            <Icon
-                              name="circle"
-                              color={
-                                this.state.testSmsResult.status === 'ok'
-                                  ? 'green'
-                                  : 'red'
+                  {this.state.activeService.meta.is_active === true ? (
+                    <Grid.Column width={15}>
+                      <Card color="orange">
+                        <Card.Content>
+                          <Card.Header>
+                            <CompoundButton
+                              onClick={this.doTestService}
+                              description={
+                                <p>
+                                  {' '}
+                                  Click to send a test SMS to{' '}
+                                  {this.state.activeService.meta.client_gsm}
+                                </p>
                               }
+                              disabled={this.state.testSmsIsSending === true}
+                              checked={true}
+                            >
+                              Send Test SMS
+                            </CompoundButton>
+                          </Card.Header>
+                          <Card.Meta>
+                            <span className="date" />
+                          </Card.Meta>
+                          <Card.Description>
+                            {this.state.testSmsResult.resp
+                              ? this.state.testSmsResult.status === 'error'
+                                ? [
+                                    <h4 key="header">
+                                      We tried to send a message from{' '}
+                                      <code>
+                                        {this.state.activeService.short_code}
+                                      </code>{' '}
+                                      to{' '}
+                                      <code>
+                                        {this.state.testSmsResult.msisdn}
+                                      </code>{' '}
+                                      and we got this error:
+                                    </h4>,
+                                    <ul key="errorlist">
+                                      <li>
+                                        Error ID:{' '}
+                                        <code>
+                                          {this.state.testSmsResult.resp.id}
+                                        </code>
+                                      </li>
+                                      <li>
+                                        Fault:{' '}
+                                        <code>
+                                          {this.state.testSmsResult.resp.fault}
+                                        </code>
+                                      </li>
+                                      <li>
+                                        Description:{' '}
+                                        <code>
+                                          {
+                                            this.state.testSmsResult.resp
+                                              .description
+                                          }
+                                        </code>
+                                      </li>
+                                      <li>
+                                        Correlator:{' '}
+                                        <Link
+                                          className="dark"
+                                          to={`/messaging/status/${
+                                            this.state.testSmsResult.correlator
+                                          }`}
+                                        >
+                                          <small style={{ color: 'darkgreen' }}>
+                                            {
+                                              this.state.testSmsResult
+                                                .correlator
+                                            }
+                                          </small>
+                                        </Link>
+                                      </li>
+                                    </ul>
+                                  ]
+                                : null
+                              : null}
+                          </Card.Description>
+                        </Card.Content>
+                        <Card.Content extra>
+                          {this.state.testSmsIsSending === true ? (
+                            <Icon
+                              loading
+                              size="small"
+                              name="spinner"
+                              color="blue"
                             />
-                            {this.state.testSmsResult.status}
-                          </a>
-                        ) : (
-                          <span>Click button to update the status of test</span>
-                        )}
-                      </Card.Content>
-                    </Card>
-                  </Grid.Column>
+                          ) : null}
+
+                          {this.state.testSmsResult.resp ? (
+                            <a>
+                              <Icon
+                                name="circle"
+                                color={
+                                  this.state.testSmsResult.status === 'ok'
+                                    ? 'green'
+                                    : 'red'
+                                }
+                              />
+                              {this.state.testSmsResult.status}
+                            </a>
+                          ) : (
+                            <span>
+                              Click button to update the status of test
+                            </span>
+                          )}
+                        </Card.Content>
+                      </Card>
+                    </Grid.Column>
+                  ) : null}
                 </Grid.Row>
                 <Divider />
 

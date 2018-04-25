@@ -154,7 +154,9 @@ class Header extends Component {
       .distinctUntilChanged()
       .debounceTime(500)
       .subscribe(v => {
-        this.setState({ app: v });
+        if (v) {
+          this.setState({ app: v });
+        }
       });
 
     this.serviceSelection = selectService$
@@ -279,9 +281,9 @@ class Header extends Component {
                         <small style={{ color: 'lightgreen' }}>
                           {this.state.stats.yesterday.subscriptions}
                         </small>/
-                        <small style={{ color: 'red' }}>
+                        <small style={{ color: 'orange' }}>
                           {this.state.stats.yesterday.unsubscriptions}
-                        </small>
+                        </small>{' '}
                         <Icon
                           size="large"
                           name={
@@ -327,9 +329,9 @@ class Header extends Component {
                         <small style={{ color: 'lightgreen' }}>
                           {this.state.stats.overall.subscriptions}
                         </small>/
-                        <small style={{ color: 'red' }}>
+                        <small style={{ color: 'orange' }}>
                           {this.state.stats.overall.unsubscriptions}
-                        </small>
+                        </small>{' '}
                         <Icon
                           size="small"
                           name={
@@ -355,13 +357,13 @@ class Header extends Component {
                       <Statistic.Label>Success Rate</Statistic.Label>
                     </Statistic>
                   </Grid.Column>
-                  <Grid.Column width={4}>
+                  <Grid.Column width={5}>
                     {this.state.stats.subscribers ? (
                       <Statistic
                         color="blue"
                         className={
                           this.state.service.name !== DASH
-                            ? 'topStatistics active'
+                            ? 'topStatistics active info'
                             : 'topStatistics deactive'
                         }
                         inverted
@@ -370,7 +372,11 @@ class Header extends Component {
                         <Statistic.Value>
                           <small>{this.state.stats.subscribers}</small>
                         </Statistic.Value>
-                        <Statistic.Label>Subscribers</Statistic.Label>
+                        <Statistic.Label
+                          style={{ fontSize: 10, fontWeight: 200 }}
+                        >
+                          Subscribers
+                        </Statistic.Label>
                       </Statistic>
                     ) : null}
 
@@ -378,7 +384,7 @@ class Header extends Component {
                       <Statistic
                         className={
                           this.state.service.name !== DASH
-                            ? 'topStatistics active'
+                            ? 'topStatistics active info'
                             : 'topStatistics deactive'
                         }
                         color="green"
@@ -388,14 +394,18 @@ class Header extends Component {
                         <Statistic.Value>
                           <small>{this.state.stats.chargingSubscribers}</small>
                         </Statistic.Value>
-                        <Statistic.Label>Charging</Statistic.Label>
+                        <Statistic.Label
+                          style={{ fontSize: 10, fontWeight: 400 }}
+                        >
+                          Charging
+                        </Statistic.Label>
                       </Statistic>
                     ) : null}
                   </Grid.Column>
-                  <Grid.Column width={12}>
+                  <Grid.Column width={11}>
                     <Step.Group
                       size="mini"
-                      style={{ WebkitFilter: 'invert(90%)' }}
+                      style={{ WebkitFilter: 'invert(90%)', opacity: 0.75 }}
                     >
                       <Step active={this.state.service.name === DASH}>
                         <Icon name="vcard" />

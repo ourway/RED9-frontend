@@ -493,3 +493,20 @@ code.red9_samples  {
 }
 
 
+.homePageGlass {
+    animation-name: glassShake;
+    animation-duration: 0.15s;
+    animation-iteration-count: 3;
+    animation-delay: 3s;
+    animation-fill-mode: forwards; /* or: backwards, both, none */
+
+}
+
+
+@keyframes glassShake {
+    0% {transform: rotate3d(0, 0, 1, 0deg); filter: grayscale(20%)}
+    25% {transform: rotate3d(0, 0, 1, -5deg)  scale3d(1.01, 1.01, 1);}
+    75% {transform: rotate3d(0, 0, 1, 5deg) scale3d(0.99, 0.99, 1); filter: grayscale(40%) }
+    100% {transform: rotate3d(0, 0, 1, 0deg) rotate3d(0, 1, 0, 180deg); filter: drop-shadow(0 0 0.1rem #111);}
+}
+

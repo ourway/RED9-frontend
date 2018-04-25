@@ -95,7 +95,7 @@ export const serviceParams = [
     placeholder: `true or false`,
     editable: true,
     description:
-      'Are you expect SDP to response to sub notifications automaticly?',
+      'Do you expect SDP to response to sub notifications automaticly?',
     gateway: ['IMI', 'IRANCELL']
   },
 
