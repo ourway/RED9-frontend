@@ -174,7 +174,9 @@ class ClientManagement extends Component {
       if (resp.status === 200) {
         resp.json().then(data => {
           this.setState({
-            clients: data.clients
+            clients: data.clients.sort((a, b) => {
+              return a.is_active ? -1 : 1;
+            })
           });
         });
       }

@@ -674,7 +674,7 @@ class Reactions extends Component {
           <Divider />
         </Segment>
 
-        <Segment inverted>
+        <Segment style={{ marginBottom: 64 }} inverted>
           <Message color="black" attached="bottom">
             <Message.Header>
               <h1>

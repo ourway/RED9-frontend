@@ -95,11 +95,9 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
           nowUpdate.next(data.now);
           usernameAssigned.next(data.company);
           if (!no_admin) {
-                                                                 
-
           }
 
-          store.set('acl', {admin: data.is_admin === true});
+          store.set('acl', { admin: data.is_admin === true });
           isAdmin.next(data.is_admin === true);
           clientKeySignal.next(btoa(uuid));
           if (!swal.isVisible() && hora === true) {

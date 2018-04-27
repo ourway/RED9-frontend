@@ -219,7 +219,11 @@ class Templates extends Component {
 
   render() {
     return (
-      <Segment inverted loading={this.state.is_fetching === true}>
+      <Segment
+        style={{ marginBottom: 64 }}
+        inverted
+        loading={this.state.is_fetching === true}
+      >
         <Menu attached="top" inverted style={{ backgroundColor: '#212931' }}>
           <Menu.Menu position="right">
             <Menu.Item

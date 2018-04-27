@@ -23,7 +23,11 @@ class Home extends Component {
                   return s.meta.is_active === true;
                 })
                 .map((s, i) => {
-                  return { name: s.name, uuid: s.meta.uuid, short_code: s.short_code };
+                  return {
+                    name: s.name,
+                    uuid: s.meta.uuid,
+                    short_code: s.short_code
+                  };
                 })
             });
           });
@@ -37,15 +41,25 @@ class Home extends Component {
   render() {
     return (
       <div style={{ margin: 'auto', padding: 25, textAlign: 'center' }}>
-        <List selection horizontal relatex="very" style={{minHeight: 64, borderBottom: '1px solid grey', marginBottom: 5}}>
+        <List
+          selection
+          horizontal
+          relatex="very"
+          style={{
+            minHeight: 64,
+            borderBottom: '1px solid grey',
+            marginBottom: 5
+          }}
+        >
           {this.state.services.map((s, i) => {
             return (
-              <List.Item key={s.uuid} >
-                   <Icon name="options" color="yellow" />
-                   {' '}
-                    <Link to={`/services/${s.uuid}`}>{s.name.toUpperCase()}</Link>
-                    <br/>
-                    <small style={{color: 'grey', float: 'left'}}>{s.short_code}</small>
+              <List.Item key={s.uuid}>
+                <Icon name="options" color="yellow" />{' '}
+                <Link to={`/services/${s.uuid}`}>{s.name.toUpperCase()}</Link>
+                <br />
+                <small style={{ color: 'grey', float: 'left' }}>
+                  {s.short_code}
+                </small>
               </List.Item>
             );
           })}

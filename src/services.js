@@ -467,14 +467,9 @@ class Services extends Component {
               return (
                 <Menu.Item
                   as="a"
-                  icon={
-                    s.meta.is_active === true
-                      ? 'toggle on'
-                      : 'toggle off'
-                  }
+                  icon={s.meta.is_active === true ? 'toggle on' : 'toggle off'}
                   fitted="vertically"
                   index={i}
-                  color="grey"
                   uuid={s.meta.uuid}
                   title={S(s.name).capitalize().s}
                   name={s.name}

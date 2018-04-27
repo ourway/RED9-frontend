@@ -165,7 +165,21 @@ class Header extends Component {
       .subscribe({
         next: s => {
           this.setState({
-            service: s
+            service: s,
+            stats: {
+              yesterday: {
+                revenue: ZERO,
+                subscriptions: ZERO2,
+                unsubscriptions: ZERO2,
+                success_rate: ZERO2
+              },
+              overall: {
+                revenue: ZERO,
+                subscriptions: ZERO2,
+                unsubscriptions: ZERO2,
+                success_rate: ZERO2
+              }
+            }
           });
           this.doGetSubscribersCount();
 
@@ -216,7 +230,7 @@ class Header extends Component {
       >
         <Grid centered doubling padded>
           <Grid.Row>
-            <Grid.Column computer={5} mobile={12} tablet={5}>
+            <Grid.Column computer={4} mobile={12} tablet={4}>
               <Link to="/">
                 <strong className="ms-font-xxl ms-fontColor-neutralLight">
                   <Image
@@ -249,7 +263,7 @@ class Header extends Component {
             </Grid.Column>
 
             <Grid.Column
-              computer={10}
+              computer={11}
               only="computer"
               verticalAlign="middle"
               textAlign="right"

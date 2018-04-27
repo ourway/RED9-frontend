@@ -160,10 +160,6 @@ a.disabled span {
 
 
 
-.ui.inverted.menu .active.item {
-    color: #039eda !important;
-    background: #2d3841 !important;
-}
 
 .ui.inverted.pointing.menu .active.item:after {
     background-color: #444342 !important;
@@ -510,3 +506,7 @@ code.red9_samples  {
     100% {transform: rotate3d(0, 0, 1, 0deg) rotate3d(0, 1, 0, 180deg); filter: drop-shadow(0 0 0.1rem #111);}
 }
 
+.ui.inverted.menu .active.item {
+    color: #dbac03 !important;
+    background: #2d3841 !important;
+}
