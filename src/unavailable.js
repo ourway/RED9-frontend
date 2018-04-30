@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import { Card } from 'semantic-ui-react';
-import { browser, env } from './config';
-import Footer from './Footer';
-import Header from './Header';
+import { Card } from 'semantic-ui-react'
+import { browser, env } from './config'
+import Footer from './Footer'
+import Header from './Header'
 
-import { titleChangeSignal } from './utils';
+import { titleChangeSignal } from './utils'
 
 class Unavailable extends Component {
   componentDidMount() {
-    titleChangeSignal.next('451 / Unavailable');
+    titleChangeSignal.next('451 / Unavailable')
   }
 
   render() {
@@ -37,8 +37,8 @@ class Unavailable extends Component {
 
         <Footer />
       </div>
-    );
+    )
   }
 }
 
-export default Unavailable;
+export default Unavailable

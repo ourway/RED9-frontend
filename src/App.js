@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import S from 'string';
-import { Route, Switch } from 'react-router-dom';
-import store from 'store';
+import React, { Component } from 'react'
+import S from 'string'
+import { Route, Switch } from 'react-router-dom'
+import store from 'store'
 import {
   titleChangeSignal,
   sendLoginRequest,
@@ -9,73 +9,73 @@ import {
   startLoading$,
   stopLoading$,
   searching$
-} from './utils';
-import Leftbar from './Leftbar';
-import Header from './Header';
-import Footer from './Footer';
-import { env, browser } from './config';
-import Services from './services';
-import Applications from './apps';
-import ClientManagement from './client_management';
-import Templates from './templates';
-import Messaging from './messaging';
+} from './utils'
+import Leftbar from './Leftbar'
+import Header from './Header'
+import Footer from './Footer'
+import { env, browser } from './config'
+import Services from './services'
+import Applications from './apps'
+import ClientManagement from './client_management'
+import Templates from './templates'
+import Messaging from './messaging'
 
-import Reactions from './reactions';
-import Home from './home';
-import Subscriptions from './subscriptions';
-import Charging from './charging';
-import Reports from './reports';
-import FTPData from './ftpData';
-import IntegrationPanel from './integrationPanel';
-import Logs from './logs';
-import CustomerCare from './customerCare';
-import KeyValueDb from './keyValueDb';
-import MockRequests from './mockRequests';
-import APIDocs from './apiDocs';
-import GettingStarted from './gettingStarted';
-import Profile from './profile';
-import Settings from './settings';
-import AggregatedReports from './aggregatedReports';
-import ForensicAdministration from './forensicAdministration';
-import Monitoring from './monitoring';
-import Information from './information';
-import Search from './search';
-import NotFound from './notFound';
+import Reactions from './reactions'
+import Home from './home'
+import Subscriptions from './subscriptions'
+import Charging from './charging'
+import Reports from './reports'
+import FTPData from './ftpData'
+import IntegrationPanel from './integrationPanel'
+import Logs from './logs'
+import CustomerCare from './customerCare'
+import KeyValueDb from './keyValueDb'
+import MockRequests from './mockRequests'
+import APIDocs from './apiDocs'
+import GettingStarted from './gettingStarted'
+import Profile from './profile'
+import Settings from './settings'
+import AggregatedReports from './aggregatedReports'
+import ForensicAdministration from './forensicAdministration'
+import Monitoring from './monitoring'
+import Information from './information'
+import Search from './search'
+import NotFound from './notFound'
 
-import { Grid, Icon, Segment, Image } from 'semantic-ui-react';
+import { Grid, Icon, Segment, Image } from 'semantic-ui-react'
 
 class App extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isLoading: false,
       isLoggedIn: false,
       user: null
-    };
-    this.sendLoginRequest = sendLoginRequest.bind(this);
+    }
+    this.sendLoginRequest = sendLoginRequest.bind(this)
   }
 
   componentWillUnmount() {
-    this.redirectSubscription.unsubscribe();
-    this.startLoadingSubscription.unsubscribe();
-    this.stopLoadingSubscription.unsubscribe();
-    this.searchChangedSubscription.unsubscribe();
-    clearInterval(this.loginInterval);
-    clearTimeout(this.loginRequestTimeout);
+    this.redirectSubscription.unsubscribe()
+    this.startLoadingSubscription.unsubscribe()
+    this.stopLoadingSubscription.unsubscribe()
+    this.searchChangedSubscription.unsubscribe()
+    clearInterval(this.loginInterval)
+    clearTimeout(this.loginRequestTimeout)
   }
 
   componentDidMount() {
     this.startLoadingSubscription = startLoading$.subscribe({
       next: q => {
-        this.setState({ isLoading: true });
+        this.setState({ isLoading: true })
       }
-    });
+    })
 
     this.stopLoadingSubscription = stopLoading$.subscribe({
       next: q => {
-        this.setState({ isLoading: false });
+        this.setState({ isLoading: false })
       }
-    });
+    })
 
     this.searchChangedSubscription = searching$
       .distinctUntilChanged()
@@ -83,30 +83,30 @@ class App extends Component {
       .subscribe({
         next: q => {
           if (q) {
-            redirectSignal.next(`/search/${q}`);
+            redirectSignal.next(`/search/${q}`)
           }
         }
-      });
+      })
 
     this.redirectSubscription = redirectSignal
       .distinctUntilChanged()
       .subscribe({
         next: (t, history) => {
-          this.props.history.push(t);
+          this.props.history.push(t)
         }
-      });
-    const uuidKey = store.get('uuid');
+      })
+    const uuidKey = store.get('uuid')
     if (uuidKey) {
       this.loginRequestTimeout = setTimeout(() => {
-        this.sendLoginRequest(atob(uuidKey), false, false);
-      }, 200);
+        this.sendLoginRequest(atob(uuidKey), false, false)
+      }, 200)
       this.loginInterval = setInterval(() => {
-        this.sendLoginRequest(atob(uuidKey), false, false);
-      }, 30000);
+        this.sendLoginRequest(atob(uuidKey), false, false)
+      }, 30000)
     } else {
-      redirectSignal.next('/login');
+      redirectSignal.next('/login')
     }
-    titleChangeSignal.next('Panel');
+    titleChangeSignal.next('Panel')
   }
 
   render() {
@@ -392,8 +392,8 @@ class App extends Component {
 
         <Footer />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

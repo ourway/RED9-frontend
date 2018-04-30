@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import swal from 'sweetalert2';
-import Rx from 'rxjs/Rx';
+import React, { Component } from 'react'
+import swal from 'sweetalert2'
+import Rx from 'rxjs/Rx'
 import {
   Table,
   Menu,
@@ -8,31 +8,28 @@ import {
   TextArea,
   Button,
   Segment
-} from 'semantic-ui-react';
+} from 'semantic-ui-react'
 import {
   createTemplate,
   getTemplates,
   updateTemplate,
   deleteTemplate
-} from './apis';
-import store from 'store';
-import { titleChangeSignal } from './utils';
+} from './apis'
+import store from 'store'
+import { titleChangeSignal } from './utils'
 
 import {
   Dialog,
   DialogType,
   DialogFooter
-} from 'office-ui-fabric-react/lib/Dialog';
-import {
-  PrimaryButton,
-  DefaultButton
-} from 'office-ui-fabric-react/lib/Button';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
-const filter$ = new Rx.Subject();
+} from 'office-ui-fabric-react/lib/Dialog'
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
+const filter$ = new Rx.Subject()
 
 class Templates extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       templates: [],
       original_templates: [],
@@ -42,17 +39,18 @@ class Templates extends Component {
       attrDialogOps: {
         is_hidden: true,
         data: {
+          random_selection: {},
           name: '',
           body: ''
         }
       }
-    };
-    this._getTemplates = this._getTemplates.bind(this);
+    }
+    this._getTemplates = this._getTemplates.bind(this)
   }
 
   _getTemplates = () => {
-    this.setState({ is_fetching: true });
-    const uuidKey = store.get('uuid');
+    this.setState({ is_fetching: true })
+    const uuidKey = store.get('uuid')
     getTemplates(atob(uuidKey)).then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
@@ -61,19 +59,19 @@ class Templates extends Component {
             original_templates: data.templates,
             ref_templates: data.templates,
             is_fetching: false
-          });
-        });
+          })
+        })
       }
-    });
-  };
+    })
+  }
 
   sendFilterSignal = (o, v) => {
-    filter$.next(v.value);
-    this.setState({ filter: v.value });
-  };
+    filter$.next(v.value)
+    this.setState({ filter: v.value })
+  }
 
   _handleDeleteTemplate = t => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     deleteTemplate(atob(uuidKey), t.name).then(resp => {
       switch (resp.status) {
         case 500:
@@ -85,10 +83,10 @@ class Templates extends Component {
             showConfirmButton: true,
             timer: 5000
           }).then(() => {
-            this._getTemplates();
-          });
+            this._getTemplates()
+          })
 
-          break;
+          break
         default:
           swal({
             position: 'center',
@@ -98,50 +96,50 @@ class Templates extends Component {
             showConfirmButton: true,
             timer: 1000
           }).then(() => {
-            this._getTemplates();
-          });
+            this._getTemplates()
+          })
 
-          break;
+          break
       }
-    });
-  };
+    })
+  }
 
   _handleBodyChange = (o, v, i, t) => {
-    const val = v.value;
+    const val = v.value
     let newList = [
       ...this.state.templates.slice(0, i),
       { ...t, body: val },
       ...this.state.templates.slice(i + 1)
-    ];
-    this.setState({ templates: newList });
-  };
+    ]
+    this.setState({ templates: newList })
+  }
 
   _handleUpdateTemplate = (t, i) => {
-    this.setState({ is_fetching: true });
-    const uuidKey = store.get('uuid');
+    this.setState({ is_fetching: true })
+    const uuidKey = store.get('uuid')
     updateTemplate(atob(uuidKey), t)
       .then(resp => {
         if (resp.status === 202) {
-          const val = t.body;
+          const val = t.body
           let newList = [
             ...this.state.original_templates.slice(0, i),
             { ...t, body: val },
             ...this.state.original_templates.slice(i + 1)
-          ];
+          ]
           this.setState({
             original_templates: newList,
             ref_templates: newList
-          });
+          })
         }
       })
       .then(() => {
-        this.setState({ is_fetching: false });
-      });
-  };
+        this.setState({ is_fetching: false })
+      })
+  }
 
   componentDidMount() {
-    titleChangeSignal.next(`Templates`);
-    this._getTemplates();
+    titleChangeSignal.next(`Templates`)
+    this._getTemplates()
     this.filterSubscribe = filter$
 
       .distinctUntilChanged()
@@ -158,27 +156,27 @@ class Templates extends Component {
                 t.body
                   .toLowerCase()
                   .trim()
-                  .match(RegExp(this.state.filter)) !== null;
-        });
+                  .match(RegExp(this.state.filter)) !== null
+        })
         this.setState({
           filter: v,
           templates: newList,
           original_templates: newList
-        });
-      });
+        })
+      })
   }
 
   componentWillUnmount() {
-    this.filterSubscribe.unsubscribe();
+    this.filterSubscribe.unsubscribe()
   }
 
   openAddDialog = () => {
-    this.setState({ is_add_dialog_hidden: false });
-  };
+    this.setState({ is_add_dialog_hidden: false })
+  }
 
   closeAddDialog = () => {
-    this.setState({ is_add_dialog_hidden: true });
-  };
+    this.setState({ is_add_dialog_hidden: true })
+  }
 
   _newTemplateNameChanged = v => {
     this.setState({
@@ -186,8 +184,8 @@ class Templates extends Component {
         ...this.state.attrDialogOps,
         data: { ...this.state.attrDialogOps.data, name: v }
       }
-    });
-  };
+    })
+  }
 
   _newTemplateBodyChanged = v => {
     this.setState({
@@ -195,14 +193,14 @@ class Templates extends Component {
         ...this.state.attrDialogOps,
         data: { ...this.state.attrDialogOps.data, body: v }
       }
-    });
-  };
+    })
+  }
 
   doCreateNewTemplate = () => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     createTemplate(atob(uuidKey), this.state.attrDialogOps.data).then(resp => {
       if (resp.status === 201) {
-        this.closeAddDialog();
+        this.closeAddDialog()
         swal({
           position: 'center',
           type: 'success',
@@ -211,11 +209,11 @@ class Templates extends Component {
           showConfirmButton: false,
           timer: 2000
         }).then(() => {
-          this._getTemplates();
-        });
+          this._getTemplates()
+        })
       }
-    });
-  };
+    })
+  }
 
   render() {
     return (
@@ -319,7 +317,7 @@ class Templates extends Component {
                     </div>
                   </Table.Cell>
                 </Table.Row>
-              );
+              )
             })}
           </Table.Body>
         </Table>
@@ -386,8 +384,8 @@ class Templates extends Component {
           </DialogFooter>
         </Dialog>
       </Segment>
-    );
+    )
   }
 }
 
-export default Templates;
+export default Templates

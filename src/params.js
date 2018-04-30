@@ -1,4 +1,4 @@
-import { env } from './config';
+import { env } from './config'
 
 export const serviceParams = [
   {
@@ -129,4 +129,4 @@ export const serviceParams = [
                       These number are provided for you by operator or your aggregator.`,
     gateway: ['IMI']
   }
-];
+]

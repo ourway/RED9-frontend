@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Segment, Menu, Input, Table, Divider } from 'semantic-ui-react';
-import JDate from 'jalali-date';
-import accounting from 'accounting-js';
-import store from 'store';
+import React, { Component } from 'react'
+import { Segment, Menu, Input, Table, Divider } from 'semantic-ui-react'
+import JDate from 'jalali-date'
+import accounting from 'accounting-js'
+import store from 'store'
 import {
   LineChart,
   Line,
@@ -14,46 +14,46 @@ import {
   Bar,
   Tooltip,
   Legend
-} from 'recharts';
+} from 'recharts'
 
-import { getFTPAggregateReport } from './apis';
+import { getFTPAggregateReport } from './apis'
 
 const str_pad = n => {
-  return String('00' + n).slice(-2);
-};
+  return String('00' + n).slice(-2)
+}
 
 class Reports extends Component {
   constructor(props) {
-    super(props);
-    const date = new Date();
-    const lastMonth = new Date();
-    lastMonth.setDate(lastMonth.getDate() - 90);
+    super(props)
+    const date = new Date()
+    const lastMonth = new Date()
+    lastMonth.setDate(lastMonth.getDate() - 90)
 
     const today = `${date.getFullYear()}-${str_pad(
       date.getMonth() + 1
-    )}-${str_pad(date.getDate())}`;
+    )}-${str_pad(date.getDate())}`
     const lastM = `${lastMonth.getFullYear()}-${str_pad(
       lastMonth.getMonth() + 1
-    )}-${str_pad(lastMonth.getDate())}`;
+    )}-${str_pad(lastMonth.getDate())}`
     this.state = {
       raw_data: [],
       data: [],
       endDate: today,
       startDate: lastM,
       service: {}
-    };
+    }
   }
 
   getPersianDate = d => {
-    const jdate = new JDate(new Date(d * 1000));
+    const jdate = new JDate(new Date(d * 1000))
     return `${jdate.getFullYear()}-${str_pad(jdate.getMonth())}-${str_pad(
       jdate.getDate()
-    )}`;
-  };
+    )}`
+  }
 
   fetchReportData = () => {
-    const service = store.get('service');
-    this.setState({ service: service });
+    const service = store.get('service')
+    this.setState({ service: service })
     if (service.meta.operator === 'MCI') {
       getFTPAggregateReport(
         service.ftp_key,
@@ -65,42 +65,42 @@ class Reports extends Component {
             this.setState({
               raw_data: data.result,
               data: data.result.map((d, i) => {
-                const jdate = this.getPersianDate(d.date_time);
-                return { ...d, date_time: jdate };
+                const jdate = this.getPersianDate(d.date_time)
+                return { ...d, date_time: jdate }
               })
-            });
-          });
+            })
+          })
         }
-      });
+      })
     }
-  };
+  }
 
   componentDidMount() {
     this.fetchTimeout = setTimeout(() => {
-      console.log('h1');
-      this.fetchReportData();
-    }, 1000);
+      console.log('h1')
+      this.fetchReportData()
+    }, 1000)
   }
 
   componentWillUnmount() {
-    clearTimeout(this.fetchTimeout);
-    clearTimeout(this.startFetchDataTimeout);
-    clearTimeout(this.endFetchDataTimeout);
+    clearTimeout(this.fetchTimeout)
+    clearTimeout(this.startFetchDataTimeout)
+    clearTimeout(this.endFetchDataTimeout)
   }
 
   _handleEndDateChange = (o, v) => {
-    this.setState({ endDate: v.value });
+    this.setState({ endDate: v.value })
 
     this.endFetchDataTimeout = setTimeout(() => {
-      this.fetchReportData();
-    }, 500);
-  };
+      this.fetchReportData()
+    }, 500)
+  }
   _handleStartDateChange = (o, v) => {
-    this.setState({ startDate: v.value });
+    this.setState({ startDate: v.value })
     this.startFetchDataTimeout = setTimeout(() => {
-      this.fetchReportData();
-    }, 500);
-  };
+      this.fetchReportData()
+    }, 500)
+  }
 
   render() {
     return (
@@ -284,13 +284,13 @@ class Reports extends Component {
                     {Math.round(r.success_rate * 100) / 100}
                   </Table.Cell>
                 </Table.Row>
-              );
+              )
             })}
           </Table.Body>
         </Table>
       </div>
-    );
+    )
   }
 }
 
-export default Reports;
+export default Reports

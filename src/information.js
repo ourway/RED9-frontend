@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { Segment, Message, Divider, Icon } from 'semantic-ui-react';
-import { env } from './config';
+import React, { Component } from 'react'
+import { Segment, Message, Divider, Icon } from 'semantic-ui-react'
+import { env } from './config'
 
 class Information extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
 
   componentDidMount() {}
@@ -68,8 +68,8 @@ class Information extends Component {
           </ul>
         </Message>
       </Segment>
-    );
+    )
   }
 }
 
-export default Information;
+export default Information

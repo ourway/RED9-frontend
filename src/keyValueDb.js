@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import NotImplemented from './not_implemented';
+import NotImplemented from './not_implemented'
 
 class KeyValueDb extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
 
   componentDidMount() {}
@@ -13,8 +13,8 @@ class KeyValueDb extends Component {
   componentWillUnmount() {}
 
   render() {
-    return <NotImplemented />;
+    return <NotImplemented />
   }
 }
 
-export default KeyValueDb;
+export default KeyValueDb

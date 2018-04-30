@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import swal from 'sweetalert2';
-import Rx from 'rxjs/Rx';
-import store from 'store';
+import React, { Component } from 'react'
+import swal from 'sweetalert2'
+import Rx from 'rxjs/Rx'
+import store from 'store'
 import {
   Dropdown,
   Table,
@@ -12,9 +12,9 @@ import {
   Input,
   Button,
   Segment
-} from 'semantic-ui-react';
+} from 'semantic-ui-react'
 
-import { titleChangeSignal } from './utils';
+import { titleChangeSignal } from './utils'
 import {
   getReactions,
   createReaction,
@@ -22,25 +22,22 @@ import {
   getServiceApps,
   deleteReaction,
   getTemplates
-} from './apis';
+} from './apis'
 
 import {
   Dialog,
   DialogType,
   DialogFooter
-} from 'office-ui-fabric-react/lib/Dialog';
-import {
-  PrimaryButton,
-  DefaultButton
-} from 'office-ui-fabric-react/lib/Button';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { Dropdown as MSDropdown } from 'office-ui-fabric-react/lib/Dropdown';
+} from 'office-ui-fabric-react/lib/Dialog'
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
+import { Dropdown as MSDropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-const filter$ = new Rx.Subject();
+const filter$ = new Rx.Subject()
 
 class Reactions extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       reactions: [],
       apps: [],
@@ -76,13 +73,13 @@ class Reactions extends Component {
           app: ''
         }
       }
-    };
-    this._getReactions = this._getReactions.bind(this);
+    }
+    this._getReactions = this._getReactions.bind(this)
   }
 
   _getReactions = name => {
-    this.setState({ is_fetching: true });
-    const uuidKey = store.get('uuid');
+    this.setState({ is_fetching: true })
+    const uuidKey = store.get('uuid')
     getReactions(atob(uuidKey), name).then(resp => {
       if (resp.status === 200) {
         resp
@@ -93,52 +90,52 @@ class Reactions extends Component {
               original_reactions: data.reactions,
               ref_reactions: data.reactions,
               is_fetching: false
-            });
+            })
           })
           .then(() => {
             getTemplates(atob(uuidKey)).then(resp => {
               if (resp.status === 200) {
                 resp.json().then(data => {
                   const temps = data.templates.map((t, i) => {
-                    return { text: t.name, key: t.name, value: t.name };
-                  });
-                  this.setState({ templates: temps });
-                });
+                    return { text: t.name, key: t.name, value: t.name }
+                  })
+                  this.setState({ templates: temps })
+                })
               }
-            });
-          });
+            })
+          })
       }
-    });
-  };
+    })
+  }
 
   doGetApps = service => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     getServiceApps(atob(uuidKey)).then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
           const apps = data.apps
             .filter(a => {
-              return a.service === service.name && a.is_active === true;
+              return a.service === service.name && a.is_active === true
             })
             .map(a => {
-              return { key: a.name, text: a.name };
-            });
+              return { key: a.name, text: a.name }
+            })
 
           this.setState({
             apps: apps
-          });
-        });
+          })
+        })
       }
-    });
-  };
+    })
+  }
 
   sendFilterSignal = (o, v) => {
-    filter$.next(v.value);
-    this.setState({ filter: v.value });
-  };
+    filter$.next(v.value)
+    this.setState({ filter: v.value })
+  }
 
   _handleDeleteReaction = t => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     deleteReaction(atob(uuidKey), t.name).then(resp => {
       switch (resp.status) {
         case 500:
@@ -149,12 +146,12 @@ class Reactions extends Component {
             text: `Seems Reaction is not removable (May be you have used this)`,
             showConfirmButton: true,
             timer: 5000
-          });
+          })
           //.then(() => {
           //  this._getReactions();
           //});
 
-          break;
+          break
         default:
           swal({
             position: 'center',
@@ -164,65 +161,65 @@ class Reactions extends Component {
             showConfirmButton: true,
             timer: 1000
           }).then(() => {
-            this._getReactions(this.state.service.name);
-          });
+            this._getReactions(this.state.service.name)
+          })
 
-          break;
+          break
       }
-    });
-  };
+    })
+  }
 
   _handleBodyChange = (o, v, i, t) => {
-    const val = v.value;
+    const val = v.value
     let newList = [
       ...this.state.reactions.slice(0, i),
       { ...t, body: val },
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   _handleUpdateReaction = (t, i) => {
-    this.setState({ is_fetching: true });
-    const uuidKey = store.get('uuid');
+    this.setState({ is_fetching: true })
+    const uuidKey = store.get('uuid')
     updateReaction(atob(uuidKey), t)
       .then(resp => {
         if (resp.status === 202) {
-          const val = t.body;
+          const val = t.body
           let newList = [
             ...this.state.original_reactions.slice(0, i),
             { ...t, body: val },
             ...this.state.original_reactions.slice(i + 1)
-          ];
+          ]
           this.setState({
             original_reactions: newList,
             ref_reactions: newList
-          });
+          })
         }
       })
       .then(() => {
-        this.setState({ is_fetching: false });
-      });
-  };
+        this.setState({ is_fetching: false })
+      })
+  }
 
   _handleTemplateChange = (t, i, o, v) => {
-    const val = v.value;
+    const val = v.value
     let newList = [
       ...this.state.reactions.slice(0, i),
       { ...t, template: val },
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   componentDidMount() {
     if (store.get('service')) {
-      const service = store.get('service');
-      this.setState({ service: service });
-      this._getReactions(service.name);
-      this.doGetApps(service);
+      const service = store.get('service')
+      this.setState({ service: service })
+      this._getReactions(service.name)
+      this.doGetApps(service)
 
-      titleChangeSignal.next(`${service.name} reactions`);
+      titleChangeSignal.next(`${service.name} reactions`)
     }
 
     this.filterSubscribe = filter$
@@ -237,18 +234,18 @@ class Reactions extends Component {
             : t.name
                 .toLowerCase()
                 .trim()
-                .match(RegExp(this.state.filter)) !== null;
-        });
+                .match(RegExp(this.state.filter)) !== null
+        })
         this.setState({
           filter: v,
           reactions: newList,
           original_reactions: newList
-        });
-      });
+        })
+      })
   }
 
   componentWillUnmount() {
-    this.filterSubscribe.unsubscribe();
+    this.filterSubscribe.unsubscribe()
   }
 
   _changeTargetKey = (t, ki, i, o, v) => {
@@ -262,89 +259,89 @@ class Reactions extends Component {
           ...t.targets.keys.slice(ki + 1)
         ]
       }
-    };
+    }
 
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   _toggleReactionMute = (r, i) => {
-    const newReactionData = { ...r, mute: !r.mute };
+    const newReactionData = { ...r, mute: !r.mute }
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   _toggleReactionDeactivate = (r, i) => {
-    const newReactionData = { ...r, is_active: !r.is_active };
+    const newReactionData = { ...r, is_active: !r.is_active }
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   _toggleRegisterUsersOnly = (r, i) => {
     const newReactionData = {
       ...r,
       trigger_if_subscribed: !r.trigger_if_subscribed
-    };
+    }
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   _toggleUnregisterUsersOnly = (r, i) => {
     const newReactionData = {
       ...r,
       trigger_if_not_subscribed: !r.trigger_if_not_subscribed
-    };
+    }
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   _toggleSubscribe = (r, i) => {
-    const newReactionData = { ...r, is_optin: !r.is_optin };
+    const newReactionData = { ...r, is_optin: !r.is_optin }
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   _toggleUnsubscribe = (r, i) => {
-    const newReactionData = { ...r, is_optout: !r.is_optout };
+    const newReactionData = { ...r, is_optout: !r.is_optout }
     let newList = [
       ...this.state.reactions.slice(0, i),
       newReactionData,
       ...this.state.reactions.slice(i + 1)
-    ];
-    this.setState({ reactions: newList });
-  };
+    ]
+    this.setState({ reactions: newList })
+  }
 
   openAddDialog = () => {
-    this.setState({ is_add_dialog_hidden: false });
-  };
+    this.setState({ is_add_dialog_hidden: false })
+  }
 
   closeAddDialog = () => {
-    this.setState({ is_add_dialog_hidden: true });
-  };
+    this.setState({ is_add_dialog_hidden: true })
+  }
 
   _newReactionAppChanged = v => {
     this.setState({
@@ -352,8 +349,8 @@ class Reactions extends Component {
         ...this.state.attrDialogOps,
         data: { ...this.state.attrDialogOps.data, app: v.key }
       }
-    });
-  };
+    })
+  }
 
   _newReactionNameChanged = v => {
     this.setState({
@@ -361,8 +358,8 @@ class Reactions extends Component {
         ...this.state.attrDialogOps,
         data: { ...this.state.attrDialogOps.data, name: v }
       }
-    });
-  };
+    })
+  }
 
   _newReactionWebhookChanged = v => {
     this.setState({
@@ -370,8 +367,8 @@ class Reactions extends Component {
         ...this.state.attrDialogOps,
         data: { ...this.state.attrDialogOps.data, webhook: v }
       }
-    });
-  };
+    })
+  }
 
   _newReactionTemplateChanged = v => {
     this.setState({
@@ -379,8 +376,8 @@ class Reactions extends Component {
         ...this.state.attrDialogOps,
         data: { ...this.state.attrDialogOps.data, template: v.key }
       }
-    });
-  };
+    })
+  }
 
   _newReactionRegexChanged = v => {
     this.setState({
@@ -388,14 +385,14 @@ class Reactions extends Component {
         ...this.state.attrDialogOps,
         data: { ...this.state.attrDialogOps.data, targets: { keys: [v] } }
       }
-    });
-  };
+    })
+  }
 
   doCreateNewReaction = () => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     createReaction(atob(uuidKey), this.state.attrDialogOps.data).then(resp => {
       if (resp.status === 201) {
-        this.closeAddDialog();
+        this.closeAddDialog()
         swal({
           position: 'center',
           type: 'success',
@@ -404,11 +401,11 @@ class Reactions extends Component {
           showConfirmButton: false,
           timer: 2000
         }).then(() => {
-          this._getReactions(this.state.service.name);
-        });
+          this._getReactions(this.state.service.name)
+        })
       }
-    });
-  };
+    })
+  }
 
   render() {
     return (
@@ -491,7 +488,7 @@ class Reactions extends Component {
                               value={k}
                             />
                           </li>
-                        );
+                        )
                       })}
                     </Table.Cell>
 
@@ -666,7 +663,7 @@ class Reactions extends Component {
                       </div>
                     </Table.Cell>
                   </Table.Row>
-                );
+                )
               })}
             </Table.Body>
           </Table>
@@ -888,8 +885,8 @@ class Reactions extends Component {
           </DialogFooter>
         </Dialog>
       </div>
-    );
+    )
   }
 }
 
-export default Reactions;
+export default Reactions

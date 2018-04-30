@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { env } from './config';
-import { Image } from 'semantic-ui-react';
+import React, { Component } from 'react'
+import { env } from './config'
+import { Image } from 'semantic-ui-react'
 
 class Footer extends Component {
   render() {
     const fafan = atob('bW9jLmVtQGFuZW1kb3I=')
       .split('')
       .reverse()
-      .join('');
+      .join('')
     return (
       <footer style={{ marginTop: 20, clear: 'both' }}>
         <div style={{}}>
@@ -91,8 +91,8 @@ class Footer extends Component {
           </div>
         </div>
       </footer>
-    );
+    )
   }
 }
 
-export default Footer;
+export default Footer

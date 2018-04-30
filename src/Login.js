@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import store from 'store';
-import sample from 'lodash/sample';
-import { sendLoginRequest, titleChangeSignal, redirectSignal } from './utils';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { Grid } from 'semantic-ui-react';
-import Footer from './Footer';
-import { Card, Image, Loader, Dimmer, Segment } from 'semantic-ui-react';
-import { env } from './config';
-import { CompoundButton } from 'office-ui-fabric-react/lib/Button';
-import { Label } from 'office-ui-fabric-react/lib/Label';
-import './App.css';
+import React, { Component } from 'react'
+import store from 'store'
+import sample from 'lodash/sample'
+import { sendLoginRequest, titleChangeSignal, redirectSignal } from './utils'
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
+import { Grid } from 'semantic-ui-react'
+import Footer from './Footer'
+import { Card, Image, Loader, Dimmer, Segment } from 'semantic-ui-react'
+import { env } from './config'
+import { CompoundButton } from 'office-ui-fabric-react/lib/Button'
+import { Label } from 'office-ui-fabric-react/lib/Label'
+import './App.css'
 
 class Login extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       dayquote: {},
       quotes: [],
@@ -21,101 +21,100 @@ class Login extends Component {
       isLoggingIn: false,
       uuid: props.match.params.client_key,
       activateButton: false
-    };
-    this.doLogin = this.doLogin.bind(this);
-    this.handleUUID = this.handleUUID.bind(this);
-    this.sendLoginRequest = sendLoginRequest.bind(this);
-    this.loadDayquote = this.loadDayquote.bind(this);
-    this.startQuoteInterval = this.startQuoteInterval.bind(this);
+    }
+    this.doLogin = this.doLogin.bind(this)
+    this.handleUUID = this.handleUUID.bind(this)
+    this.sendLoginRequest = sendLoginRequest.bind(this)
+    this.loadDayquote = this.loadDayquote.bind(this)
+    this.startQuoteInterval = this.startQuoteInterval.bind(this)
   }
 
   componentWillUnmount() {
-    this.redirectSubscription.unsubscribe();
-    clearInterval(this.quoteLoadInterval);
-    clearTimeout(this.loadTimeout);
-    clearTimeout(this.quoteStartTimeout);
+    this.redirectSubscription.unsubscribe()
+    clearInterval(this.quoteLoadInterval)
+    clearTimeout(this.loadTimeout)
+    clearTimeout(this.quoteStartTimeout)
   }
 
   loadDayquote() {
-    let self = this;
+    let self = this
 
     if (this.state.quotes.length === 0) {
       this.setState({
         isLoadingDayquote: true
-      });
+      })
       fetch('/quotes.json').then(r => {
         r.json().then(data => {
           this.setState({
             quotes: data,
             dayquote: sample(data)
-          });
+          })
           self.loadTimeout = setTimeout(() => {
             self.setState({
               isLoadingDayquote: false
-            });
-          }, 1000);
-        });
-      });
+            })
+          }, 1000)
+        })
+      })
     } else {
       this.setState({
         dayquote: sample(this.state.quotes)
-      });
+      })
     }
   }
 
   startQuoteInterval = () => {
-    const t = 24000;
+    const t = 24000
     return setInterval(() => {
-      this.loadDayquote();
-    }, t);
-  };
+      this.loadDayquote()
+    }, t)
+  }
 
   componentDidMount() {
     this.redirectSubscription = redirectSignal
       .distinctUntilChanged()
       .subscribe({
         next: (t, history) => {
-          this.props.history.push(t);
+          this.props.history.push(t)
         }
-      });
+      })
 
-    store.clearAll();
-    titleChangeSignal.next('Login');
+    store.clearAll()
+    titleChangeSignal.next('Login')
     this.quoteStartTimeout = setTimeout(() => {
-      this.loadDayquote();
-    }, 100);
+      this.loadDayquote()
+    }, 100)
 
-    this.quoteLoadInterval = this.startQuoteInterval();
+    this.quoteLoadInterval = this.startQuoteInterval()
     if (this.state.uuid) {
-      this.doLogin();
+      this.doLogin()
     }
   }
 
   handleUUID = e => {
-    const pat = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i; //uuid4
-    let activateButton =
-      e.length === 36 && e.match(pat) !== null ? true : false;
+    const pat = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i //uuid4
+    let activateButton = e.length === 36 && e.match(pat) !== null ? true : false
     this.setState({
       uuid: e,
       activateButton: activateButton
-    });
-  };
+    })
+  }
 
   doLogin = e => {
     this.setState({
       activateButton: false,
       isLoggingIn: true
-    });
+    })
     this.sendLoginRequest(this.state.uuid, true, true).then(resp => {
       if (resp.status !== 200) {
-        this.setState({ isLoggingIn: false });
+        this.setState({ isLoggingIn: false })
       }
-    });
+    })
     //    this.setState({
     //      uuid: ''
     //    });
     //e.preventDefault();
-  };
+  }
 
   render() {
     return (
@@ -257,8 +256,8 @@ class Login extends Component {
 
         <Footer />
       </Segment>
-    );
+    )
   }
 }
 
-export default Login;
+export default Login

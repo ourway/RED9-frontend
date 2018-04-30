@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import NotImplemented from './not_implemented';
+import React, { Component } from 'react'
+import NotImplemented from './not_implemented'
 
 class AggregatedReports extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
 
   componentDidMount() {}
@@ -12,8 +12,8 @@ class AggregatedReports extends Component {
   componentWillUnmount() {}
 
   render() {
-    return <NotImplemented />;
+    return <NotImplemented />
   }
 }
 
-export default AggregatedReports;
+export default AggregatedReports

@@ -25,13 +25,25 @@
     "semantic-ui-react": "^0.79.1",
     "store": "^2.0.12",
     "string": "^3.3.3",
-    "sweetalert2": "^7.19.1",
+    "sweetalert2": "^7.19.2",
     "typeface-inconsolata": "^0.0.54"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.5",
+    "prettier": "^1.12.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

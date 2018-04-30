@@ -1,22 +1,22 @@
-import { detect } from 'detect-browser';
+import { detect } from 'detect-browser'
 
 export const browser =
-  detect() !== null ? detect() : { os: 'N/A', name: 'Unknown' };
+  detect() !== null ? detect() : { os: 'N/A', name: 'Unknown' }
 
 export const env = {
-  company: 'SabaIdea',
+  company: 'Rashavas',
   company_email: 'my.samimi@gmail.com',
   company_contact_gsm: '9124056673',
-  product: 'VAS Platform',
-  API_BASE: 'https://aparat.red9.ir',
+  product: 'RED9',
+  API_BASE: 'https://red9.ir',
   SELF_IP: 'http://10.20.97.21',
   SELF_PORT: 6051,
   IMI_PORT: 8090,
-  FTP_BASE: 'https://aparat.red9.ir/imi_ftp/v1',
-  CODE51_BASE: 'https://aparat.red9.ir/code51',
+  FTP_BASE: 'https://ftp.red9.ir/imi_ftp/v1',
+  CODE51_BASE: 'https://api.appido.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.5.5 / 27 April 2018',
-  logo: 'sabaidea',
+  product_version: '0.5.6 / 29 April 2018',
+  logo: 'red9',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
   copyright_logo: 'rashavas.logo',
   copyright_company: "Tose'e Ide'e Rasha Co",
@@ -33,4 +33,4 @@ export const env = {
     '#232221',
     '#270d18'
   ]
-};
+}

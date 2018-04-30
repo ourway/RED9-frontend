@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import store from 'store';
-import sample from 'lodash/sample';
+import React, { Component } from 'react'
+import store from 'store'
+import sample from 'lodash/sample'
 
 import {
   Button,
@@ -12,42 +12,39 @@ import {
   Dimmer,
   Popup,
   Loader
-} from 'semantic-ui-react';
+} from 'semantic-ui-react'
 
-import { env } from './config';
-import swal from 'sweetalert2';
-import { onFilter$, toggleFormEdit$, changeColorCode$ } from './utils';
+import { env } from './config'
+import swal from 'sweetalert2'
+import { onFilter$, toggleFormEdit$, changeColorCode$ } from './utils'
 
 import {
   Dialog,
   DialogType,
   DialogFooter
-} from 'office-ui-fabric-react/lib/Dialog';
+} from 'office-ui-fabric-react/lib/Dialog'
 
-import {
-  PrimaryButton,
-  DefaultButton
-} from 'office-ui-fabric-react/lib/Button';
-import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup'
 
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import { getClientAuthHeaders } from './apis';
+import { getClientAuthHeaders } from './apis'
 import {
   MessageBar,
   MessageBarType
-} from 'office-ui-fabric-react/lib/MessageBar';
+} from 'office-ui-fabric-react/lib/MessageBar'
 
 class Red9Form extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     const colorCode = props.data.colorCode
       ? props.data.colorCode
-      : sample(env.colorset);
+      : sample(env.colorset)
     const data = {
       ...props.data,
       colorCode: colorCode
-    };
+    }
     this.state = {
       filter: '',
       deactivationBox: false,
@@ -68,29 +65,29 @@ class Red9Form extends Component {
       changeSet: props.data.colorCode ? [] : ['colorCode'],
       is_saving: false,
       original_data: props.data
-    };
+    }
 
-    this.handleValueChange = this.handleValueChange.bind(this);
-    this.handleSaveChanges = this.handleSaveChanges.bind(this);
-    this.doUpdate = this.doUpdate.bind(this);
-    this.deactivate = this.deactivate.bind(this);
-    this.hideDeactivate = this.hideDeactivate.bind(this);
-    this.doDeactivate = this.doDeactivate.bind(this);
+    this.handleValueChange = this.handleValueChange.bind(this)
+    this.handleSaveChanges = this.handleSaveChanges.bind(this)
+    this.doUpdate = this.doUpdate.bind(this)
+    this.deactivate = this.deactivate.bind(this)
+    this.hideDeactivate = this.hideDeactivate.bind(this)
+    this.doDeactivate = this.doDeactivate.bind(this)
 
-    this.activate = this.activate.bind(this);
-    this.hideActivate = this.hideActivate.bind(this);
-    this.doActivate = this.doActivate.bind(this);
+    this.activate = this.activate.bind(this)
+    this.hideActivate = this.hideActivate.bind(this)
+    this.doActivate = this.doActivate.bind(this)
   }
 
   handleSaveChanges = () => {
     this.setState({
       is_saving: true
-    });
-    let uuidKey = store.get('apikey');
+    })
+    let uuidKey = store.get('apikey')
     if (this.props.scope === 'client') {
-      uuidKey = store.get('uuid');
+      uuidKey = store.get('uuid')
     }
-    const authHeaders = getClientAuthHeaders(atob(uuidKey));
+    const authHeaders = getClientAuthHeaders(atob(uuidKey))
 
     let opts = {
       method: 'PATCH',
@@ -98,8 +95,8 @@ class Red9Form extends Component {
       body: JSON.stringify(this.state.data)
       //mode: 'cors',
       //cache: 'default'
-    };
-    const req = fetch(this.props.endpoint, opts);
+    }
+    const req = fetch(this.props.endpoint, opts)
     req.then(resp => {
       if (resp.ok === true) {
         resp.json().then(result => {
@@ -114,15 +111,15 @@ class Red9Form extends Component {
             }).then(() => {
               this.setState({
                 is_saving: false
-              });
-            });
+              })
+            })
           }
-        });
+        })
 
         this.setState({
           original_data: this.state.data,
           changeSet: []
-        });
+        })
       } else {
         swal({
           position: 'center',
@@ -134,11 +131,11 @@ class Red9Form extends Component {
         }).then(() => {
           this.setState({
             is_saving: false
-          });
-        });
+          })
+        })
       }
-    });
-  };
+    })
+  }
 
   OpenAttrDialog = (e, m) => {
     this.setState({
@@ -149,8 +146,8 @@ class Red9Form extends Component {
         value: '',
         targetAttribute: m.targetattr
       }
-    });
-  };
+    })
+  }
 
   CloseAttrDialog = () => {
     this.setState({
@@ -161,8 +158,8 @@ class Red9Form extends Component {
         value: '',
         targetAttribute: null
       }
-    });
-  };
+    })
+  }
 
   attrDialogValueChanged = value => {
     this.setState({
@@ -175,8 +172,8 @@ class Red9Form extends Component {
               ? 0
               : parseInt(value, 10)
       }
-    });
-  };
+    })
+  }
 
   doUpdate() {
     if (!this.state.attrDialogOps.targetAttribute) {
@@ -186,7 +183,7 @@ class Red9Form extends Component {
           [this.state.attrDialogOps.key]: this.state.attrDialogOps.value
         },
         changeSet: [...this.state.changeSet, this.state.attrDialogOps.key]
-      });
+      })
     } else {
       this.setState({
         data: {
@@ -197,9 +194,9 @@ class Red9Form extends Component {
           }
         },
         changeSet: [...this.state.changeSet, this.state.attrDialogOps.key]
-      });
+      })
     }
-    this.CloseAttrDialog();
+    this.CloseAttrDialog()
   }
 
   attrDialogKeyChanged = key => {
@@ -212,8 +209,8 @@ class Red9Form extends Component {
           .toLowerCase()
           .trim()
       }
-    });
-  };
+    })
+  }
 
   AttrDialogTypeChanged = (e, option) => {
     this.setState({
@@ -221,8 +218,8 @@ class Red9Form extends Component {
         ...this.state.attrDialogOps,
         type: option.key
       }
-    });
-  };
+    })
+  }
 
   addAttrDialog = () => {
     return (
@@ -285,22 +282,22 @@ class Red9Form extends Component {
           <DefaultButton onClick={this.CloseAttrDialog} text="Cancel" />
         </DialogFooter>
       </Dialog>
-    );
-  };
+    )
+  }
 
   hideDeactivate = () => {
-    this.setState({ deactivationBox: false });
-  };
+    this.setState({ deactivationBox: false })
+  }
 
   deactivate = () => {
-    this.setState({ deactivationBox: true });
+    this.setState({ deactivationBox: true })
     //let uuidKey = store.get('uuid');
     // this.props.deactivation_api(atob(uuidKey), this.state.data)
-  };
+  }
 
   doDeactivate = () => {
-    let uuidKey = store.get('uuid');
-    this.props.deactivation_api(atob(uuidKey), this.state.data);
+    let uuidKey = store.get('uuid')
+    this.props.deactivation_api(atob(uuidKey), this.state.data)
     this.setState({
       data: {
         ...this.state.data,
@@ -309,23 +306,23 @@ class Red9Form extends Component {
           is_active: false
         }
       }
-    });
-    this.hideDeactivate();
-  };
+    })
+    this.hideDeactivate()
+  }
 
   hideActivate = () => {
-    this.setState({ activationBox: false });
-  };
+    this.setState({ activationBox: false })
+  }
 
   activate = () => {
-    this.setState({ activationBox: true });
+    this.setState({ activationBox: true })
     //let uuidKey = store.get('uuid');
     // this.props.deactivation_api(atob(uuidKey), this.state.data)
-  };
+  }
 
   doActivate = () => {
-    let uuidKey = store.get('uuid');
-    this.props.activation_api(atob(uuidKey), this.state.data);
+    let uuidKey = store.get('uuid')
+    this.props.activation_api(atob(uuidKey), this.state.data)
     this.setState({
       data: {
         ...this.state.data,
@@ -334,19 +331,19 @@ class Red9Form extends Component {
           is_active: true
         }
       }
-    });
-    this.hideActivate();
-  };
+    })
+    this.hideActivate()
+  }
 
   // This is the main function to update and handle value changes
   handleValueChange = e => {
-    let value = e.target.value.trim().toString();
-    const name = e.target.name;
+    let value = e.target.value.trim().toString()
+    const name = e.target.name
     if (e.target.type === 'number') {
-      value = parseInt(value, 10);
+      value = parseInt(value, 10)
     }
 
-    let newData = {};
+    let newData = {}
 
     if (name.indexOf('|') > 0) {
       newData = {
@@ -355,11 +352,11 @@ class Red9Form extends Component {
           ...this.state.data[name.split('|')[0]],
           [name.split('|')[1]]: value
         }
-      };
+      }
 
       if (!value) {
         if (!this.state.data[name.split('|')[0]]) {
-          value = this.state.data[name.split('|')[1]];
+          value = this.state.data[name.split('|')[1]]
         }
       }
 
@@ -370,21 +367,21 @@ class Red9Form extends Component {
       ) {
         this.setState(prevState => ({
           changeSet: prevState.changeSet.filter(i => i !== name)
-        }));
+        }))
       } else {
         this.setState(prevState => ({
           changeSet: [...prevState.changeSet, name]
-        }));
+        }))
       }
     } else {
       newData = {
         ...this.state.data,
         [name]: value
-      };
+      }
 
       if (!value) {
         if (!this.state.original_data[name]) {
-          value = this.state.original_data[name];
+          value = this.state.original_data[name]
         }
       }
 
@@ -392,35 +389,35 @@ class Red9Form extends Component {
       if (value === this.state.original_data[name]) {
         this.setState(prevState => ({
           changeSet: prevState.changeSet.filter(i => i !== name)
-        }));
+        }))
       } else {
         this.setState(prevState => ({
           changeSet: [...prevState.changeSet, name]
-        }));
+        }))
       }
     }
 
     this.setState({
       data: newData
-    });
+    })
 
     //console.log(this.state.data)
-  };
+  }
 
   componentWillUnmount() {
-    this.filterSubscription.unsubscribe();
-    this.editableFormSubscription.unsubscribe();
+    this.filterSubscription.unsubscribe()
+    this.editableFormSubscription.unsubscribe()
   }
 
   componentDidMount() {
-    changeColorCode$.next(this.state.colorCode);
+    changeColorCode$.next(this.state.colorCode)
     this.editableFormSubscription = toggleFormEdit$
       .debounceTime(50)
       .subscribe(target => {
         if (target.meta.uuid === this.state.data.meta.uuid) {
-          this.setState({ isHidden: !this.state.isHidden });
+          this.setState({ isHidden: !this.state.isHidden })
         }
-      });
+      })
 
     this.filterSubscription = onFilter$
       .debounceTime(500)
@@ -430,26 +427,26 @@ class Red9Form extends Component {
           this.setState({
             data: this.state.original_data,
             filter: ''
-          });
+          })
         } else {
           this.setState({
             data: {
               filter: debounced,
               ...Object.keys(this.state.original_data)
                 .filter(sp => {
-                  const pat = RegExp(debounced.toLowerCase());
-                  return sp.match(pat);
+                  const pat = RegExp(debounced.toLowerCase())
+                  return sp.match(pat)
                 })
                 .reduce((o, val) => {
-                  o[val] = this.state.data[val];
-                  return o;
+                  o[val] = this.state.data[val]
+                  return o
                 }, {}),
               meta: this.state.original_data.meta
             }
-          });
+          })
         }
-      });
-    this.setState({ isLoading: false });
+      })
+    this.setState({ isLoading: false })
   }
 
   render() {
@@ -542,12 +539,12 @@ class Red9Form extends Component {
             {Object.keys(this.state.data)
               .filter(i => i !== 'meta')
               .map(param => {
-                const paramValue = this.state.data[param];
-                const _t = typeof paramValue;
-                const paramType = paramValue === null ? '' : _t;
+                const paramValue = this.state.data[param]
+                const _t = typeof paramValue
+                const paramType = paramValue === null ? '' : _t
                 const targetParamField = this.state.field_params.filter(
                   i => i.name === param
-                )[0];
+                )[0]
                 return (
                   <Table.Row key={param}>
                     <Table.Cell width={2}>
@@ -587,7 +584,7 @@ class Red9Form extends Component {
                                     }
                                   />
                                 </Form.Field>
-                              );
+                              )
                             })}
 
                             <Popup
@@ -654,12 +651,12 @@ class Red9Form extends Component {
                     <Table.Cell collapsing color="blue">
                       {targetParamField
                         ? targetParamField.gateway.map(g => {
-                            return <em key={g}>{g} &nbsp;</em>;
+                            return <em key={g}>{g} &nbsp;</em>
                           })
                         : null}
                     </Table.Cell>
                   </Table.Row>
-                );
+                )
               })}
           </Table.Body>
 
@@ -743,8 +740,8 @@ class Red9Form extends Component {
 
         {this.addAttrDialog()}
       </Segment>
-    );
+    )
   }
 }
 
-export default Red9Form;
+export default Red9Form

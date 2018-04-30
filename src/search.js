@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Segment,
   Divider,
@@ -6,38 +6,38 @@ import {
   Icon,
   Table,
   Statistic
-} from 'semantic-ui-react';
-import { ftpRenewalHistory } from './apis';
-import store from 'store';
-import sortBy from 'lodash/sortBy';
-import { env } from './config';
+} from 'semantic-ui-react'
+import { ftpRenewalHistory } from './apis'
+import store from 'store'
+import sortBy from 'lodash/sortBy'
+import { env } from './config'
 
-import accounting from 'accounting-js';
+import accounting from 'accounting-js'
 
-import jalaali from 'jalaali-js';
+import jalaali from 'jalaali-js'
 
 class FTPRenewal extends Component {
   constructor(props) {
-    super(props);
-    this.state = { ftp_events: [] };
+    super(props)
+    this.state = { ftp_events: [] }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.doPrepare(nextProps);
+    this.doPrepare(nextProps)
   }
 
   componentDidMount() {
-    this.doPrepare(this.props);
+    this.doPrepare(this.props)
   }
 
   doPrepare(props) {
-    this.setState({ ftp_events: [] });
-    const now = new Date();
-    const last90days = now.setSeconds(now.getUTCSeconds() - 3600 * 24 * 90);
-    const nowJd = jalaali.toJalaali(new Date());
-    const last90daysJd = jalaali.toJalaali(new Date(last90days));
-    const nowj = `${nowJd.jy}-${nowJd.jm}-${nowJd.jd}`;
-    const last90j = `${last90daysJd.jy}-${last90daysJd.jm}-${last90daysJd.jd}`;
+    this.setState({ ftp_events: [] })
+    const now = new Date()
+    const last90days = now.setSeconds(now.getUTCSeconds() - 3600 * 24 * 90)
+    const nowJd = jalaali.toJalaali(new Date())
+    const last90daysJd = jalaali.toJalaali(new Date(last90days))
+    const nowj = `${nowJd.jy}-${nowJd.jm}-${nowJd.jd}`
+    const last90j = `${last90daysJd.jy}-${last90daysJd.jm}-${last90daysJd.jd}`
     ftpRenewalHistory(
       props.activeService.meta.ftp_key,
       props.query,
@@ -46,32 +46,32 @@ class FTPRenewal extends Component {
     ).then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
-          const events = data.events || [];
+          const events = data.events || []
 
           const _e = sortBy(events, [
             function(o) {
-              return -o.date_time;
+              return -o.date_time
             }
-          ]);
-          this.setState({ ftp_events: _e, nowj: nowj, last90j: last90j });
-        });
+          ])
+          this.setState({ ftp_events: _e, nowj: nowj, last90j: last90j })
+        })
       }
-    });
+    })
   }
 
   render() {
     if (this.state.ftp_events.length > 0) {
       const billed = this.state.ftp_events
         .map((e, i) => {
-          return e.billed_price_point / 10;
+          return e.billed_price_point / 10
         })
-        .reduce((a, b) => a + b, 0);
+        .reduce((a, b) => a + b, 0)
       const target = this.state.ftp_events
         .map((e, i) => {
-          return e.base_price_point / 10;
+          return e.base_price_point / 10
         })
-        .reduce((a, b) => a + b, 0);
-      const success = Math.round(billed / target * 100);
+        .reduce((a, b) => a + b, 0)
+      const success = Math.round(billed / target * 100)
       return (
         <Segment inverted>
           <Message color="black">
@@ -135,8 +135,8 @@ class FTPRenewal extends Component {
 
                   <Table.Body>
                     {this.state.ftp_events.map((e, i) => {
-                      const d = new Date(e.date_time * 1000);
-                      const _d = jalaali.toJalaali(d);
+                      const d = new Date(e.date_time * 1000)
+                      const _d = jalaali.toJalaali(d)
                       return (
                         <Table.Row key={e.trasn_id}>
                           <Table.Cell>{i + 1} </Table.Cell>
@@ -163,7 +163,7 @@ class FTPRenewal extends Component {
                             {e.billed_price_point / 10}
                           </Table.Cell>
                         </Table.Row>
-                      );
+                      )
                     })}
                   </Table.Body>
                 </Table>
@@ -171,53 +171,53 @@ class FTPRenewal extends Component {
             </Message.Content>
           </Message>
         </Segment>
-      );
+      )
     } else {
-      return <span>Not any FTP renewal events :/</span>;
+      return <span>Not any FTP renewal events :/</span>
     }
   }
 }
 
 class Search extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       ftp_events: [],
       query: '',
       isLoading: false,
       activeService: {}
-    };
+    }
   }
 
   getNationalNumber = num => {
-    const m = num.match(/[\d]*([\d]{10})/);
+    const m = num.match(/[\d]*([\d]{10})/)
     if (m && m.length === 2) {
-      return 98 + m[1];
+      return 98 + m[1]
     }
-  };
+  }
 
   doActBasedOnQuery = q => {
-    let query = atob(q);
-    const _query = decodeURIComponent(query);
+    let query = atob(q)
+    const _query = decodeURIComponent(query)
     this.setState({
       query: _query
-    });
-  };
+    })
+  }
 
   componentDidMount() {
-    this.doFindService();
-    this.doActBasedOnQuery(this.props.match.params.query);
+    this.doFindService()
+    this.doActBasedOnQuery(this.props.match.params.query)
   }
 
   doFindService() {
-    this.setState({ activeService: store.get('service') });
+    this.setState({ activeService: store.get('service') })
   }
 
   componentWillUnmount() {}
 
   componentWillReceiveProps(nextProps) {
-    this.doFindService();
-    this.doActBasedOnQuery(nextProps.match.params.query);
+    this.doFindService()
+    this.doActBasedOnQuery(nextProps.match.params.query)
   }
 
   render() {
@@ -245,7 +245,7 @@ class Search extends Component {
           <span>Please Select a service to search</span>
         )}
       </Segment>
-    );
+    )
   }
 }
-export default Search;
+export default Search

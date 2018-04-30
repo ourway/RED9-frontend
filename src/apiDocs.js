@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import { Segment, List } from 'semantic-ui-react';
+import { Segment, List } from 'semantic-ui-react'
 
 class APIDocs extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
 
   componentDidMount() {}
@@ -37,8 +37,8 @@ class APIDocs extends Component {
           </List.Item>
         </List>
       </Segment>
-    );
+    )
   }
 }
 
-export default APIDocs;
+export default APIDocs

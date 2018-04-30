@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import { List, Icon, Search, Label } from 'semantic-ui-react';
-import store from 'store';
+import React, { Component } from 'react'
+import { List, Icon, Search, Label } from 'semantic-ui-react'
+import store from 'store'
 
-import { selectService$, selectApp$, searching$ } from './utils';
+import { selectService$, selectApp$, searching$ } from './utils'
 //import { redirectSignal } from './utils';
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
-import { isAdmin } from './utils';
-import { getIp } from './utils';
+import { isAdmin } from './utils'
+import { getIp } from './utils'
 
 class Leftbar extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       selected_service: null,
       selected_app: null,
       is_admin: false,
       ip: '--.--.--.--',
       city: ''
-    };
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -31,49 +31,49 @@ class Leftbar extends Component {
       nextState.ip !== this.state.ip ||
       nextState.selected_service !== this.state.selected_service ||
       nextState.selected_app !== this.state.selected_app
-    );
+    )
   }
 
   componentWillUnmount() {
-    clearTimeout(this.getIpTimeout);
-    clearTimeout(this.selectServiceTimeout);
-    this.adminSubscription.unsubscribe();
-    this.serviceSelection.unsubscribe();
+    clearTimeout(this.getIpTimeout)
+    clearTimeout(this.selectServiceTimeout)
+    this.adminSubscription.unsubscribe()
+    this.serviceSelection.unsubscribe()
   }
 
   componentDidMount() {
     this.selectServiceTimeout = setTimeout(() => {
-      const service = store.get('service');
+      const service = store.get('service')
       if (service) {
-        this.setState({ selected_service: service });
+        this.setState({ selected_service: service })
       }
-    }, 10);
+    }, 10)
 
     this.serviceSelection = selectService$
       .distinctUntilChanged()
       .debounceTime(50)
       .subscribe({
         next: s => {
-          this.setState({ selected_service: s });
+          this.setState({ selected_service: s })
         }
-      });
+      })
 
     this.AppSelection = selectApp$
       .distinctUntilChanged()
       .debounceTime(50)
       .subscribe({
         next: a => {
-          this.setState({ selected_app: a });
+          this.setState({ selected_app: a })
         }
-      });
+      })
 
     this.adminSubscription = isAdmin.distinctUntilChanged().subscribe({
       next: b => {
         this.setState({
           is_admin: b
-        });
+        })
       }
-    });
+    })
 
     this.getIpTimeout = setTimeout(() => {
       getIp().then(resp => {
@@ -83,17 +83,17 @@ class Leftbar extends Component {
             this.setState({
               ip: r.ip,
               city: r.city
-            });
+            })
           }
-        });
-      });
-    }, 2);
+        })
+      })
+    }, 2)
   }
 
   doSearch = (_, e) => {
-    const val = e.value.trim();
-    searching$.next(btoa(encodeURIComponent(val)));
-  };
+    const val = e.value.trim()
+    searching$.next(btoa(encodeURIComponent(val)))
+  }
 
   render() {
     const sections = [
@@ -118,7 +118,7 @@ class Leftbar extends Component {
       ':Set:',
       'Profile',
       'Settings'
-    ];
+    ]
 
     const need_service = [
       'Reactions',
@@ -129,16 +129,16 @@ class Leftbar extends Component {
       'Integration Panel',
       'Logs',
       'Customer Care'
-    ];
+    ]
 
-    const need_app = ['Messaging', 'Charging'];
+    const need_app = ['Messaging', 'Charging']
     const admin_sections = [
       'Client Management',
       'Aggregated Reports',
       'Forensic Administration',
       'Monitoring',
       'System Information'
-    ];
+    ]
 
     return (
       <List relaxed className="ms-slideRightIn10">
@@ -158,9 +158,9 @@ class Leftbar extends Component {
         </h3>
 
         {sections.map((i, n) => {
-          let p = i.toLowerCase().replace(' ', '-');
-          const ap = this.props.activepath.split('/')[0];
-          let is_activepath = ap === p;
+          let p = i.toLowerCase().replace(' ', '-')
+          const ap = this.props.activepath.split('/')[0]
+          let is_activepath = ap === p
 
           let mode = need_service.includes(i)
             ? this.state.selected_service === null
@@ -170,7 +170,7 @@ class Leftbar extends Component {
               ? this.state.selected_app === null
                 ? 'disabled'
                 : ''
-              : '';
+              : ''
 
           if (p.indexOf(':') > -1) {
             return (
@@ -186,7 +186,7 @@ class Leftbar extends Component {
                   {i.slice(1, -1)}
                 </h5>
               </List.Item>
-            );
+            )
           }
           return (
             <List.Item
@@ -219,7 +219,7 @@ class Leftbar extends Component {
                 </span>
               </Link>
             </List.Item>
-          );
+          )
         })}
         {this.state.is_admin === true
           ? [
@@ -228,8 +228,8 @@ class Leftbar extends Component {
               </h4>,
 
               admin_sections.map((i, n) => {
-                let p = i.toLowerCase().replace(' ', '-');
-                let is_activepath = this.props.activepath === p;
+                let p = i.toLowerCase().replace(' ', '-')
+                let is_activepath = this.props.activepath === p
 
                 return (
                   <List.Item
@@ -248,7 +248,7 @@ class Leftbar extends Component {
                       </span>
                     </Link>
                   </List.Item>
-                );
+                )
               })
             ]
           : null}
@@ -271,8 +271,8 @@ class Leftbar extends Component {
           </Link>
         </List.Item>
       </List>
-    );
+    )
   }
 }
 
-export default Leftbar;
+export default Leftbar

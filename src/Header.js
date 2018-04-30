@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import { Grid, Image, Step, Statistic, Label, Icon } from 'semantic-ui-react';
+import React, { Component } from 'react'
+import { Grid, Image, Step, Statistic, Label, Icon } from 'semantic-ui-react'
 import {
   usernameAssigned,
   selectService$,
   changeColorCode$,
   selectApp$
-} from './utils';
-import S from 'string';
-import accounting from 'accounting-js';
-import { env } from './config';
+} from './utils'
+import S from 'string'
+import accounting from 'accounting-js'
+import { env } from './config'
 import {
   ftpServiceLive,
   ftpGetChargingSubscribersCount,
   getSubscribersCount
-} from './apis';
-import { Link } from 'react-router-dom';
-import store from 'store';
+} from './apis'
+import { Link } from 'react-router-dom'
+import store from 'store'
 
-const ZERO = 0;
-const ZERO2 = 0;
-const DASH = '------';
+const ZERO = 0
+const ZERO2 = 0
+const DASH = '------'
 
 class Header extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       colorCode: '#1f262c',
       company: DASH,
@@ -49,33 +49,33 @@ class Header extends Component {
           success_rate: ZERO2
         }
       }
-    };
+    }
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timer2);
-    clearTimeout(this.ftpDataTimeout);
-    clearTimeout(this.ftpDataTimeout2);
-    this.appSelection.unsubscribe();
-    this.clientSubscription.unsubscribe();
-    this.serviceSelection.unsubscribe();
-    this.colorCodeChangeSubscription.unsubscribe();
+    clearTimeout(this.timer2)
+    clearTimeout(this.ftpDataTimeout)
+    clearTimeout(this.ftpDataTimeout2)
+    this.appSelection.unsubscribe()
+    this.clientSubscription.unsubscribe()
+    this.serviceSelection.unsubscribe()
+    this.colorCodeChangeSubscription.unsubscribe()
   }
 
   doGetSubscribersCount = () => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     if (uuidKey) {
       getSubscribersCount(atob(uuidKey), this.state.service.name).then(resp => {
         if (resp.status === 200) {
           resp.json().then(data => {
             this.setState({
               stats: { ...this.state.stats, subscribers: data.count || 0 }
-            });
-          });
+            })
+          })
         }
-      });
+      })
     }
-  };
+  }
 
   doGetFtpChargingSubscribersCount = () => {
     ftpGetChargingSubscribersCount(this.state.service.meta.ftp_key).then(
@@ -87,18 +87,18 @@ class Header extends Component {
                 ...this.state.stats,
                 chargingSubscribers: data.count || 0
               }
-            });
-          });
+            })
+          })
         }
       }
-    );
-  };
+    )
+  }
 
   doGetFtpData = (ftp_key, overall) => {
     return ftpServiceLive(ftp_key, overall).then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
-          const result = data.result;
+          const result = data.result
           this.setState({
             stats: {
               ...this.state.stats,
@@ -109,8 +109,8 @@ class Header extends Component {
                 success_rate: Number(result.success_rate * 100).toFixed(1)
               }
             }
-          });
-        });
+          })
+        })
       } else {
         this.setState({
           stats: {
@@ -122,42 +122,45 @@ class Header extends Component {
               success_rate: ZERO2
             }
           }
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   componentDidMount() {
     if (store.get('service')) {
-      const service = store.get('service');
-      this.setState({ service: service });
+      const service = store.get('service')
+      this.setState({ service: service })
 
       this.ftpDataTimeout2 = setTimeout(() => {
-        this.doGetSubscribersCount();
+        this.doGetSubscribersCount()
         if (service.meta && service.meta.operator === 'MCI') {
-          this.doGetFtpChargingSubscribersCount();
+          this.doGetFtpChargingSubscribersCount()
           this.doGetFtpData(service.meta.ftp_key, false).then(() => {
-            this.doGetFtpData(service.meta.ftp_key, true);
-          });
+            this.doGetFtpData(service.meta.ftp_key, true)
+          })
         }
-      }, 100);
+      }, 100)
     }
 
     this.colorCodeChangeSubscription = changeColorCode$
       .distinctUntilChanged()
       .debounceTime(500)
       .subscribe(c => {
-        this.setState({ colorCode: c });
-      });
+        this.setState({ colorCode: c })
+      })
 
     this.appSelection = selectApp$
       .distinctUntilChanged()
       .debounceTime(500)
       .subscribe(v => {
         if (v) {
-          this.setState({ app: v });
+          this.setState({ app: v })
+            if (v.api_keys){
+           store.set('api-key', btoa(v.api_keys.join('')))
+            }
         }
-      });
+      })
 
     this.serviceSelection = selectService$
       .distinctUntilChanged()
@@ -180,16 +183,16 @@ class Header extends Component {
                 success_rate: ZERO2
               }
             }
-          });
-          this.doGetSubscribersCount();
+          })
+          this.doGetSubscribersCount()
 
           if (s.meta.operator === 'MCI') {
-            this.doGetFtpChargingSubscribersCount();
+            this.doGetFtpChargingSubscribersCount()
             this.ftpDataTimeout = setTimeout(() => {
               this.doGetFtpData(s.meta.ftp_key, false).then(() => {
-                this.doGetFtpData(s.meta.ftp_key, true);
-              });
-            }, 200);
+                this.doGetFtpData(s.meta.ftp_key, true)
+              })
+            }, 200)
           } else {
             this.setState({
               stats: {
@@ -206,10 +209,10 @@ class Header extends Component {
                   success_rate: ZERO2
                 }
               }
-            });
+            })
           }
         }
-      });
+      })
 
     this.clientSubscription = usernameAssigned
       .distinctUntilChanged()
@@ -217,9 +220,9 @@ class Header extends Component {
         next: v => {
           this.setState({
             company: v
-          });
+          })
         }
-      });
+      })
   }
 
   render() {
@@ -479,8 +482,8 @@ class Header extends Component {
           </Grid.Row>
         </Grid>
       </header>
-    );
+    )
   }
 }
 
-export default Header;
+export default Header

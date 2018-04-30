@@ -1,35 +1,32 @@
-import React, { Component } from 'react';
-import swal from 'sweetalert2';
-import store from 'store';
-import { Table, Icon, Divider, Menu, Input } from 'semantic-ui-react';
+import React, { Component } from 'react'
+import swal from 'sweetalert2'
+import store from 'store'
+import { Table, Icon, Divider, Menu, Input } from 'semantic-ui-react'
 import {
   getClients,
   createClient,
   renewClientKey,
   activateClient,
   deactivateClient
-} from './apis';
-import { env } from './config';
-import { redirectSignal } from './utils';
+} from './apis'
+import { env } from './config'
+import { redirectSignal } from './utils'
 import {
   MessageBar,
   MessageBarType
-} from 'office-ui-fabric-react/lib/MessageBar';
+} from 'office-ui-fabric-react/lib/MessageBar'
 
 import {
   Dialog,
   DialogType,
   DialogFooter
-} from 'office-ui-fabric-react/lib/Dialog';
-import {
-  PrimaryButton,
-  DefaultButton
-} from 'office-ui-fabric-react/lib/Button';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
+} from 'office-ui-fabric-react/lib/Dialog'
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 class ClientManagement extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       error: null,
       clients: [],
@@ -71,17 +68,17 @@ class ClientManagement extends Component {
         ],
         data: {}
       }
-    };
+    }
   }
 
   doRenewClientKey = () => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     renewClientKey(atob(uuidKey), this.state.selected.email).then(resp => {
       if (resp.status === 200) {
-        this.closeRenewDialog();
+        this.closeRenewDialog()
 
         resp.json().then(data => {
-          console.log(data.client_key);
+          console.log(data.client_key)
 
           swal({
             position: 'center',
@@ -91,39 +88,39 @@ class ClientManagement extends Component {
             showConfirmButton: true,
             timer: 20000
           }).then(() => {
-            this.doGetClients();
-          });
-        });
+            this.doGetClients()
+          })
+        })
       }
-    });
-  };
+    })
+  }
 
   refreshClientKeyDialog = target => {
-    this.setState({ is_renew_dialog_hidden: false, selected: target });
-  };
+    this.setState({ is_renew_dialog_hidden: false, selected: target })
+  }
 
   ActivateClientKeyDialog = target => {
-    this.setState({ is_activate_dialog_hidden: false, selected: target });
-  };
+    this.setState({ is_activate_dialog_hidden: false, selected: target })
+  }
 
   closeActivateDialog = () => {
-    this.setState({ is_activate_dialog_hidden: true });
-  };
+    this.setState({ is_activate_dialog_hidden: true })
+  }
 
   closeRenewDialog = () => {
-    this.setState({ is_renew_dialog_hidden: true });
-  };
+    this.setState({ is_renew_dialog_hidden: true })
+  }
 
   doToggleActivation = () => {
-    let targetFunc;
-    const uuidKey = store.get('uuid');
+    let targetFunc
+    const uuidKey = store.get('uuid')
     if (this.state.selected.is_active === true) {
-      targetFunc = deactivateClient(atob(uuidKey), this.state.selected.email);
+      targetFunc = deactivateClient(atob(uuidKey), this.state.selected.email)
     } else {
-      targetFunc = activateClient(atob(uuidKey), this.state.selected.email);
+      targetFunc = activateClient(atob(uuidKey), this.state.selected.email)
     }
     targetFunc.then(resp => {
-      this.closeActivateDialog();
+      this.closeActivateDialog()
       swal({
         position: 'center',
         type: 'success',
@@ -134,15 +131,15 @@ class ClientManagement extends Component {
         showConfirmButton: false,
         timer: 2000
       }).then(() => {
-        this.doGetClients();
-      });
-    });
-  };
+        this.doGetClients()
+      })
+    })
+  }
 
   componentWillUnmount() {}
 
   doCreateNewClient = () => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     createClient(atob(uuidKey), this.state.attrDialogOps.data).then(resp => {
       if (resp.status === 500) {
         this.setState({
@@ -151,9 +148,9 @@ class ClientManagement extends Component {
           Please notice that Email
           and Number must be unique
               `
-        });
+        })
       } else if (resp.status === 200) {
-        this.CloseAttrDialog();
+        this.CloseAttrDialog()
         swal({
           position: 'center',
           type: 'success',
@@ -162,44 +159,44 @@ class ClientManagement extends Component {
           showConfirmButton: false,
           timer: 2000
         }).then(() => {
-          this.doGetClients();
-        });
+          this.doGetClients()
+        })
       }
-    });
-  };
+    })
+  }
 
   doGetClients = () => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     getClients(atob(uuidKey)).then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
           this.setState({
             clients: data.clients.sort((a, b) => {
-              return a.is_active ? -1 : 1;
+              return a.is_active ? -1 : 1
             })
-          });
-        });
+          })
+        })
       }
-    });
-  };
+    })
+  }
 
   componentDidMount() {
-    this.doGetClients();
+    this.doGetClients()
   }
 
   handleFilterClients = (_, o) => {
-    this.setState({ filter: o.value.toLowerCase().trim() });
-  };
+    this.setState({ filter: o.value.toLowerCase().trim() })
+  }
 
   DialogValueChanged = (value, key) => {
     let data = {
       ...this.state.attrDialogOps.data,
       [key]: value.toString()
-    };
+    }
     if (!value) {
-      let raw_data = this.state.attrDialogOps.data;
-      delete raw_data[key];
-      data = raw_data;
+      let raw_data = this.state.attrDialogOps.data
+      delete raw_data[key]
+      data = raw_data
     }
 
     this.setState({
@@ -207,26 +204,26 @@ class ClientManagement extends Component {
         ...this.state.attrDialogOps,
         data: data
       }
-    });
-  };
+    })
+  }
 
   goToLoginPage = ck => {
-    redirectSignal.next(`/login/${ck}`);
-  };
+    redirectSignal.next(`/login/${ck}`)
+  }
 
   CloseAttrDialog = () => {
     this.setState({
       error: null,
       attrDialogOps: { ...this.state.attrDialogOps, is_hidden: true, data: {} }
-    });
-  };
+    })
+  }
 
   clientAddDialog = () => {
     this.setState({
       error: null,
       attrDialogOps: { ...this.state.attrDialogOps, is_hidden: false, data: {} }
-    });
-  };
+    })
+  }
 
   render() {
     return (
@@ -292,7 +289,7 @@ class ClientManagement extends Component {
                       c.client_key
                         .toLowerCase()
                         .trim()
-                        .match(RegExp(this.state.filter)) !== null;
+                        .match(RegExp(this.state.filter)) !== null
               })
               .map((c, i) => {
                 return (
@@ -340,7 +337,7 @@ class ClientManagement extends Component {
                       </a>
                     </Table.Cell>
                   </Table.Row>
-                );
+                )
               })}
           </Table.Body>
         </Table>
@@ -479,7 +476,7 @@ class ClientManagement extends Component {
                 placeholder={p.placeholder}
                 required={true}
               />
-            );
+            )
           })}
           <DialogFooter>
             <PrimaryButton
@@ -498,8 +495,8 @@ class ClientManagement extends Component {
           </DialogFooter>
         </Dialog>
       </div>
-    );
+    )
   }
 }
 
-export default ClientManagement;
+export default ClientManagement

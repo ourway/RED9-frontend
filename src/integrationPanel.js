@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import NotImplemented from './not_implemented';
+import NotImplemented from './not_implemented'
 
 class IntegrationPanel extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
 
   componentDidMount() {}
@@ -13,8 +13,8 @@ class IntegrationPanel extends Component {
   componentWillUnmount() {}
 
   render() {
-    return <NotImplemented />;
+    return <NotImplemented />
   }
 }
 
-export default IntegrationPanel;
+export default IntegrationPanel

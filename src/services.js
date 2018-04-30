@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import swal from 'sweetalert2';
-import Gist from 'react-gist';
-import store from 'store';
+import React, { Component } from 'react'
+import swal from 'sweetalert2'
+import Gist from 'react-gist'
+import store from 'store'
 import {
   Menu,
   Button,
@@ -15,13 +15,13 @@ import {
   Dropdown,
   Header,
   Grid
-} from 'semantic-ui-react';
+} from 'semantic-ui-react'
 
-import { env } from './config';
+import { env } from './config'
 
-import S from 'string';
+import S from 'string'
 
-import Red9Form from './red9form';
+import Red9Form from './red9form'
 import {
   getClientServices,
   getClientGateways,
@@ -31,7 +31,7 @@ import {
   testService,
   activateService,
   deactivateService
-} from './apis';
+} from './apis'
 import {
   titleChangeSignal,
   onFilter$,
@@ -42,34 +42,31 @@ import {
   changeColorCode$,
   redirectSignal,
   toggleFormEdit$
-} from './utils';
-import { Icon as MsIcon } from 'office-ui-fabric-react/lib/Icon';
-import { CompoundButton } from 'office-ui-fabric-react/lib/Button';
-import { Link } from 'react-router-dom';
+} from './utils'
+import { Icon as MsIcon } from 'office-ui-fabric-react/lib/Icon'
+import { CompoundButton } from 'office-ui-fabric-react/lib/Button'
+import { Link } from 'react-router-dom'
 
 import {
   Dialog,
   DialogType,
   DialogFooter
-} from 'office-ui-fabric-react/lib/Dialog';
-import {
-  PrimaryButton,
-  DefaultButton
-} from 'office-ui-fabric-react/lib/Button';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
+} from 'office-ui-fabric-react/lib/Dialog'
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import { Dropdown as MSDropdown } from 'office-ui-fabric-react/lib/Dropdown';
+import { Dropdown as MSDropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-import { serviceParams } from './params';
+import { serviceParams } from './params'
 
 import {
   MessageBar,
   MessageBarType
-} from 'office-ui-fabric-react/lib/MessageBar';
+} from 'office-ui-fabric-react/lib/MessageBar'
 
 class Services extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       editMode: false,
       testSmsResult: {},
@@ -89,35 +86,35 @@ class Services extends Component {
         params: [],
         data: {}
       }
-    };
+    }
 
-    this.OperatorChanged = this.OperatorChanged.bind(this);
-    this.doCreateNewService = this.doCreateNewService.bind(this);
-    this.toggleEditMode = this.toggleEditMode.bind(this);
-    this.ftpPing = this.ftpPing.bind(this);
-    this.getCode51 = this.getCode51.bind(this);
+    this.OperatorChanged = this.OperatorChanged.bind(this)
+    this.doCreateNewService = this.doCreateNewService.bind(this)
+    this.toggleEditMode = this.toggleEditMode.bind(this)
+    this.ftpPing = this.ftpPing.bind(this)
+    this.getCode51 = this.getCode51.bind(this)
   }
 
   handleFilterParams = e => {
     this.setState({
       filter: e.target.value
-    });
-    onFilter$.next(e.target.value);
-  };
+    })
+    onFilter$.next(e.target.value)
+  }
 
   toggleEditMode = () => {
-    toggleFormEdit$.next(this.state.activeService);
-    this.setState({ editMode: !this.state.editMode });
-  };
+    toggleFormEdit$.next(this.state.activeService)
+    this.setState({ editMode: !this.state.editMode })
+  }
 
   getCode51 = name => {
     getCode51Services().then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
-          let available = false;
-          const _s = data.result.filter(s => s.name === name).length;
+          let available = false
+          const _s = data.result.filter(s => s.name === name).length
           if (_s > 0) {
-            available = true;
+            available = true
           }
           this.setState({
             activeService: {
@@ -127,17 +124,17 @@ class Services extends Component {
                 is_in_code51: available
               }
             }
-          });
-        });
+          })
+        })
       }
-    });
-  };
+    })
+  }
 
   ftpPing = ftp_key => {
     ftpServicePing(ftp_key).then(resp => {
-      let connection = false;
+      let connection = false
       if (resp.status === 200) {
-        connection = true;
+        connection = true
       }
       this.setState({
         activeService: {
@@ -147,9 +144,9 @@ class Services extends Component {
             is_ftp_connected: connection
           }
         }
-      });
-    });
-  };
+      })
+    })
+  }
 
   handleServiceClick = (e, { uuid, title, data }) => {
     this.setState({
@@ -157,87 +154,87 @@ class Services extends Component {
       activeService: data,
       filter: '',
       editMode: false
-    });
+    })
 
     if (data.meta.operator === 'MCI') {
       this.someAjaxCalls = setTimeout(() => {
-        this.ftpPing(data.meta.ftp_key);
-        this.getCode51(data.name);
-      }, 10);
+        this.ftpPing(data.meta.ftp_key)
+        this.getCode51(data.name)
+      }, 10)
     }
-    redirectSignal.next(`/services/${uuid}`);
-    titleChangeSignal.next(`${title} - Services`);
-    onFilter$.next('');
-    selectService$.next(data);
+    redirectSignal.next(`/services/${uuid}`)
+    titleChangeSignal.next(`${title} - Services`)
+    onFilter$.next('')
+    selectService$.next(data)
     const app = data.meta.apps.filter(a => {
-      return true;
-    })[0] || { name: 'N/A' };
-    selectApp$.next(app);
-  };
+      return true
+    })[0] || { name: 'N/A' }
+    selectApp$.next(app)
+  }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   prepareServiceList = () => {
-    startLoading$.next(true);
-    const uuidKey = store.get('uuid'); //no need to check again
-    const r = getClientServices(atob(uuidKey));
+    startLoading$.next(true)
+    const uuidKey = store.get('uuid') //no need to check again
+    const r = getClientServices(atob(uuidKey))
     return r.then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
-          titleChangeSignal.next('Services');
-          data.services.sort((a, b) => a.meta.is_active !== true);
+          titleChangeSignal.next('Services')
+          data.services.sort((a, b) => a.meta.is_active !== true)
           const asl = data.services.filter(s => {
-            return s.meta.uuid === this.state.activeService.meta.uuid;
-          });
+            return s.meta.uuid === this.state.activeService.meta.uuid
+          })
           selectApp$.next(
             asl.length > 0 ? asl[0].meta.apps[0] : { name: 'N/A' }
-          );
+          )
           this.setState({
             services: data.services,
             activeService:
               asl.length > 0 ? asl[0] : { meta: { uuid: undefined } }
-          });
+          })
           if (asl.length > 0) {
-            titleChangeSignal.next(`${S(asl[0].name)} - Services`);
-            selectService$.next(asl[0]);
+            titleChangeSignal.next(`${S(asl[0].name)} - Services`)
+            selectService$.next(asl[0])
             if (asl[0].meta.operator === 'MCI') {
               this.extraTimeouts = setTimeout(() => {
-                this.ftpPing(asl[0].meta.ftp_key);
-                this.getCode51(asl[0].name);
-              }, 10);
+                this.ftpPing(asl[0].meta.ftp_key)
+                this.getCode51(asl[0].name)
+              }, 10)
             }
           }
-        });
-        stopLoading$.next(true);
+        })
+        stopLoading$.next(true)
       }
-    });
-  };
+    })
+  }
 
   componentWillReceiveProps(nextProps) {
     //console.log(nextProps)
   }
 
   componentWillUnmount() {
-    this.colorCodeChangeSubscription.unsubscribe();
-    clearTimeout(this.someAjaxCalls);
-    clearTimeout(this.extraTimeouts);
+    this.colorCodeChangeSubscription.unsubscribe()
+    clearTimeout(this.someAjaxCalls)
+    clearTimeout(this.extraTimeouts)
     // stopLoading$.next(true);
   }
 
   componentDidMount() {
-    const service = store.get('service');
+    const service = store.get('service')
     if (service && !this.state.activeService.meta.uuid) {
-      this.setState({ activeService: service });
+      this.setState({ activeService: service })
     }
 
     this.colorCodeChangeSubscription = changeColorCode$
       .distinctUntilChanged()
       .debounceTime(250)
       .subscribe(c => {
-        this.setState({ colorCode: c });
-      });
+        this.setState({ colorCode: c })
+      })
 
-    this.prepareServiceList();
+    this.prepareServiceList()
   }
 
   OpenAttrDialog = e => {
@@ -248,8 +245,8 @@ class Services extends Component {
         params: [],
         data: {}
       }
-    });
-  };
+    })
+  }
 
   CloseAttrDialog = () => {
     this.setState({
@@ -259,11 +256,11 @@ class Services extends Component {
         params: [],
         data: {}
       }
-    });
-  };
+    })
+  }
 
   DialogValueChanged = (v, option) => {
-    const value = v.split(' ').join('_');
+    const value = v.split(' ').join('_')
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
@@ -272,15 +269,15 @@ class Services extends Component {
           [option]: value
         }
       }
-    });
-  };
+    })
+  }
 
   doCreateNewService() {
-    const data = this.state.attrDialogOps.data;
-    const crs = createService(this.state.uuid, data);
+    const data = this.state.attrDialogOps.data
+    const crs = createService(this.state.uuid, data)
     crs.then(resp => {
       if (resp.status === 201) {
-        this.CloseAttrDialog();
+        this.CloseAttrDialog()
         swal({
           position: 'center',
           type: 'success',
@@ -289,9 +286,9 @@ class Services extends Component {
           showConfirmButton: false,
           timer: 2000
         }).then(() => {
-          this.CloseAttrDialog();
-        });
-        this.prepareServiceList();
+          this.CloseAttrDialog()
+        })
+        this.prepareServiceList()
       } else {
         swal({
           position: 'center',
@@ -300,21 +297,21 @@ class Services extends Component {
           text: `Please Recheck your settings`,
           showConfirmButton: true,
           timer: 5000
-        });
+        })
       }
-    });
+    })
   }
 
   OperatorChanged = (e, options) => {
     const jsonParams = serviceParams.filter(
       i => i.gateway.includes(e.key) && i.type === 'json'
-    );
+    )
 
-    const gwr = getClientGateways(this.state.uuid);
+    const gwr = getClientGateways(this.state.uuid)
 
     const params = serviceParams.filter(
       i => i.gateway.includes(e.key) && i.type !== 'json'
-    );
+    )
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
@@ -324,14 +321,14 @@ class Services extends Component {
           jsonParams.length === 0
             ? {}
             : jsonParams.reduce((o, val) => {
-                return { [val.name]: {} };
+                return { [val.name]: {} }
               }, {})
       }
-    });
+    })
 
     gwr.then(resp =>
       resp.json().then(data => {
-        const gateways = data.gateways.filter(i => i.sms_center === e.key);
+        const gateways = data.gateways.filter(i => i.sms_center === e.key)
         if (gateways.length > 0) {
           this.setState({
             attrDialogOps: {
@@ -341,11 +338,11 @@ class Services extends Component {
                 gateway: gateways[0].name
               }
             }
-          });
+          })
         }
       })
-    );
-  };
+    )
+  }
 
   ServiceDialog = () => {
     return (
@@ -411,7 +408,7 @@ class Services extends Component {
                 placeholder={p.placeholder}
                 required={true}
               />
-            );
+            )
           })
         ) : (
           <MessageBar messageBarType={MessageBarType.error} isMultiline={false}>
@@ -435,26 +432,26 @@ class Services extends Component {
           />
         </DialogFooter>
       </Dialog>
-    );
-  };
+    )
+  }
 
   doTestService = () => {
     this.setState({
       testSmsIsSending: true,
       testSmsResult: {}
-    });
+    })
 
-    const uuidKey = store.get('uuid'); //no need to check again
-    const req = testService(atob(uuidKey), this.state.activeService.meta.uuid);
+    const uuidKey = store.get('uuid') //no need to check again
+    const req = testService(atob(uuidKey), this.state.activeService.meta.uuid)
     req.then(resp =>
       resp.json().then(data => {
         this.setState({
           testSmsResult: data,
           testSmsIsSending: false
-        });
+        })
       })
-    );
-  };
+    )
+  }
 
   render() {
     //console.log("wow")
@@ -478,9 +475,9 @@ class Services extends Component {
                   active={this.state.activeService.meta.uuid === s.meta.uuid}
                   onClick={this.handleServiceClick}
                 />
-              );
+              )
             } else {
-              return null;
+              return null
             }
           })}
 
@@ -499,9 +496,9 @@ class Services extends Component {
                           {s.name}
                         </Link>
                       </Dropdown.Item>
-                    );
+                    )
                   } else {
-                    return null;
+                    return null
                   }
                 })}
               </Dropdown.Menu>
@@ -562,7 +559,7 @@ class Services extends Component {
           <Segment attached="bottom" children basic raised inverted>
             {this.state.services
               .filter(s => {
-                return s.meta.uuid === this.state.activeService.meta.uuid;
+                return s.meta.uuid === this.state.activeService.meta.uuid
               })
               .map(s => {
                 return (
@@ -579,7 +576,7 @@ class Services extends Component {
                     scope="client"
                     form_name="service"
                   />
-                );
+                )
               })}
 
             {this.state.editMode === false ? (
@@ -665,7 +662,7 @@ class Services extends Component {
                                       icon="adn"
                                       color="black"
                                     />
-                                  );
+                                  )
                                 }
                               )}
                             </Button.Group>
@@ -987,8 +984,8 @@ class Services extends Component {
         )}
         {this.ServiceDialog()}
       </div>
-    );
+    )
   }
 }
 
-export default Services;
+export default Services

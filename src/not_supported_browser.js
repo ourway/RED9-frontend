@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import { Card, Icon } from 'semantic-ui-react';
-import { browser, env } from './config';
+import { Card, Icon } from 'semantic-ui-react'
+import { browser, env } from './config'
 
-import Footer from './Footer';
-import Header from './Header';
-import { titleChangeSignal } from './utils';
+import Footer from './Footer'
+import Header from './Header'
+import { titleChangeSignal } from './utils'
 
 const extra = (
   <a
@@ -16,11 +16,11 @@ const extra = (
     <Icon name="download" />
     Download a modern browser
   </a>
-);
+)
 
 class NotSupportedBrowser extends Component {
   componentDidMount() {
-    titleChangeSignal.next('406 / Not Supported');
+    titleChangeSignal.next('406 / Not Supported')
   }
 
   render() {
@@ -47,8 +47,8 @@ class NotSupportedBrowser extends Component {
 
         <Footer />
       </div>
-    );
+    )
   }
 }
 
-export default NotSupportedBrowser;
+export default NotSupportedBrowser

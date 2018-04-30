@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import { Image, List, Icon } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import store from 'store';
-import { getClientServices } from './apis';
+import { Image, List, Icon } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import store from 'store'
+import { getClientServices } from './apis'
 
 class Home extends Component {
   constructor(props) {
-    super(props);
-    this.state = { services: [] };
+    super(props)
+    this.state = { services: [] }
   }
 
   componentDidMount() {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     if (uuidKey) {
       getClientServices(atob(uuidKey)).then(resp => {
         if (resp.status === 200) {
@@ -20,19 +20,19 @@ class Home extends Component {
             this.setState({
               services: data.services
                 .filter((s, i) => {
-                  return s.meta.is_active === true;
+                  return s.meta.is_active === true
                 })
                 .map((s, i) => {
                   return {
                     name: s.name,
                     uuid: s.meta.uuid,
                     short_code: s.short_code
-                  };
+                  }
                 })
-            });
-          });
+            })
+          })
         }
-      });
+      })
     }
   }
 
@@ -61,7 +61,7 @@ class Home extends Component {
                   {s.short_code}
                 </small>
               </List.Item>
-            );
+            )
           })}
         </List>
         <Image
@@ -75,8 +75,8 @@ class Home extends Component {
           <h3>Start here</h3>
         </Link>
       </div>
-    );
+    )
   }
 }
 
-export default Home;
+export default Home

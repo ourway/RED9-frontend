@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import store from 'store';
-import { env } from './config';
-import swal from 'sweetalert2';
+import React, { Component } from 'react'
+import store from 'store'
+import { env } from './config'
+import swal from 'sweetalert2'
 import {
   Table,
   Icon,
@@ -10,10 +10,10 @@ import {
   Message,
   Radio,
   Divider
-} from 'semantic-ui-react';
-import { getServiceApps, createApp, updateApp } from './apis';
+} from 'semantic-ui-react'
+import { getServiceApps, createApp, updateApp } from './apis'
 
-import Gist from 'react-gist';
+import Gist from 'react-gist'
 
 import {
   redirectSignal,
@@ -21,22 +21,19 @@ import {
   titleChangeSignal,
   stopLoading$,
   selectApp$
-} from './utils';
+} from './utils'
 
 import {
   Dialog,
   DialogType,
   DialogFooter
-} from 'office-ui-fabric-react/lib/Dialog';
-import {
-  PrimaryButton,
-  DefaultButton
-} from 'office-ui-fabric-react/lib/Button';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
+} from 'office-ui-fabric-react/lib/Dialog'
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 class Applications extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       error: null,
       apps: [],
@@ -66,62 +63,62 @@ class Applications extends Component {
         ],
         data: {}
       }
-    };
+    }
   }
 
   openAddDialog = () => {
-    this.setState({ is_add_dialog_hidden: false });
-  };
+    this.setState({ is_add_dialog_hidden: false })
+  }
 
   closeAddDialog = () => {
-    this.setState({ is_add_dialog_hidden: true });
-  };
+    this.setState({ is_add_dialog_hidden: true })
+  }
 
   doGetApps = () => {
-    startLoading$.next(true);
+    startLoading$.next(true)
 
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     getServiceApps(atob(uuidKey)).then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
           const apps = data.apps.filter(a => {
-            return a.service === this.state.activeService.name;
-          });
+            return a.service === this.state.activeService.name
+          })
 
           const selected_app = apps.filter(a => {
-            return a.uuid === this.props.match.params.uuid;
-          })[0] || { uuid: null, name: 'N/A' };
+            return a.uuid === this.props.match.params.uuid
+          })[0] || { uuid: null, name: 'N/A' }
 
           this.setState({
             apps: apps,
             original_apps: apps,
             selected: selected_app
-          });
-          selectApp$.next(selected_app);
-          stopLoading$.next(true);
-        });
+          })
+          selectApp$.next(selected_app)
+          stopLoading$.next(true)
+        })
       }
-    });
-  };
+    })
+  }
 
   componentWillUnmount() {}
 
   componentDidMount() {
-    this.doGetApps();
-    const lss = store.get('service');
+    this.doGetApps()
+    const lss = store.get('service')
     if (lss) {
-      const sd = lss;
-      titleChangeSignal.next(`${sd.name} apps`);
-      this.setState({ activeService: sd });
+      const sd = lss
+      titleChangeSignal.next(`${sd.name} apps`)
+      this.setState({ activeService: sd })
     }
   }
 
   handleFilterApps = (_, o) => {
-    this.setState({ filter: o.value.toLowerCase().trim() });
-  };
+    this.setState({ filter: o.value.toLowerCase().trim() })
+  }
 
   doCreateNewApp = () => {
-    const uuidKey = store.get('uuid');
+    const uuidKey = store.get('uuid')
     createApp(
       atob(uuidKey),
       this.state.attrDialogOps.data.name,
@@ -129,7 +126,7 @@ class Applications extends Component {
       this.state.attrDialogOps.data.mo_url
     ).then(resp => {
       if (resp.status === 201) {
-        this.closeAddDialog();
+        this.closeAddDialog()
         swal({
           position: 'center',
           type: 'success',
@@ -138,11 +135,11 @@ class Applications extends Component {
           showConfirmButton: false,
           timer: 2000
         }).then(() => {
-          this.doGetApps();
-        });
+          this.doGetApps()
+        })
       }
-    });
-  };
+    })
+  }
 
   DialogValueChanged = (value, key) => {
     let data = {
@@ -151,11 +148,11 @@ class Applications extends Component {
         .trim()
         .toString()
         .toLowerCase()
-    };
+    }
     if (!value) {
-      let raw_data = this.state.attrDialogOps.data;
-      delete raw_data[key];
-      data = raw_data;
+      let raw_data = this.state.attrDialogOps.data
+      delete raw_data[key]
+      data = raw_data
     }
 
     this.setState({
@@ -163,60 +160,60 @@ class Applications extends Component {
         ...this.state.attrDialogOps,
         data: data
       }
-    });
-  };
+    })
+  }
 
   goToLoginPage = ck => {
-    redirectSignal.next(`/login/${ck}`);
-  };
+    redirectSignal.next(`/login/${ck}`)
+  }
 
   toggleAppStatus = (app, index) => {
-    const status = !app.is_active;
-    const newAppData = { ...app, is_active: status };
+    const status = !app.is_active
+    const newAppData = { ...app, is_active: status }
     let newList = [
       ...this.state.apps.slice(0, index),
       newAppData,
       ...this.state.apps.slice(index + 1)
-    ];
+    ]
 
-    this.handleAppUpdate(newAppData);
-    this.setState({ apps: newList });
-  };
+    this.handleAppUpdate(newAppData)
+    this.setState({ apps: newList })
+  }
 
   handleAppUpdate = app => {
-    startLoading$.next(true);
-    const uuidKey = store.get('uuid');
+    startLoading$.next(true)
+    const uuidKey = store.get('uuid')
     updateApp(atob(uuidKey), app).then(resp => {
       if (resp.status === 202) {
-        this.doGetApps();
+        this.doGetApps()
       }
-      stopLoading$.next(true);
-    });
-  };
+      stopLoading$.next(true)
+    })
+  }
 
   handleUrlUpdate = a => {
-    this.handleAppUpdate(a);
-  };
+    this.handleAppUpdate(a)
+  }
 
   handleUrlChange = (app, index, _, target) => {
-    const val = target.value;
+    const val = target.value
     let newList = [
       ...this.state.apps.slice(0, index),
       { ...app, mo_url: val },
       ...this.state.apps.slice(index + 1)
-    ];
-    this.setState({ apps: newList });
-  };
+    ]
+    this.setState({ apps: newList })
+  }
 
   handleAppClick = app => {
     this.setState({
       selected: this.state.apps.filter(a => {
-        return a.uuid === app.uuid;
+        return a.uuid === app.uuid
       })[0]
-    });
-    selectApp$.next(app);
-    redirectSignal.next(`/apps/${app.uuid}`);
-  };
+    })
+    selectApp$.next(app)
+    redirectSignal.next(`/apps/${app.uuid}`)
+  }
 
   render() {
     return (
@@ -308,11 +305,11 @@ class Applications extends Component {
                         <li key={i} className="appListLi">
                           <code style={{ fontSize: 10 }}>{ak}</code>
                         </li>
-                      );
+                      )
                     })}
                   </Table.Cell>
                 </Table.Row>
-              );
+              )
             })}
           </Table.Body>
         </Table>
@@ -525,8 +522,8 @@ class Applications extends Component {
           </DialogFooter>
         </Dialog>
       </div>
-    );
+    )
   }
 }
 
-export default Applications;
+export default Applications

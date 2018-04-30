@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Segment, Message, Icon } from 'semantic-ui-react';
+import React, { Component } from 'react'
+import { Segment, Message, Icon } from 'semantic-ui-react'
 
 class Information extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
 
   componentDidMount() {}
@@ -22,8 +22,8 @@ class Information extends Component {
           </Message.Header>
         </Message>
       </Segment>
-    );
+    )
   }
 }
 
-export default Information;
+export default Information
