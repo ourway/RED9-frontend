@@ -33,7 +33,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@uifabric/merge-styles@>=5.16.1 <6.0.0", "@uifabric/merge-styles@>=5.17.0 <6.0.0":
+"@uifabric/merge-styles@>=5.17.0 <6.0.0":
   version "5.17.0"
   resolved "https://registry.yarnpkg.com/@uifabric/merge-styles/-/merge-styles-5.17.0.tgz#96de616cb9fa5c05a79ac18ff96db9fe5644f2d2"
   dependencies:
@@ -48,13 +48,13 @@
     "@uifabric/utilities" ">=5.24.0 <6.0.0"
     tslib "^1.7.1"
 
-"@uifabric/styling@>=5.27.0 <6.0.0":
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/@uifabric/styling/-/styling-5.27.0.tgz#dbc0a58da82b67eb64938caf4180189e23334dff"
+"@uifabric/styling@>=5.29.0 <6.0.0":
+  version "5.29.0"
+  resolved "https://registry.yarnpkg.com/@uifabric/styling/-/styling-5.29.0.tgz#0e87be18466e5e9d81f54e7b884e6457b0957acc"
   dependencies:
     "@microsoft/load-themed-styles" "^1.7.13"
-    "@uifabric/merge-styles" ">=5.16.1 <6.0.0"
-    "@uifabric/utilities" ">=5.28.0 <6.0.0"
+    "@uifabric/merge-styles" ">=5.17.0 <6.0.0"
+    "@uifabric/utilities" ">=5.29.0 <6.0.0"
     tslib "^1.7.1"
 
 "@uifabric/utilities@>=5.24.0 <6.0.0":
@@ -65,7 +65,7 @@
     prop-types "^15.5.10"
     tslib "^1.7.1"
 
-"@uifabric/utilities@>=5.28.0 <6.0.0", "@uifabric/utilities@>=5.29.0 <6.0.0":
+"@uifabric/utilities@>=5.29.0 <6.0.0":
   version "5.29.0"
   resolved "https://registry.yarnpkg.com/@uifabric/utilities/-/utilities-5.29.0.tgz#89948b14dfab8217ed05b73844c7b17f70bb12a6"
   dependencies:
@@ -5403,14 +5403,14 @@ obuf@^1.0.0, obuf@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
 
-office-ui-fabric-react@^5.91.0:
-  version "5.91.0"
-  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-5.91.0.tgz#f52b24f33ff23fcf53598d94a8c801caaf69811e"
+office-ui-fabric-react@^5.93.0:
+  version "5.93.0"
+  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-5.93.0.tgz#63f1249125fbc23b57115d653ef01587bef1faa9"
   dependencies:
     "@microsoft/load-themed-styles" "^1.7.13"
     "@uifabric/icons" ">=5.7.1 <6.0.0"
     "@uifabric/merge-styles" ">=5.17.0 <6.0.0"
-    "@uifabric/styling" ">=5.27.0 <6.0.0"
+    "@uifabric/styling" ">=5.29.0 <6.0.0"
     "@uifabric/utilities" ">=5.29.0 <6.0.0"
     prop-types "^15.5.10"
     tslib "^1.7.1"

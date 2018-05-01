@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
+import JDate from 'jalali-date'
 import store from 'store'
 import swal from 'sweetalert2'
-import { Segment, Statistic, Button } from 'semantic-ui-react'
-import { CompoundButton, IButtonProps } from 'office-ui-fabric-react/lib/Button'
+import { Segment, Statistic, Button, Table } from 'semantic-ui-react'
+import { CompoundButton } from 'office-ui-fabric-react/lib/Button'
 import { Label } from 'office-ui-fabric-react/lib/Label'
 import {
   getTemplates,
   getMessageQueue,
   deleteMessageQueue,
   sendSmsWithoutCharge,
-  postNewBulkToSubs
+  postNewBulkToSubs,
+  getKVKey,
+  setKVKey,
+  getAllKVKeys
 } from './apis'
 
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
@@ -28,6 +32,7 @@ class Messaging extends Component {
     this.state = {
       apikey: null,
       templates: [],
+      bulk_list: {},
       inqueue: 'N/A',
       is_bulk_dialog_hidden: true,
       is_single_dialog_hidden: true,
@@ -56,6 +61,20 @@ class Messaging extends Component {
     })
   }
 
+  doCleanQueue = () => {
+    deleteMessageQueue(this.state.apikey).then(r => {
+      if (r.status === 200) {
+        swal({
+          position: 'center',
+          type: 'success',
+          title: 'OK',
+          text: `Your Queue is clean now`,
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }
+    })
+  }
   doCreateNewBulk = () => {
     const data = {
       message: this.state.attrDialogOps.bulk.message,
@@ -65,16 +84,22 @@ class Messaging extends Component {
     postNewBulkToSubs(this.state.apikey, data).then(resp => {
       this.closeBulkDialog()
       if (resp.status === 200) {
-        resp.json().then(data => {
-          this.setState({ inqueue: data.count })
+        resp.json().then(d => {
+          this.setState({ inqueue: d.count })
+          setKVKey(
+            this.state.apikey,
+            'bulk',
+            this.state.attrDialogOps.bulk.name,
+            { template: data.template, count: d.count }
+          )
           swal({
             position: 'center',
             type: 'success',
             title: 'Congrats!',
-            text: `Your bulk is queued (${data.count} messages)`,
+            text: `Your bulk is queued (${d.count} messages)`,
             showConfirmButton: false,
             timer: 2000
-          })
+          }).then(() => this.doGetBulks(this.state.apikey))
         })
       }
     })
@@ -151,6 +176,28 @@ class Messaging extends Component {
     })
   }
 
+  doGetBulks = apikey => {
+    getAllKVKeys(apikey, 'bulk').then(resp => {
+      if (resp.status === 200) {
+        resp.json().then(data => {
+          data.keys.map((k, i) => {
+            return getKVKey(apikey, 'bulk', k).then(r => {
+              if (r.status === 200) {
+                r.json().then(d => {
+                  this.setState({
+                    bulk_list: {
+                      ...this.state.bulk_list,
+                      [k]: d
+                    }
+                  })
+                })
+              }
+            })
+          })
+        })
+      }
+    })
+  }
   _newSmsPhoneChanged = v => {
     this.setState({
       attrDialogOps: {
@@ -178,6 +225,7 @@ class Messaging extends Component {
       this.messagesCountInterval = setInterval(() => {
         this.getQueueSize(atob(apikeyb64))
       }, 15000)
+      this.doGetBulks(atob(apikeyb64))
     }
 
     getTemplates(atob(uuidKey)).then(resp => {
@@ -204,7 +252,12 @@ class Messaging extends Component {
             <Statistic.Label style={{ color: 'grey' }}>
               Queued Messages{' '}
               {this.state.inqueue !== 'N/A' && this.state.inqueue > 0 ? (
-                <Button size="mini" color="red" icon="stop" />
+                <Button
+                  size="mini"
+                  color="red"
+                  icon="stop"
+                  onClick={this.doCleanQueue}
+                />
               ) : null}
             </Statistic.Label>
             <Statistic.Value>{this.state.inqueue}</Statistic.Value>
@@ -235,6 +288,38 @@ class Messaging extends Component {
             Single message
           </CompoundButton>
         </div>
+
+        <Table inverted celled singleLine>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Datetime</Table.HeaderCell>
+              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>template</Table.HeaderCell>
+              <Table.HeaderCell>Subscribers</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {Object.keys(this.state.bulk_list).map((b, i) => {
+              const d = new JDate(new Date(this.state.bulk_list[b].updated_at))
+              const bd = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+              return (
+                <Table.Row key={i} className="appRow">
+                  <Table.Cell collapsing>{bd}</Table.Cell>
+                  <Table.Cell collapsing>
+                    {this.state.bulk_list[b].key}
+                  </Table.Cell>
+                  <Table.Cell collapsing>
+                    {this.state.bulk_list[b].object.template}
+                  </Table.Cell>
+
+                  <Table.Cell collapsing>
+                    {this.state.bulk_list[b].object.count}
+                  </Table.Cell>
+                </Table.Row>
+              )
+            })}
+          </Table.Body>
+        </Table>
 
         <Dialog
           hidden={this.state.is_bulk_dialog_hidden}

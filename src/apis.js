@@ -382,3 +382,41 @@ export const sendSmsWithoutCharge = (apiKey, data) => {
     opts
   )
 }
+
+export const setKVKey = (apiKey, section, key, data) => {
+  const authHeaders = getAPIAuthHeaders(apiKey)
+  let opts = {
+    method: 'POST',
+    body: JSON.stringify({
+      key: key,
+      section: `console_${section}`,
+      object: data
+    }),
+    headers: authHeaders
+  }
+  return fetch(`${env.API_BASE}/api/app/database/set`, opts)
+}
+
+export const getKVKey = (apiKey, section, key) => {
+  const authHeaders = getAPIAuthHeaders(apiKey)
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  }
+  return fetch(
+    `${env.API_BASE}/api/app/database/get/console_${section}/${key}`,
+    opts
+  )
+}
+
+export const getAllKVKeys = (apiKey, section) => {
+  const authHeaders = getAPIAuthHeaders(apiKey)
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  }
+  return fetch(
+    `${env.API_BASE}/api/app/database/list/keys/console_${section}`,
+    opts
+  )
+}

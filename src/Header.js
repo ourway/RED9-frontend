@@ -156,9 +156,9 @@ class Header extends Component {
       .subscribe(v => {
         if (v) {
           this.setState({ app: v })
-            if (v.api_keys){
-           store.set('api-key', btoa(v.api_keys.join('')))
-            }
+          if (v.api_keys) {
+            store.set('api-key', btoa(v.api_keys.join('')))
+          }
         }
       })
 
