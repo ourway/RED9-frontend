@@ -12,6 +12,7 @@ export const clientKeySignal = new Rx.Subject()
 export const reloadReports = new Rx.Subject()
 export const titleChangeSignal = new Rx.Subject()
 export const onFilter$ = new Rx.Subject()
+export const reporterSignal = new Rx.Subject()
 export const selectService$ = new Rx.Subject()
 export const selectApp$ = new Rx.Subject()
 export const toggleFormEdit$ = new Rx.Subject()
@@ -42,6 +43,7 @@ selectService$
     next: s => {
       const serviceData = {
         name: s.name,
+        wappush: s.wappush,
         ftp_key: s.meta.ftp_key,
         meta: s.meta,
         sid: s.service_id

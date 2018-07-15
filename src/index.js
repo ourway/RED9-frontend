@@ -39,6 +39,12 @@ ReactDOM.render(
     <Switch>
       <Route exact path="/login" name="Login" component={Login} />
       <Route exact path="/login/:client_key" name="Login" component={Login} />
+      <Route
+        exact
+        path="/login/:client_key/:only_report"
+        name="Login"
+        component={Login}
+      />
       <Route component={Unavailable} exact path="/451" name="Home" />
       <Route component={NotSupportedBrowser} exact path="/406" name="Home" />
       <Route

@@ -9,6 +9,7 @@ import {
   Input,
   Message,
   Radio,
+  Segment,
   Divider
 } from 'semantic-ui-react'
 import { getServiceApps, createApp, updateApp } from './apis'
@@ -37,6 +38,7 @@ class Applications extends Component {
     this.state = {
       error: null,
       apps: [],
+      loading: true,
       original_apps: [],
       activeApp: {},
       activeService: {},
@@ -82,17 +84,24 @@ class Applications extends Component {
       if (resp.status === 200) {
         resp.json().then(data => {
           const apps = data.apps.filter(a => {
-            return a.service === this.state.activeService.name
+            return (
+              a.service.toLowerCase() ===
+              this.state.activeService.name.toLowerCase()
+            )
           })
 
-          const selected_app = apps.filter(a => {
-            return a.uuid === this.props.match.params.uuid
-          })[0] || { uuid: null, name: 'N/A' }
+          const selected_app =
+            apps.filter(a => {
+              return a.uuid === this.props.match.params.uuid
+            })[0] || apps.length > 0
+              ? apps[0]
+              : { uuid: null, name: 'N/A' }
 
           this.setState({
             apps: apps,
             original_apps: apps,
-            selected: selected_app
+            selected: selected_app,
+            loading: false
           })
           selectApp$.next(selected_app)
           stopLoading$.next(true)
@@ -217,7 +226,7 @@ class Applications extends Component {
 
   render() {
     return (
-      <div>
+      <Segment inverted loading={this.state.loading === true}>
         <Menu attached="top" inverted style={{ backgroundColor: '#212931' }}>
           <Menu.Menu position="right">
             <Menu.Item
@@ -521,7 +530,7 @@ class Applications extends Component {
             <DefaultButton onClick={this.closeAddDialog} text="Cancel" />
           </DialogFooter>
         </Dialog>
-      </div>
+      </Segment>
     )
   }
 }

@@ -3,7 +3,6 @@ import { List, Icon, Search, Label } from 'semantic-ui-react'
 import store from 'store'
 
 import { selectService$, selectApp$, searching$ } from './utils'
-//import { redirectSignal } from './utils';
 
 import { Link } from 'react-router-dom'
 
@@ -24,7 +23,7 @@ class Leftbar extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     // There are two modes that we need to render:
-    // - is_admin mode is changing or active path is changing
+    // is_admin mode is changing or active path is changing
     return (
       nextState.is_admin !== this.state.is_admin ||
       nextProps.activepath !== this.props.activepath ||
@@ -42,12 +41,14 @@ class Leftbar extends Component {
   }
 
   componentDidMount() {
+    this.setState({ reporter: atob(store.get('reporter') || 'ZmFsc2U=') })
+
     this.selectServiceTimeout = setTimeout(() => {
       const service = store.get('service')
       if (service) {
         this.setState({ selected_service: service })
       }
-    }, 10)
+    }, 100)
 
     this.serviceSelection = selectService$
       .distinctUntilChanged()
@@ -96,29 +97,32 @@ class Leftbar extends Component {
   }
 
   render() {
-    const sections = [
-      ':Definitions:',
-      'Services',
-      'Apps',
-      ':Advanced Settings:',
-      'Templates',
-      'Reactions',
-      ':Try:',
-      'Messaging',
-      'Charging',
-      'Subscriptions',
-      ':Analyze:',
-      'Reports',
-      ':Help Desk:',
-      'Customer Care',
-      ':Development:',
-      'Key.Value Database',
-      'API Docs',
-      'Getting Started',
-      ':Set:',
-      'Profile',
-      'Settings'
-    ]
+    const sections =
+      this.state.reporter !== 'true'
+        ? [
+            ':Definitions:',
+            'Services',
+            'Apps',
+            ':Advanced Settings:',
+            'Templates',
+            'Reactions',
+            ':Try:',
+            'Messaging',
+            'Charging',
+            'Subscriptions',
+            ':Analyze:',
+            'Reports',
+            ':Help Desk:',
+            'Customer Care',
+            ':Development:',
+            'Key.Value Database',
+            'API Docs',
+            'Getting Started',
+            ':Set:',
+            'Profile',
+            'Settings'
+          ]
+        : ['Services', 'Reports', 'Subscriptions']
 
     const need_service = [
       'Reactions',

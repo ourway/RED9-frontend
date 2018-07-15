@@ -100,6 +100,15 @@ export const serviceParams = [
   },
 
   {
+    name: 'wappush',
+    type: 'text',
+    placeholder: `true or false`,
+    editable: true,
+    description: 'Is this service a WAP PUSH type service?',
+    gateway: ['IMI', 'IRANCELL']
+  },
+
+  {
     name: 'renewal_url',
     type: 'url',
     placeholder: `https://myserver.net/${env.company}-${

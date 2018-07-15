@@ -12,6 +12,7 @@ import { env } from './config'
 import {
   ftpServiceLive,
   ftpGetChargingSubscribersCount,
+  getWapPushRevenue,
   getSubscribersCount
 } from './apis'
 import { Link } from 'react-router-dom'
@@ -25,8 +26,10 @@ class Header extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      colorCode: '#1f262c',
+      colorCode: env.product_color,
+      wappush_revenue: 0,
       company: DASH,
+      reporter: atob(store.get('reporter') || 'ZmFsc2U='),
       service: {
         name: DASH
       },
@@ -60,6 +63,17 @@ class Header extends Component {
     this.clientSubscription.unsubscribe()
     this.serviceSelection.unsubscribe()
     this.colorCodeChangeSubscription.unsubscribe()
+  }
+
+  doGetWapPushRevenue = () => {
+    const uuidKey = store.get('uuid')
+    getWapPushRevenue(atob(uuidKey), this.state.service.name).then(data => {
+      if (data.status === 200) {
+        data.json().then(resp => {
+          this.setState({ wappush_revenue: resp.revenue })
+        })
+      }
+    })
   }
 
   doGetSubscribersCount = () => {
@@ -185,6 +199,7 @@ class Header extends Component {
             }
           })
           this.doGetSubscribersCount()
+          this.doGetWapPushRevenue()
 
           if (s.meta.operator === 'MCI') {
             this.doGetFtpChargingSubscribersCount()
@@ -242,23 +257,53 @@ class Header extends Component {
                     style={{ verticalAlign: 'sub' }}
                     inline
                   />
-                  <div style={{ display: 'inline-block' }}>
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      borderLeft: '1px dashed #ffffff77',
+                      margin: 2,
+                      padding: 2
+                    }}
+                  >
                     {env.company === 'SabaIdea' ? ' ' : env.company}
                     <strong style={{ fontWeight: 800 }}>
                       {' '}
                       {env.product !== 'RED9' ? (
-                        env.product
+                        <span style={{ borderBottom: '1px dashed #cccccc33' }}>
+                          {env.product}
+                        </span>
                       ) : (
-                        <span>
-                          <span style={{ color: '#cc0000' }}>RED</span>
-                          <span style={{ color: '#fff' }}>9</span>
+                        <span style={{ borderBottom: '1px dashed #cccccc33' }}>
+                          <b style={{ color: '#cc0000', fontWeight: 800 }}>
+                            RED
+                          </b>
+                          <span style={{ color: '#fff', fontWeight: 200 }}>
+                            9
+                          </span>
                         </span>
                       )}
                     </strong>
                     <br />
                     <i style={{ fontSize: 8 }}>
-                      Verison <b>{env.product_version.split('/')[0]}</b>
+                      Verison{' '}
+                      <b style={{ fontSize: 13 }}>
+                        <code>{env.product_version.split('/')[0]}</code>
+                      </b>
                       <small>{env.product_version.split('/')[1]}</small>
+                      {' | '}
+                      {env.codename}
+                      {env.product !== 'RED9' ? (
+                        <span>
+                          {' | '}
+                          Powered by{' '}
+                          <span>
+                            <b style={{ color: '#cc0000', fontWeight: 800 }}>
+                              RED
+                            </b>
+                            <span style={{ color: '#fff' }}>9</span>
+                          </span>
+                        </span>
+                      ) : null}
                     </i>
                   </div>
                 </strong>
@@ -306,8 +351,8 @@ class Header extends Component {
                           name={
                             this.state.stats.yesterday.subscriptions <
                             this.state.stats.yesterday.unsubscriptions
-                              ? 'long arrow down'
-                              : 'long arrow up'
+                              ? 'arrow down'
+                              : 'arrow up'
                           }
                           color={
                             this.state.stats.yesterday.subscriptions <
@@ -415,6 +460,35 @@ class Header extends Component {
                           style={{ fontSize: 10, fontWeight: 400 }}
                         >
                           Charging
+                        </Statistic.Label>
+                      </Statistic>
+                    ) : null}
+
+                    {this.state.wappush_revenue !== 0 &&
+                    this.state.reporter !== 'true' ? (
+                      <Statistic
+                        className={
+                          this.state.service.name !== DASH
+                            ? 'topStatistics active info'
+                            : 'topStatistics deactive'
+                        }
+                        color="green"
+                        inverted
+                        size="mini"
+                      >
+                        <Statistic.Value>
+                          <small>{this.state.wappush_revenue.total}</small>
+                          |
+                          <small style={{ fontSize: 10 }}>
+                            <a href="/reports">
+                              {this.state.wappush_revenue.count} charge events
+                            </a>
+                          </small>
+                        </Statistic.Value>
+                        <Statistic.Label
+                          style={{ fontSize: 10, fontWeight: 400 }}
+                        >
+                          SMS Charge Revenue
                         </Statistic.Label>
                       </Statistic>
                     ) : null}

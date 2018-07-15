@@ -71,6 +71,7 @@ class Services extends Component {
       editMode: false,
       testSmsResult: {},
       overview: [],
+      reporter: atob(store.get('reporter') || 'ZmFsc2U='),
       colorCode: 'transparent',
       uuid: atob(store.get('uuid')),
       activeService: {
@@ -506,7 +507,8 @@ class Services extends Component {
           ) : null}
 
           <Menu.Menu position="right">
-            {this.state.activeService.meta.inserted_at ? (
+            {this.state.activeService.meta.inserted_at &&
+            this.state.reporter !== 'true' ? (
               <Menu.Item
                 as="a"
                 icon={
@@ -540,18 +542,19 @@ class Services extends Component {
                 />
               </Menu.Item>
             ) : null}
-
-            <Menu.Item
-              as="a"
-              icon="add"
-              fitted="vertically"
-              color="blue"
-              name=""
-              title="Add a new service"
-              key="add_new_service"
-              style={{ backgroundColor: '#23367c85' }}
-              onClick={this.OpenAttrDialog}
-            />
+            {this.state.reporter !== 'true' ? (
+              <Menu.Item
+                as="a"
+                icon="add"
+                fitted="vertically"
+                color="blue"
+                name=""
+                title="Add a new service"
+                key="add_new_service"
+                style={{ backgroundColor: '#23367c85' }}
+                onClick={this.OpenAttrDialog}
+              />
+            ) : null}
           </Menu.Menu>
         </Menu>
 
@@ -656,7 +659,11 @@ class Services extends Component {
                                   return (
                                     <Button
                                       content={app.name}
-                                      href={`/apps/${app.uuid}`}
+                                      href={
+                                        this.state.reporter !== 'true'
+                                          ? `/apps/${app.uuid}`
+                                          : '/getting-started'
+                                      }
                                       key={app.name}
                                       size="small"
                                       icon="adn"
@@ -739,7 +746,7 @@ class Services extends Component {
                           <Card.Header>
                             <CompoundButton
                               onClick={this.doTestService}
-                              description={
+                              secondaryText={
                                 <p>
                                   {' '}
                                   Click to send a test SMS to{' '}
@@ -967,7 +974,7 @@ class Services extends Component {
               <CompoundButton
                 primary={true}
                 onClick={this.OpenAttrDialog}
-                description="It's easy"
+                secondaryText="It's easy"
                 iconProps={{ iconName: 'Add' }}
               >
                 Create A New Service

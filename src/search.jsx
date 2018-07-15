@@ -71,7 +71,7 @@ class FTPRenewal extends Component {
           return e.base_price_point / 10
         })
         .reduce((a, b) => a + b, 0)
-      const success = Math.round(billed / target * 100)
+      const success = Math.round((billed / target) * 100)
       return (
         <Segment inverted>
           <Message color="black">

@@ -420,3 +420,41 @@ export const getAllKVKeys = (apiKey, section) => {
     opts
   )
 }
+
+export const getSubscribers = (client_key, service_name) => {
+  const authHeaders = getClientAuthHeaders(client_key)
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  }
+  return fetch(
+    `${
+      env.API_BASE
+    }/api/client/history?service=${service_name}&limit=50000&offset=0&country_code=98`,
+    opts
+  )
+}
+
+export const getWapPushRevenue = (client_key, service_name) => {
+  const authHeaders = getClientAuthHeaders(client_key)
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  }
+  return fetch(
+    `${env.API_BASE}/api/client/wappush_revenue?service=${service_name}`,
+    opts
+  )
+}
+
+export const getSubscriptionDetails = (client_key, service_name) => {
+  const authHeaders = getClientAuthHeaders(client_key)
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  }
+  return fetch(
+    `${env.API_BASE}/api/client/history?service=${service_name}&limit=0`,
+    opts
+  )
+}

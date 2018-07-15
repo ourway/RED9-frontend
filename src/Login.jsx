@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import store from 'store'
 import sample from 'lodash/sample'
-import { sendLoginRequest, titleChangeSignal, redirectSignal } from './utils'
+import {
+  sendLoginRequest,
+  titleChangeSignal,
+  redirectSignal,
+  reporterSignal
+} from './utils'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Grid } from 'semantic-ui-react'
 import Footer from './Footer'
@@ -20,6 +25,9 @@ class Login extends Component {
       isLoadingDayquote: false,
       isLoggingIn: false,
       uuid: props.match.params.client_key,
+      only_report:
+        props.match.params.only_report ===
+        '7f45a9fa-5437-44df-a62c-03279548473d',
       activateButton: false
     }
     this.doLogin = this.doLogin.bind(this)
@@ -71,6 +79,9 @@ class Login extends Component {
   }
 
   componentDidMount() {
+    if (this.state.only_report === true) {
+      reporterSignal.next('OK')
+    }
     this.redirectSubscription = redirectSignal
       .distinctUntilChanged()
       .subscribe({
@@ -80,6 +91,7 @@ class Login extends Component {
       })
 
     store.clearAll()
+    store.set('reporter', btoa(this.state.only_report))
     titleChangeSignal.next('Login')
     this.quoteStartTimeout = setTimeout(() => {
       this.loadDayquote()
@@ -147,6 +159,11 @@ class Login extends Component {
                   <small style={{ color: 'grey' }}>
                     Verison <b>{env.product_version.split('/')[0]}</b>
                     {env.product_version.split('/')[1]}
+                    {` | `}
+                    Code Name:{' '}
+                    <u>
+                      <code style={{ fontSize: 12 }}>{env.codename}</code>
+                    </u>
                     {` | `}
                     Endpoint: {env.API_BASE}
                     <br />

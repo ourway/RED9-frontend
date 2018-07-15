@@ -510,3 +510,10 @@ code.red9_samples  {
     color: #dbac03 !important;
     background: #2d3841 !important;
 }
+
+
+.recharts-default-tooltip {
+    color: black;
+
+}
+
