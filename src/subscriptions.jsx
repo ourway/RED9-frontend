@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import { fixDatetime } from './utils'
 import { Segment, Table } from 'semantic-ui-react'
 import { getSubscribers } from './apis'
 import store from 'store'
@@ -74,7 +75,7 @@ class Subscriptions extends Component {
                   <Table.Cell>
                     {JDate.toJalali(new Date(s.activated_on)).join('/')}
                     {' | '}
-                    <small>{s.activated_on}</small>
+                    <small>{fixDatetime(s.activated_on)}</small>
                   </Table.Cell>
                   <Table.Cell>{s.sub_source}</Table.Cell>
                   <Table.Cell>
@@ -82,7 +83,7 @@ class Subscriptions extends Component {
                       <span>
                         {JDate.toJalali(new Date(s.deactivated_on)).join('/')}
                         {' | '}
-                        <small>{s.deactivated_on}</small>
+                        <small>{fixDatetime(s.deactivated_on)}</small>
                       </span>
                     ) : null}
                   </Table.Cell>

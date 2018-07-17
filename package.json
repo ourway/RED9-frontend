@@ -12,7 +12,7 @@
     "jalali-date": "^1.0.2",
     "lato-font": "^3.0.0",
     "lodash": "^4.17.10",
-    "office-ui-fabric-react": "^6.35.0",
+    "office-ui-fabric-react": "^6.37.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-gist": "^1.2.1",
@@ -25,7 +25,7 @@
     "semantic-ui-react": "^0.82.0",
     "store": "^2.0.12",
     "string": "^3.3.3",
-    "sweetalert2": "^7.25.0",
+    "sweetalert2": "^7.25.6",
     "typeface-inconsolata": "^0.0.54"
   },
   "scripts": {

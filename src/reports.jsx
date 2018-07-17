@@ -85,10 +85,7 @@ class Reports extends Component {
           let indexed = _.uniqBy(
             _.merge(reports.activations, reports.deactivations),
             'date_time'
-          ).filter(e => {
-            return e.date_time !== 'N/A'
-          })
-
+          )
           this.setState({
             red9_sub_data: {
               raw_data: data.reports,
@@ -347,7 +344,7 @@ class Reports extends Component {
             <Segment id="mci_report_panel_wappush" inverted>
               <ResponsiveContainer width="99%" height={200}>
                 <LineChart
-                  data={this.state.red9_sub_data.nested}
+                  data={_.union(this.state.red9_sub_data.reports.activations)}
                   margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
                 >
                   <XAxis dataKey="date_time" />
@@ -363,11 +360,40 @@ class Reports extends Component {
                     stroke="teal"
                     activeDot={{ r: 2 }}
                   />
+
                   <Line
-                    activeDot={{ r: 5 }}
+                    type="monotone"
+                    dataKey="source"
+                    stroke="grey"
+                    activeDot={{ r: 2 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+
+              <ResponsiveContainer width="99%" height={200}>
+                <LineChart
+                  data={_.union(this.state.red9_sub_data.reports.deactivations)}
+                  margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                >
+                  <XAxis dataKey="date_time" />
+                  <YAxis />
+                  <Tooltip
+                    wrapperStyle={{ backgroundColor: '#222' }}
+                    cursor={{ stroke: '#515151', strokeWidth: 1 }}
+                  />
+                  <Legend verticalAlign="top" height={36} />
+                  <Line
                     type="monotone"
                     dataKey="deactivations"
                     stroke="red"
+                    activeDot={{ r: 2 }}
+                  />
+
+                  <Line
+                    type="monotone"
+                    dataKey="source"
+                    stroke="grey"
+                    activeDot={{ r: 2 }}
                   />
                 </LineChart>
               </ResponsiveContainer>

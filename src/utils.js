@@ -23,6 +23,13 @@ export const stopLoading$ = new Rx.Subject()
 
 //export const ab_controller = new AbortController()
 //export const ab_signal = ab_controller.signal
+//
+export const fixDatetime = dtr => {
+  let dt = new Date(dtr)
+  let myTZO = 270
+  let myNewDate = new Date(dt.getTime() + myTZO * 60000)
+  return myNewDate.toLocaleString('en-US', { timeZone: 'Asia/Tehran' })
+}
 
 export const getIp = () => {
   return fetch('https://ipapi.co/json')
