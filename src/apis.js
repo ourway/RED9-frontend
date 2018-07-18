@@ -458,3 +458,15 @@ export const getSubscriptionDetails = (client_key, service_name) => {
     opts
   )
 }
+
+export const getAllReports = (client_key, service_name) => {
+  const authHeaders = getClientAuthHeaders(client_key)
+  let opts = {
+    method: 'GET',
+    headers: authHeaders
+  }
+  return fetch(
+    `${env.API_BASE}/api/client/get_service_report/${service_name}/all`,
+    opts
+  )
+}

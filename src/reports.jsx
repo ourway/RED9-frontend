@@ -17,7 +17,11 @@ import {
   Legend
 } from 'recharts'
 
-import { getFTPAggregateReport, getSubscriptionDetails } from './apis'
+import {
+  getFTPAggregateReport,
+  getSubscriptionDetails,
+  getAllReports
+} from './apis'
 
 const str_pad = n => {
   return String('00' + n).slice(-2)
@@ -39,6 +43,7 @@ class Reports extends Component {
     this.state = {
       raw_data: [],
       data: [],
+      all_reports: [],
       red9_sub_data: { reports: { activations: [], deactivations: [] } },
       endDate: today,
       startDate: lastM,
@@ -62,6 +67,18 @@ class Reports extends Component {
         jdate.getDate()
       )}`
     }
+  }
+
+  doGetAllReports = () => {
+    const service = store.get('service')
+    const apikey = store.get('uuid')
+    getAllReports(atob(apikey), service.name).then(resp => {
+      if (resp.status === 200) {
+        resp.json().then(data => {
+          this.setState({ all_reports: data.result.reverse() })
+        })
+      }
+    })
   }
 
   fetchReportData = () => {
@@ -122,6 +139,7 @@ class Reports extends Component {
   componentDidMount() {
     this.fetchTimeout = setTimeout(() => {
       this.fetchReportData()
+      this.doGetAllReports()
     }, 200)
   }
 
@@ -178,10 +196,129 @@ class Reports extends Component {
             </Menu.Menu>
           </Menu>
 
+          <Segment id="mci_report_panel" inverted>
+            <h1 align="center">Daily Subscription Stats</h1>
+            <ResponsiveContainer width="99%" height={200}>
+              <ComposedChart
+                data={this.state.all_reports}
+                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+              >
+                <XAxis dataKey="jday" />
+                <YAxis />
+                <Tooltip
+                  wrapperStyle={{ backgroundColor: '#222' }}
+                  cursor={{ stroke: '#515151', strokeWidth: 1 }}
+                />
+                <Legend verticalAlign="top" height={36} />
+
+                <Area
+                  type="monotone"
+                  dataKey="total_postpaid_subscribers"
+                  fill="teal"
+                  stroke="green"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="total_prepaid_subscribers"
+                  fill="#234444"
+                  stroke="lightgreen"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="postpaid_deactivations"
+                  fill="hotpink"
+                  stroke="pink"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="prepaid_deactivations"
+                  fill="darkred"
+                  stroke="red"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="new_postpaid_subscribers"
+                  fill="grey"
+                  stroke="red"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="new_prepaid_subscribers"
+                  fill="lightgrey"
+                  stroke="hotpink"
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+
+            <h1 align="center">MO/MT Stats</h1>
+            <ResponsiveContainer width="99%" height={200}>
+              <ComposedChart
+                data={this.state.all_reports}
+                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+              >
+                <XAxis dataKey="jday" />
+                <YAxis />
+                <Tooltip
+                  wrapperStyle={{ backgroundColor: '#222' }}
+                  cursor={{ stroke: '#515151', strokeWidth: 1 }}
+                />
+                <Legend verticalAlign="top" height={36} />
+
+                <Area
+                  type="monotone"
+                  dataKey="postpaid_mo_count"
+                  fill="green"
+                  stroke="darkgreen"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="prepaid_mo_count"
+                  fill="green"
+                  stroke="darkgreen"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="postpaid_mt_count"
+                  fill="teal"
+                  stroke="teal"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="prepaid_mt_count"
+                  fill="darkgreen"
+                  stroke="green"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="postpaid_delivery_count"
+                  fill="lightgrey"
+                  stroke="grey"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="prepaid_delivery_count"
+                  fill="lightgrey"
+                  stroke="grey"
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Segment>
+
           {this.state.service.meta &&
           this.state.service.wappush !== 'true' &&
           this.state.service.meta.operator === 'MCI' ? (
             <Segment id="mci_report_panel" inverted>
+              <h1 align="center">FTP server data</h1>
               <ResponsiveContainer width="99%" height={200}>
                 <LineChart
                   data={this.state.data}

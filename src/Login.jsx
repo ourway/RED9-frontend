@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import store from 'store'
 import sample from 'lodash/sample'
+import { distinctUntilChanged } from 'rxjs/operators'
 import {
   sendLoginRequest,
   titleChangeSignal,
@@ -83,7 +84,7 @@ class Login extends Component {
       reporterSignal.next('OK')
     }
     this.redirectSubscription = redirectSignal
-      .distinctUntilChanged()
+      .pipe(distinctUntilChanged())
       .subscribe({
         next: (t, history) => {
           this.props.history.push(t)

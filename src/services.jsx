@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import Gist from 'react-gist'
 import store from 'store'
 import {
@@ -229,8 +230,10 @@ class Services extends Component {
     }
 
     this.colorCodeChangeSubscription = changeColorCode$
-      .distinctUntilChanged()
-      .debounceTime(250)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(250)
+      )
       .subscribe(c => {
         this.setState({ colorCode: c })
       })

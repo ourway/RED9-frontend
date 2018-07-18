@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Grid, Image, Step, Statistic, Label, Icon } from 'semantic-ui-react'
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import {
   usernameAssigned,
   selectService$,
@@ -158,15 +159,19 @@ class Header extends Component {
     }
 
     this.colorCodeChangeSubscription = changeColorCode$
-      .distinctUntilChanged()
-      .debounceTime(500)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
       .subscribe(c => {
         this.setState({ colorCode: c })
       })
 
     this.appSelection = selectApp$
-      .distinctUntilChanged()
-      .debounceTime(500)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
       .subscribe(v => {
         if (v) {
           this.setState({ app: v })
@@ -177,8 +182,10 @@ class Header extends Component {
       })
 
     this.serviceSelection = selectService$
-      .distinctUntilChanged()
-      .debounceTime(250)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(250)
+      )
       .subscribe({
         next: s => {
           this.setState({
@@ -230,7 +237,7 @@ class Header extends Component {
       })
 
     this.clientSubscription = usernameAssigned
-      .distinctUntilChanged()
+      .pipe(distinctUntilChanged())
       .subscribe({
         next: v => {
           this.setState({
@@ -312,7 +319,7 @@ class Header extends Component {
 
             <Grid.Column
               computer={11}
-              only="computer"
+              only="computer tablet"
               verticalAlign="middle"
               textAlign="right"
             >

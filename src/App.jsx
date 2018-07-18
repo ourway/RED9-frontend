@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import S from 'string'
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import { Route, Switch } from 'react-router-dom'
 import store from 'store'
 import {
@@ -78,8 +79,10 @@ class App extends Component {
     })
 
     this.searchChangedSubscription = searching$
-      .distinctUntilChanged()
-      .debounceTime(1000)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(1000)
+      )
       .subscribe({
         next: q => {
           if (q) {
@@ -89,7 +92,7 @@ class App extends Component {
       })
 
     this.redirectSubscription = redirectSignal
-      .distinctUntilChanged()
+      .pipe(distinctUntilChanged())
       .subscribe({
         next: (t, history) => {
           this.props.history.push(t)
@@ -118,7 +121,7 @@ class App extends Component {
           <Grid.Row style={{ paddingTop: 0, borderTop: '1px solid #41474d' }}>
             <Grid.Column
               computer={3}
-              only="computer"
+              only="computer tablet"
               style={{
                 borderRight: '1px solid #515151',
                 padding: 10,
@@ -138,7 +141,7 @@ class App extends Component {
               }}
               className="desktop"
               computer={13}
-              only="computer"
+              only="computer tablet"
             >
               <Segment
                 className="grad"
@@ -332,7 +335,7 @@ class App extends Component {
             <Grid.Column
               mobile="16"
               tablet="16"
-              only="mobile tablet"
+              only="mobile"
               className="ms-slideUpIn20"
             >
               <Segment inverted textAlign="left" padded="very">

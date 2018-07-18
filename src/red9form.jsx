@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import store from 'store'
 import sample from 'lodash/sample'
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 
 import {
   Button,
@@ -412,7 +413,7 @@ class Red9Form extends Component {
   componentDidMount() {
     changeColorCode$.next(this.state.colorCode)
     this.editableFormSubscription = toggleFormEdit$
-      .debounceTime(50)
+      .pipe(debounceTime(50))
       .subscribe(target => {
         if (target.meta.uuid === this.state.data.meta.uuid) {
           this.setState({ isHidden: !this.state.isHidden })
@@ -420,8 +421,10 @@ class Red9Form extends Component {
       })
 
     this.filterSubscription = onFilter$
-      .debounceTime(500)
-      .distinctUntilChanged()
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
       .subscribe(debounced => {
         if (!debounced) {
           this.setState({

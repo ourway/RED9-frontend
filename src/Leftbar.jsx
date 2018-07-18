@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { List, Icon, Search, Label } from 'semantic-ui-react'
 import store from 'store'
 
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import { selectService$, selectApp$, searching$ } from './utils'
 
 import { Link } from 'react-router-dom'
@@ -51,8 +52,10 @@ class Leftbar extends Component {
     }, 100)
 
     this.serviceSelection = selectService$
-      .distinctUntilChanged()
-      .debounceTime(50)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(50)
+      )
       .subscribe({
         next: s => {
           this.setState({ selected_service: s })
@@ -60,15 +63,17 @@ class Leftbar extends Component {
       })
 
     this.AppSelection = selectApp$
-      .distinctUntilChanged()
-      .debounceTime(50)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(50)
+      )
       .subscribe({
         next: a => {
           this.setState({ selected_app: a })
         }
       })
 
-    this.adminSubscription = isAdmin.distinctUntilChanged().subscribe({
+    this.adminSubscription = isAdmin.pipe(distinctUntilChanged()).subscribe({
       next: b => {
         this.setState({
           is_admin: b

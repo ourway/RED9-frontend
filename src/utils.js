@@ -1,25 +1,26 @@
 import swal from 'sweetalert2'
-import Rx from 'rxjs/Rx'
+import { Subject } from 'rxjs'
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import { env } from './config'
 import { getClientGateways, createClientGateway } from './apis'
 
 import store from 'store'
-export const usernameAssigned = new Rx.Subject()
-export const isAdmin = new Rx.Subject()
-export const nowUpdate = new Rx.Subject()
-export const redirectSignal = new Rx.Subject()
-export const clientKeySignal = new Rx.Subject()
-export const reloadReports = new Rx.Subject()
-export const titleChangeSignal = new Rx.Subject()
-export const onFilter$ = new Rx.Subject()
-export const reporterSignal = new Rx.Subject()
-export const selectService$ = new Rx.Subject()
-export const selectApp$ = new Rx.Subject()
-export const toggleFormEdit$ = new Rx.Subject()
-export const changeColorCode$ = new Rx.Subject()
-export const searching$ = new Rx.Subject()
-export const startLoading$ = new Rx.Subject()
-export const stopLoading$ = new Rx.Subject()
+export const usernameAssigned = new Subject()
+export const isAdmin = new Subject()
+export const nowUpdate = new Subject()
+export const redirectSignal = new Subject()
+export const clientKeySignal = new Subject()
+export const reloadReports = new Subject()
+export const titleChangeSignal = new Subject()
+export const onFilter$ = new Subject()
+export const reporterSignal = new Subject()
+export const selectService$ = new Subject()
+export const selectApp$ = new Subject()
+export const toggleFormEdit$ = new Subject()
+export const changeColorCode$ = new Subject()
+export const searching$ = new Subject()
+export const startLoading$ = new Subject()
+export const stopLoading$ = new Subject()
 
 //export const ab_controller = new AbortController()
 //export const ab_signal = ab_controller.signal
@@ -37,15 +38,17 @@ export const getIp = () => {
 
 export const browser = () => {}
 
-titleChangeSignal.distinctUntilChanged().subscribe({
+titleChangeSignal.pipe(distinctUntilChanged()).subscribe({
   next: t => {
     document.title = `${t} - ${env.company} ${env.product}`
   }
 })
 
 selectService$
-  .distinctUntilChanged()
-  .debounceTime(50)
+  .pipe(
+    distinctUntilChanged(),
+    debounceTime(50)
+  )
   .subscribe({
     next: s => {
       const serviceData = {

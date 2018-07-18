@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
-import Rx from 'rxjs/Rx'
+
+import { Subject } from 'rxjs'
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
+
 import store from 'store'
 import {
   Dropdown,
@@ -33,7 +36,7 @@ import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Dropdown as MSDropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-const filter$ = new Rx.Subject()
+const filter$ = new Subject()
 
 class Reactions extends Component {
   constructor(props) {
@@ -223,10 +226,10 @@ class Reactions extends Component {
     }
 
     this.filterSubscribe = filter$
-
-      .distinctUntilChanged()
-      .debounceTime(500)
-
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
       .subscribe(v => {
         const newList = this.state.ref_reactions.filter(t => {
           return this.state.filter === ''

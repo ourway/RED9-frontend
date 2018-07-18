@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
-import Rx from 'rxjs/Rx'
+import { Subject } from 'rxjs'
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import {
   Table,
   Menu,
@@ -25,7 +26,7 @@ import {
 } from 'office-ui-fabric-react/lib/Dialog'
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
-const filter$ = new Rx.Subject()
+const filter$ = new Subject()
 
 class Templates extends Component {
   constructor(props) {
@@ -141,9 +142,10 @@ class Templates extends Component {
     titleChangeSignal.next(`Templates`)
     this._getTemplates()
     this.filterSubscribe = filter$
-
-      .distinctUntilChanged()
-      .debounceTime(500)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
 
       .subscribe(v => {
         const newList = this.state.ref_templates.filter(t => {
