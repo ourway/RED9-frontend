@@ -189,6 +189,42 @@ class Applications extends Component {
     this.setState({ apps: newList })
   }
 
+  handleAKLimitChange = (ai, aki, key, value) => {
+    let target = this.state.apps[ai].apikeys[aki]
+
+    let newApiKeys = [
+      ...this.state.apps[ai].apikeys.slice(0, aki),
+      { ...target, [`${key}_tpm`]: Math.max(0, Number(value)) },
+      ...this.state.apps[ai].apikeys.slice(aki + 1)
+    ]
+
+    let newList = [
+      ...this.state.apps.slice(0, ai),
+      { ...this.state.apps[ai], apikeys: newApiKeys },
+      ...this.state.apps.slice(ai + 1)
+    ]
+
+    this.setState({ apps: newList })
+  }
+
+  toggleACLStatus = (ai, aki, key) => {
+    let target = this.state.apps[ai].apikeys[aki]
+
+    let newApiKeys = [
+      ...this.state.apps[ai].apikeys.slice(0, aki),
+      { ...target, [`can_${key}`]: !target[`can_${key}`] },
+      ...this.state.apps[ai].apikeys.slice(aki + 1)
+    ]
+
+    let newList = [
+      ...this.state.apps.slice(0, ai),
+      { ...this.state.apps[ai], apikeys: newApiKeys },
+      ...this.state.apps.slice(ai + 1)
+    ]
+
+    this.setState({ apps: newList })
+  }
+
   handleAppUpdate = app => {
     startLoading$.next(true)
     const uuidKey = store.get('uuid')
@@ -244,12 +280,8 @@ class Applications extends Component {
               <Table.HeaderCell />
               <Table.HeaderCell width={2}>Name</Table.HeaderCell>
               <Table.HeaderCell width={1}>Status</Table.HeaderCell>
-              <Table.HeaderCell width={7}>Callback (MO) URL</Table.HeaderCell>
-              <Table.HeaderCell width={1}>
-                Queued <br />
-                <small>messages</small>
-              </Table.HeaderCell>
-              <Table.HeaderCell width={4}>API Keys</Table.HeaderCell>
+              <Table.HeaderCell width={6}>Callback (MO) URL</Table.HeaderCell>
+              <Table.HeaderCell width={7}>API Keys</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -293,10 +325,9 @@ class Applications extends Component {
                           ? {
                               labelPosition: 'left',
                               icon: 'save',
-                              label: 'Save',
                               color: 'green',
                               onClick: (o, v) => this.handleUrlUpdate(a, o, v),
-                              circular: true
+                              circular: false
                             }
                           : null
                       }
@@ -307,13 +338,142 @@ class Applications extends Component {
                       value={a.mo_url}
                     />
                   </Table.Cell>
-                  <Table.Cell />
                   <Table.Cell>
-                    {a.apikeys.map((ak, i) => {
+                    {a.apikeys.map((ak, aki) => {
                       return (
-                        <li key={i} className="appListLi">
-                          <code style={{ fontSize: 10 }}>{ak}</code>
-                        </li>
+                        <ul key={ak}>
+                          <li className="appListLi">
+                            {JSON.stringify(
+                              this.state.original_apps[i].apikeys[aki]
+                            ) !== JSON.stringify(ak) ? (
+                              <a style={{ float: 'right' }}>
+                                <Icon
+                                  name="save"
+                                  color="green"
+                                  onClick={() => this.handleAppUpdate(a)}
+                                />
+                              </a>
+                            ) : null}
+                            <Icon name="key" color="teal" />
+                            <code style={{ fontSize: 14 }}>{ak.key}</code>
+                          </li>
+
+                          <table className="apikeys_table">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <h4>
+                                    <Icon name="adjust" color="grey" />
+                                    Limitations
+                                  </h4>
+                                  <table>
+                                    <tbody>
+                                      {[
+                                        'message',
+                                        'charge',
+                                        'push_otp',
+                                        'push_notif'
+                                      ].map((cr, x) => {
+                                        return (
+                                          <tr key={cr}>
+                                            <td>
+                                              {cr
+                                                .replace('_', ' ')
+                                                .toUpperCase()}{' '}
+                                              ⇢{' '}
+                                            </td>
+                                            <td>
+                                              <Input
+                                                size="small"
+                                                inverted
+                                                style={{
+                                                  backgroundColor:
+                                                    this.state.original_apps[i]
+                                                      .apikeys[aki][
+                                                      `${cr}_tpm`
+                                                    ] !== ak[`${cr}_tpm`]
+                                                      ? '#552a2a'
+                                                      : 'transparent'
+                                                }}
+                                                icon="thermometer quarter"
+                                                type="number"
+                                                disabled={
+                                                  ak[`can_${cr}`] !== true
+                                                }
+                                                readOnly={
+                                                  ak[`can_${cr}`] !== true
+                                                }
+                                                onChange={(o, t) =>
+                                                  this.handleAKLimitChange(
+                                                    i,
+                                                    aki,
+                                                    cr,
+                                                    t.value
+                                                  )
+                                                }
+                                                iconPosition="left"
+                                                transparent
+                                                value={ak[`${cr}_tpm`]}
+                                              />
+                                            </td>
+                                          </tr>
+                                        )
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </td>
+                                <td>
+                                  <h4>
+                                    <Icon
+                                      name="shield alternate"
+                                      color="grey"
+                                    />
+                                    ACL
+                                  </h4>
+                                  <table>
+                                    <tbody>
+                                      {[
+                                        'message',
+                                        'charge',
+                                        'push_otp',
+                                        'push_notif'
+                                      ].map((cr, y) => {
+                                        return (
+                                          <tr key={cr}>
+                                            <td>{cr} </td>
+                                            <td>
+                                              <a
+                                                onClick={() =>
+                                                  this.toggleACLStatus(
+                                                    i,
+                                                    aki,
+                                                    cr
+                                                  )
+                                                }
+                                              >
+                                                {ak[`can_${cr}`] === true ? (
+                                                  <Icon
+                                                    name="checkmark box"
+                                                    color="teal"
+                                                  />
+                                                ) : (
+                                                  <Icon
+                                                    name="square outline"
+                                                    color="grey"
+                                                  />
+                                                )}
+                                              </a>
+                                            </td>
+                                          </tr>
+                                        )
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </ul>
                       )
                     })}
                   </Table.Cell>

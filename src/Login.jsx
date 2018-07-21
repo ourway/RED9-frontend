@@ -204,7 +204,7 @@ class Login extends Component {
                     <CompoundButton
                       primary={true}
                       onClick={this.doLogin}
-                      description={`to ${env.company} ${env.product}`}
+                      secondaryText={`to ${env.company} ${env.product}`}
                       disabled={this.state.activateButton === false}
                       checked={false}
                     >

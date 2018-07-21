@@ -4,6 +4,7 @@ export const browser =
   detect() !== null ? detect() : { os: 'N/A', name: 'Unknown' }
 
 const mode = 'rashavas'
+const servermode = 'local' // or production
 
 const sabaidea_env = {
   company: 'SabaIdea',
@@ -30,6 +31,7 @@ const sabaidea_env = {
   colorset: [
     '#002046',
     '#210f0f',
+    '#362156',
     '#111111',
     '#091508',
     '#1e0c21',
@@ -45,7 +47,8 @@ const rashavas_env = {
   company_contact_gsm: '9120228207',
   product: 'RED9',
   product_color: '#00182f',
-  API_BASE: 'https://red9.ir',
+  API_BASE:
+    servermode === 'local' ? 'http://localhost:6051' : 'https://red9.ir',
   SELF_IP: 'http://10.20.197.211',
   SELF_PORT: 6051,
   IMI_PORT: 8090,
@@ -67,6 +70,7 @@ const rashavas_env = {
     '#111111',
     '#091508',
     '#1e0c21',
+    '#362156',
     '#1d0b27',
     '#232221',
     '#270d18'
@@ -102,6 +106,7 @@ const wat_env = {
     '#111111',
     '#091508',
     '#1e0c21',
+    '#362156',
     '#1d0b27',
     '#232221',
     '#270d18'

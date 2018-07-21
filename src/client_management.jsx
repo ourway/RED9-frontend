@@ -64,6 +64,60 @@ class ClientManagement extends Component {
             description: 'Service Provider MSISDN',
             placeholder: 'Unique number / 989xx-xxxx-xxx (MSISDN please)',
             type: 'tel'
+          },
+
+          {
+            name: 'Max MT Message TPM',
+            key: 'config.max_message_tpm',
+            //default: 1200,
+            description: 'Maximun number of overall MT messages per minute',
+            placeholder: '1200 messages per minute (across all services)',
+            type: 'number'
+          },
+          {
+            name: 'Max Charge TPM',
+            key: 'config.max_charge_tpm',
+            //default: 1200,
+            description: 'Maximun number of overall charge requests per minute',
+            placeholder: '1200 charges per minute (across all services)',
+            type: 'number'
+          },
+
+          {
+            name: 'Max Push OTP TPM',
+            key: 'config.max_push_otp_tpm',
+            //default: 1200,
+            description: 'Maximun number of overall push OTPs per minute',
+            placeholder: '1200 otp pushes per minute (across all services)',
+            type: 'number'
+          },
+
+          {
+            name: 'Max Push Notification TPM',
+            key: 'config.max_push_notif_tpm',
+            //default: 1200,
+            description:
+              'Maximun number of overall push notifications per minute',
+            placeholder: '4800 pushes per minute (across all services)',
+            type: 'number'
+          },
+
+          {
+            name: 'Email Report Frequency',
+            //default: 2,
+            key: 'config.email_report_freq',
+            description: 'Report emailes will be sent every N days',
+            placeholder: '2',
+            type: 'number'
+          },
+
+          {
+            name: 'IP whitelist',
+            //default: 2,
+            key: 'config.white_list_ips',
+            placeholder: '91.99.99.203;185.147.178.13;...',
+            description: 'List of whitelist IPs',
+            type: 'text'
           }
         ],
         data: {}
@@ -189,10 +243,24 @@ class ClientManagement extends Component {
   }
 
   DialogValueChanged = (value, key) => {
-    let data = {
-      ...this.state.attrDialogOps.data,
-      [key]: value.toString()
+    let data = {}
+
+    if (key.match('config.') === null) {
+      data = {
+        ...this.state.attrDialogOps.data,
+        [key]: value.toString()
+      }
+    } else {
+      data = {
+        ...this.state.attrDialogOps.data,
+        [key]: value.toString(),
+        config: {
+          ...this.state.attrDialogOps.data.config,
+          [key.slice(7, 100)]: value.toString()
+        }
+      }
     }
+
     if (!value) {
       let raw_data = this.state.attrDialogOps.data
       delete raw_data[key]
@@ -260,6 +328,8 @@ class ClientManagement extends Component {
               <Table.HeaderCell>Status</Table.HeaderCell>
               <Table.HeaderCell>Contact</Table.HeaderCell>
               <Table.HeaderCell>Contact Number</Table.HeaderCell>
+              <Table.HeaderCell>Limits [M/C/P]</Table.HeaderCell>
+              <Table.HeaderCell>IP ACL</Table.HeaderCell>
               <Table.HeaderCell>Client Access Key</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
@@ -275,6 +345,11 @@ class ClientManagement extends Component {
                       .trim()
                       .match(RegExp(this.state.filter)) !== null ||
                       c.name
+                        .toLowerCase()
+                        .trim()
+                        .match(RegExp(this.state.filter)) !== null ||
+                      c.services
+                        .join(';')
                         .toLowerCase()
                         .trim()
                         .match(RegExp(this.state.filter)) !== null ||
@@ -322,6 +397,11 @@ class ClientManagement extends Component {
                       {c.name}
                     </Table.Cell>
                     <Table.Cell>{c.gsm}</Table.Cell>
+                    <Table.Cell>
+                      {c.config.max_message_tpm} / {c.config.max_charge_tpm} /{' '}
+                      {c.config.max_push_notif_tpm}
+                    </Table.Cell>
+                    <Table.Cell>{c.config.white_list_ips}</Table.Cell>
                     <Table.Cell>
                       <code>{c.client_key}</code>
                     </Table.Cell>
@@ -471,7 +551,7 @@ class ClientManagement extends Component {
                 type={p.type}
                 borderless
                 onChanged={v => this.DialogValueChanged(v, p.key)}
-                value={this.state.attrDialogOps.data[p.key]}
+                value={this.state.attrDialogOps.data[p.key] || p.default}
                 title={p.description}
                 placeholder={p.placeholder}
                 required={true}
@@ -484,7 +564,7 @@ class ClientManagement extends Component {
               text="Add"
               disabled={
                 Object.keys(this.state.attrDialogOps.data).length !==
-                this.state.attrDialogOps.params.length
+                this.state.attrDialogOps.params.length + 1
               }
             />
             <DefaultButton

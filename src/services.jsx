@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import swal from 'sweetalert2'
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import Gist from 'react-gist'
+import sample from 'lodash/sample'
 import store from 'store'
 import {
   Menu,
@@ -465,8 +466,11 @@ class Services extends Component {
         <Menu attached="top" inverted>
           {this.state.services.map((s, i) => {
             if (i <= 5) {
+              let cc = s.meta.colorCode || sample(env.colorset)
+
               return (
                 <Menu.Item
+                  style={{ borderRight: `10px solid ${cc}aa` }}
                   as="a"
                   icon={s.meta.is_active === true ? 'toggle on' : 'toggle off'}
                   fitted="vertically"

@@ -281,7 +281,7 @@ footer {
 }
 
 .ui.search input {
-    background: #234444 !important;
+    background: #2e2e2e !important;
     color: white !important;
 }
 
@@ -517,3 +517,9 @@ code.red9_samples  {
 
 }
 
+.apikeys_table {
+padding: inherit;
+background-color: #0d0d0d1a;
+width: 100%;
+border: 1px solid #515151;
+}
