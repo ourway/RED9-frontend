@@ -1,7 +1,7 @@
 {
   "name": "red9_console",
-  "version": "0.1.0",
-  "homepage": "https://aparat.red9.ir",
+  "version": "0.1.1",
+  "homepage": "https://red9.ir",
   "private": true,
   "dependencies": {
     "accounting-js": "^1.1.1",
@@ -12,20 +12,20 @@
     "jalali-date": "^1.0.2",
     "lato-font": "^3.0.0",
     "lodash": "^4.17.10",
-    "office-ui-fabric-react": "^6.37.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "office-ui-fabric-react": "^6.48.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "react-gist": "^1.2.1",
     "react-highlight": "^0.12.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
-    "recharts": "^1.0.1",
+    "recharts": "^1.1.0",
     "rxjs": "^6.2.2",
     "semantic-ui-css": "^2.3.3",
-    "semantic-ui-react": "^0.82.0",
+    "semantic-ui-react": "^0.82.2",
     "store": "^2.0.12",
     "string": "^3.3.3",
-    "sweetalert2": "^7.25.6",
+    "sweetalert2": "^7.26.11",
     "typeface-inconsolata": "^0.0.54"
   },
   "scripts": {
@@ -36,9 +36,14 @@
     "precommit": "lint-staged"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.3.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-react": "^7.11.1",
     "husky": "^0.14.3",
-    "lint-staged": "^7.2.0",
-    "prettier": "^1.13.7"
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2"
   },
   "lint-staged": {
     "*.js": [

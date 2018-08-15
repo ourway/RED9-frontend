@@ -48,6 +48,15 @@ export const serviceParams = [
   },
 
   {
+    name: 'spid',
+    type: 'text',
+    editable: true,
+    placeholder: 'Partner ID',
+    description: 'Partner id',
+    gateway: ['IRANCELL']
+  },
+
+  {
     name: 'service_name_fa',
     type: 'text',
     editable: true,

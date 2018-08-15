@@ -75,7 +75,24 @@ class Reports extends Component {
     getAllReports(atob(apikey), service.name).then(resp => {
       if (resp.status === 200) {
         resp.json().then(data => {
-          this.setState({ all_reports: data.result.reverse() })
+          let final = data.result.map((e, i) => {
+            return {
+              ...e,
+              deactivations: e.postpaid_deactivations + e.prepaid_deactivations,
+              activations:
+                e.new_postpaid_subscribers + e.new_prepaid_subscribers,
+              total_subs:
+                e.total_prepaid_subscribers + e.total_postpaid_subscribers,
+              bounced:
+                e.postpaid_bounced_subscribers + e.prepaid_bounced_subscribers,
+              pure:
+                e.new_postpaid_subscribers +
+                e.new_prepaid_subscribers -
+                (e.postpaid_bounced_subscribers + e.prepaid_bounced_subscribers)
+            }
+          })
+
+          this.setState({ all_reports: final.reverse() })
         })
       }
     })
@@ -99,15 +116,10 @@ class Reports extends Component {
             })
           }
 
-          let indexed = _.uniqBy(
-            _.merge(reports.activations, reports.deactivations),
-            'date_time'
-          )
           this.setState({
             red9_sub_data: {
               raw_data: data.reports,
-              reports: reports,
-              nested: indexed
+              reports: reports
             }
           })
         })
@@ -126,7 +138,13 @@ class Reports extends Component {
               raw_data: data.result,
               data: data.result.map((d, i) => {
                 const jdate = this.getPersianDate(d.date_time)
-                return { ...d, date_time: jdate }
+                return {
+                  ...d,
+                  date_time: jdate,
+                  jday: jdate,
+                  total_atempts:
+                    d.successful_charge_attempt + d.unsuccessful_charge_attempt
+                }
               })
             })
           })
@@ -213,44 +231,81 @@ class Reports extends Component {
 
                 <Area
                   type="monotone"
-                  dataKey="total_postpaid_subscribers"
-                  fill="teal"
+                  dataKey="deactivations"
+                  fill="Pink"
+                  stroke="red"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="activations"
+                  fill="lightgreen"
                   stroke="green"
                 />
 
                 <Area
                   type="monotone"
-                  dataKey="total_prepaid_subscribers"
-                  fill="#234444"
-                  stroke="lightgreen"
-                />
-
-                <Area
-                  type="monotone"
-                  dataKey="postpaid_deactivations"
+                  dataKey="bounced"
                   fill="hotpink"
                   stroke="pink"
                 />
 
                 <Area
                   type="monotone"
+                  dataKey="pure"
+                  fill="teal"
+                  stroke="black"
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="postpaid_deactivations"
+                  fill="LightPink"
+                  stroke="darkred"
+                />
+
+                <Area
+                  type="monotone"
                   dataKey="prepaid_deactivations"
-                  fill="darkred"
-                  stroke="red"
+                  fill="LightPink"
+                  stroke="darkred"
                 />
 
                 <Area
                   type="monotone"
                   dataKey="new_postpaid_subscribers"
-                  fill="grey"
-                  stroke="red"
+                  fill="PaleGoldenrod"
+                  stroke="LimeGreen"
                 />
 
                 <Area
                   type="monotone"
                   dataKey="new_prepaid_subscribers"
-                  fill="lightgrey"
-                  stroke="hotpink"
+                  fill="PaleGoldenrod"
+                  stroke="LimeGreen"
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+
+            <h1 align="center">Subscription Chart</h1>
+            <ResponsiveContainer width="99%" height={200}>
+              <ComposedChart
+                data={this.state.all_reports}
+                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+              >
+                <XAxis dataKey="jday" />
+                <YAxis />
+                <Tooltip
+                  wrapperStyle={{ backgroundColor: '#222' }}
+                  cursor={{ stroke: '#515151', strokeWidth: 1 }}
+                />
+                <Legend verticalAlign="top" height={36} />
+
+                <Area
+                  type="monotone"
+                  dataKey="total_subs"
+                  fill="teal"
+                  stroke="green"
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -335,10 +390,10 @@ class Reports extends Component {
                     type="monotone"
                     dataKey="unsub_count"
                     stroke="#cc0000"
-                    activeDot={{ r: 2 }}
+                    activeDot={{ r: 1 }}
                   />
                   <Line
-                    activeDot={{ r: 5 }}
+                    activeDot={{ r: 1 }}
                     type="monotone"
                     dataKey="subs_count"
                     stroke="teal"
@@ -376,7 +431,7 @@ class Reports extends Component {
                   <Bar dataKey="success_rate" barSize={10} fill="#333" />
 
                   <Line
-                    activeDot={{ r: 5 }}
+                    activeDot={{ r: 1 }}
                     type="monotone"
                     dataKey="success_rate"
                     stroke="orange"
@@ -400,78 +455,23 @@ class Reports extends Component {
                     type="monotone"
                     dataKey="unsuccessful_charge_attempt"
                     stroke="#cc0000"
-                    activeDot={{ r: 2 }}
+                    activeDot={{ r: 1 }}
                   />
                   <Line
-                    activeDot={{ r: 5 }}
+                    activeDot={{ r: 1 }}
                     type="monotone"
                     dataKey="successful_charge_attempt"
                     stroke="teal"
                   />
+
+                  <Line
+                    activeDot={{ r: 1 }}
+                    type="monotone"
+                    dataKey="total_atempts"
+                    stroke="black"
+                  />
                 </LineChart>
               </ResponsiveContainer>
-
-              <Divider />
-
-              <Table
-                celled
-                inverted
-                selectable
-                attached="bottom"
-                singleLine
-                striped
-                size="small"
-                compact
-                basic
-              >
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell />
-                    <Table.HeaderCell>Date</Table.HeaderCell>
-                    <Table.HeaderCell>Income</Table.HeaderCell>
-                    <Table.HeaderCell>Subs</Table.HeaderCell>
-                    <Table.HeaderCell>Unsubs</Table.HeaderCell>
-                    <Table.HeaderCell>Successful Charge tries</Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Unsuccessful Charge tries
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>Success Rate</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-
-                <Table.Body>
-                  {this.state.raw_data.reverse().map((r, i) => {
-                    return (
-                      <Table.Row key={i}>
-                        <Table.Cell textAlign="center">{i + 1}</Table.Cell>
-                        <Table.Cell textAlign="center">
-                          {this.getPersianDate(r.date_time)}
-                        </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          <code> {accounting.formatNumber(r.income)} </code>
-                        </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          {accounting.formatNumber(r.subs_count)}
-                        </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          {accounting.formatNumber(r.unsub_count)}
-                        </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          {accounting.formatNumber(r.successful_charge_attempt)}
-                        </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          {accounting.formatNumber(
-                            r.unsuccessful_charge_attempt
-                          )}
-                        </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          {Math.round(r.success_rate * 100) / 100}
-                        </Table.Cell>
-                      </Table.Row>
-                    )
-                  })}
-                </Table.Body>
-              </Table>
             </Segment>
           ) : null}
 
@@ -495,14 +495,14 @@ class Reports extends Component {
                     type="monotone"
                     dataKey="activations"
                     stroke="teal"
-                    activeDot={{ r: 2 }}
+                    activeDot={{ r: 1 }}
                   />
 
                   <Line
                     type="monotone"
                     dataKey="source"
                     stroke="grey"
-                    activeDot={{ r: 2 }}
+                    activeDot={{ r: 1 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -523,14 +523,14 @@ class Reports extends Component {
                     type="monotone"
                     dataKey="deactivations"
                     stroke="red"
-                    activeDot={{ r: 2 }}
+                    activeDot={{ r: 1 }}
                   />
 
                   <Line
                     type="monotone"
                     dataKey="source"
                     stroke="grey"
-                    activeDot={{ r: 2 }}
+                    activeDot={{ r: 1 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -572,7 +572,7 @@ class Reports extends Component {
                               type="monotone"
                               dataKey="activations"
                               stroke="lightgreen"
-                              activeDot={{ r: 2 }}
+                              activeDot={{ r: 1 }}
                             />
                           </LineChart>
                         </ResponsiveContainer>
@@ -619,7 +619,7 @@ class Reports extends Component {
                               type="monotone"
                               dataKey="deactivations"
                               stroke="red"
-                              activeDot={{ r: 2 }}
+                              activeDot={{ r: 1 }}
                             />
                           </LineChart>
                         </ResponsiveContainer>
@@ -633,6 +633,62 @@ class Reports extends Component {
             </Grid>
 
             <Divider />
+
+            <Table
+              celled
+              inverted
+              selectable
+              attached="bottom"
+              singleLine
+              striped
+              size="small"
+              compact
+              basic
+            >
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell />
+                  <Table.HeaderCell>Date</Table.HeaderCell>
+                  <Table.HeaderCell>Income</Table.HeaderCell>
+                  <Table.HeaderCell>Subs</Table.HeaderCell>
+                  <Table.HeaderCell>Unsubs</Table.HeaderCell>
+                  <Table.HeaderCell>Successful Charge tries</Table.HeaderCell>
+                  <Table.HeaderCell>Unsuccessful Charge tries</Table.HeaderCell>
+                  <Table.HeaderCell>Success Rate</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+
+              <Table.Body>
+                {this.state.raw_data.reverse().map((r, i) => {
+                  return (
+                    <Table.Row key={i}>
+                      <Table.Cell textAlign="center">{i + 1}</Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {this.getPersianDate(r.date_time)}
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        <code> {accounting.formatNumber(r.income)} </code>
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {accounting.formatNumber(r.subs_count)}
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {accounting.formatNumber(r.unsub_count)}
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {accounting.formatNumber(r.successful_charge_attempt)}
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {accounting.formatNumber(r.unsuccessful_charge_attempt)}
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {Math.round(r.success_rate * 100) / 100}
+                      </Table.Cell>
+                    </Table.Row>
+                  )
+                })}
+              </Table.Body>
+            </Table>
           </div>
         </Segment>
       </div>

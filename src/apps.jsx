@@ -523,7 +523,7 @@ class Applications extends Component {
                     {` curl -X POST \\
   ${env.API_BASE}/api/app/messaging/send_sms_without_charge \\
   	-H 'Content-Type: application/json' \\
-  	-H 'api-key: ${this.state.selected.apikeys}' \\
+  	-H 'api-key: ${this.state.selected.apikeys[0].key}' \\
   	-d '{
   		"message": "We like to think of ${env.company} ${
                       env.product
@@ -553,7 +553,7 @@ class Applications extends Component {
                     {` curl -X POST \\
   ${env.API_BASE}/api/app/messaging/send_bulk_to_subs \\
   	-H 'Content-Type: application/json' \\
-  	-H 'api-key: ${this.state.selected.apikeys}' \\
+  	-H 'api-key: ${this.state.selected.apikeys[0].key}' \\
   	-d '{
             "message": "We like to think of ${env.company} ${
                       env.product
@@ -588,7 +588,7 @@ class Applications extends Component {
                     {` curl -X POST \\
   ${env.API_BASE}/api/app/subscriptions/otp_subscribe \\
   	-H 'Content-Type: application/json' \\
-  	-H 'api-key: ${this.state.selected.apikeys}' \\
+  	-H 'api-key: ${this.state.selected.apikeys[0].key}' \\
   	-d '{
    		"national_number":${env.company_contact_gsm},
    		"country_code": 98
@@ -617,7 +617,7 @@ class Applications extends Component {
                     {` curl -X POST \\
   ${env.API_BASE}/api/app/subscriptions/otp_confirm_subscription \\
   	-H 'Content-Type: application/json' \\
-  	-H 'api-key: ${this.state.selected.apikeys}' \\
+  	-H 'api-key: ${this.state.selected.apikeys[0].key}' \\
   	-d '{
    		"correlator": "3e34c2b0-cd6d-4a05-a3e7-0e806192272",
    		"pin": "9527"

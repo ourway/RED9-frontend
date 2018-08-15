@@ -3,6 +3,7 @@ import S from 'string'
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import { Route, Switch } from 'react-router-dom'
 import store from 'store'
+
 import {
   titleChangeSignal,
   sendLoginRequest,
@@ -355,8 +356,8 @@ class App extends Component {
                   <br />
                   {browser.os === 'iOS' ? (
                     <span>
-                      We have successfully tested the application on <b>iPad</b>,{' '}
-                      <b>iPad Mini</b> and <b>iPad Pro</b> on landscape mode.
+                      We have successfully tested the application on <b>iPad</b>
+                      , <b>iPad Mini</b> and <b>iPad Pro</b> on landscape mode.
                     </span>
                   ) : null}
                   {browser.os === 'Mac OS' ? (

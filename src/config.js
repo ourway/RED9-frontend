@@ -4,7 +4,7 @@ export const browser =
   detect() !== null ? detect() : { os: 'N/A', name: 'Unknown' }
 
 const mode = 'rashavas'
-const servermode = 'local' // or production
+const servermode = 'production' // or production
 
 const sabaidea_env = {
   company: 'SabaIdea',
@@ -19,8 +19,8 @@ const sabaidea_env = {
   FTP_BASE: 'https://aparat.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://aparat.red9.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.7.1 / 18 Jul 2018',
-  codename: 'Ice Wicket',
+  product_version: '0.7.4 / 12 Aug 2018',
+  codename: 'Heavy Hurricane',
   logo: 'sabaidea',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
   copyright_logo: 'rashavas.logo',
@@ -55,7 +55,7 @@ const rashavas_env = {
   FTP_BASE: 'https://ftp.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://api.appido.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.7.1 / 18 Jul 2018',
+  product_version: '0.7.5 / 25 Jul 2018',
   codename: 'Ice Wicket',
   logo: 'red9',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
@@ -112,7 +112,5 @@ const wat_env = {
     '#270d18'
   ]
 }
-
 */
-
 export const env = mode === 'rashavas' ? rashavas_env : sabaidea_env

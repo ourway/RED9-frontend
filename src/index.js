@@ -4,7 +4,7 @@ import 'semantic-ui-css/semantic.css'
 import 'typeface-inconsolata/index.css'
 import 'font-awesome/css/font-awesome.css'
 import 'highlight.js/styles/solarized-dark.css'
-import 'lato-font/css/lato-font.css'
+import 'office-ui-fabric-react/dist/css/fabric.css'
 import './index.css'
 import './App.css'
 import './general'
@@ -63,7 +63,7 @@ registerServiceWorker()
 const is_devmode = process.env.NODE_ENV === 'development'
 
 if (is_devmode === false) {
-  const cst = 'color: green; font-size:12px;font-family:monospace'
+  const cst = 'color: green; font-size:19px;font-family:monospace'
   console.debug(
     `Hey geek friend!  ${env.company} ${
       env.product
