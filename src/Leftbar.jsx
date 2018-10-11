@@ -39,6 +39,7 @@ class Leftbar extends Component {
     clearTimeout(this.selectServiceTimeout)
     this.adminSubscription.unsubscribe()
     this.serviceSelection.unsubscribe()
+    this.AppSelection.unsubscribe()
   }
 
   componentDidMount() {

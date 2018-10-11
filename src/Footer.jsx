@@ -85,10 +85,29 @@ class Footer extends Component {
                 <a style={{ fontWeight: 400 }} href={`mailto:${fafan}`}>
                   {' '}
                   {atob(env.author)}
-                </a>/{' '}
+                </a>
+                /{' '}
               </span>
             </small>
           </div>
+          <br />
+          <div />
+          <ul>
+            <li style={{ display: 'inline-block' }}>
+              <a href="//docs.red9.ir">API documentation</a>
+            </li>
+            {' / '}
+            <li style={{ display: 'inline-block' }}>
+              <a href="//status.red9.ir">Service Status</a>
+            </li>
+            {' / '}
+            <li style={{ display: 'inline-block' }}>
+              <a href="//tech.red9.ir/smart-charging/whitepaper.txt">
+                Smart Charging White Paper
+              </a>
+            </li>
+            {'  / '}
+          </ul>
         </div>
       </footer>
     )

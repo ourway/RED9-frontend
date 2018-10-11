@@ -351,7 +351,7 @@ class Messaging extends Component {
             type="text"
             label="Bulk Name"
             borderless
-            onChanged={this._newBulkNameChanged}
+            onChange={this._newBulkNameChanged}
             value={this.state.attrDialogOps.bulk.name}
             title="Enter new bulk name"
             placeholder="new_movie_has_arrived ..."
@@ -361,7 +361,7 @@ class Messaging extends Component {
           <MSDropdown
             placeHolder="Select a Template"
             label="Message Template:"
-            onChanged={this._newBulkTemplateChanged}
+            onChange={this._newBulkTemplateChanged}
             id="Basicdrop122"
             required={true}
             options={this.state.templates}
@@ -408,7 +408,7 @@ class Messaging extends Component {
             type="number"
             label="Target Cell Phone"
             borderless
-            onChanged={this._newSmsPhoneChanged}
+            onChange={this._newSmsPhoneChanged}
             value={this.state.attrDialogOps.single.national_number}
             title="Enter target cellphone number"
             placeholder="9120228207"
@@ -418,7 +418,7 @@ class Messaging extends Component {
           <MSDropdown
             placeHolder="Select a Template"
             label="Message Template:"
-            onChanged={this._newSmsTemplateChanged}
+            onChange={this._newSmsTemplateChanged}
             id="Basicdrop122"
             required={true}
             options={this.state.templates}

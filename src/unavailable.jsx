@@ -16,7 +16,7 @@ class Unavailable extends Component {
     return (
       <div>
         <Header />
-        <div>
+        <div style={{ minHeight: 400 }}>
           <Card
             style={{
               padding: 20,

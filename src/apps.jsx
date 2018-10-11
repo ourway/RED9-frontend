@@ -666,7 +666,7 @@ class Applications extends Component {
             type="text"
             label="App Name"
             borderless
-            onChanged={v => this.DialogValueChanged(v, 'name')}
+            onChange={v => this.DialogValueChanged(v, 'name')}
             value={this.state.attrDialogOps.data['name']}
             title="Enter your new application name"
             placeholder="IOS application team ..."
@@ -678,7 +678,7 @@ class Applications extends Component {
             type="url"
             label="Callback (MO) URL"
             borderless
-            onChanged={v => this.DialogValueChanged(v, 'mo_url')}
+            onChange={v => this.DialogValueChanged(v, 'mo_url')}
             value={this.state.attrDialogOps.data['mo_url']}
             title="Enter your target URL"
             placeholder="https://myapi.network/red9/callback/..."

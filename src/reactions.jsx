@@ -700,18 +700,20 @@ class Reactions extends Component {
             </p>
             <ol>
               <li>
-                <b>Default</b> Reaction:<br />
+                <b>Default</b> Reaction:
+                <br />
                 <p>
                   It's a default reaction that will response to all MO messages
-                  except 1 digit MOs (<code>{this.state.digits_reaction}</code>).
-                  The target key for default reaction is <code>default</code>.
-                  You can disactive or mute it in panel or via API.
+                  except 1 digit MOs (<code>{this.state.digits_reaction}</code>
+                  ). The target key for default reaction is <code>default</code>
+                  . You can disactive or mute it in panel or via API.
                 </p>
               </li>
               <br />
 
               <li>
-                <b>Digits Ignore</b> Reaction:<br />
+                <b>Digits Ignore</b> Reaction:
+                <br />
                 <p>
                   This reaction is a <u>mute</u> reaction. Means that when it
                   triggers, It does not send any MT to user, effectivly acts as
@@ -724,7 +726,8 @@ class Reactions extends Component {
               </li>
               <br />
               <li>
-                <b>SMS Subscription</b> Reaction:<br />
+                <b>SMS Subscription</b> Reaction:
+                <br />
                 <p>
                   When a SMS based subscription notification comes from
                   operator, SDP will trigger a reaction with
@@ -733,7 +736,8 @@ class Reactions extends Component {
               </li>
               <br />
               <li>
-                <b>OTP Subscription</b> Reaction:<br />
+                <b>OTP Subscription</b> Reaction:
+                <br />
                 <p>
                   When an OTP based subscription notification comes from
                   operator, SDP will trigger a reaction with
@@ -756,8 +760,8 @@ class Reactions extends Component {
                 <code>Your token is {`<%= message %>`}</code>.
               </li>
               <li>
-                Create a reaction named <u>token_reaction</u>.
-                <b>Template</b> must be null and the <b>target key</b> must be{' '}
+                Create a reaction named <u>token_reaction</u>.<b>Template</b>{' '}
+                must be null and the <b>target key</b> must be{' '}
                 <code>{`^1[\\d]{3}`}</code>. The <b>webhook</b> must be your
                 token API endpoint.
               </li>
@@ -779,7 +783,8 @@ class Reactions extends Component {
               free online service like{' '}
               <a href="https://www.regextester.com/" target="_new">
                 regextester
-              </a>.
+              </a>
+              .
             </p>
             <h3>API docs</h3>
             <p>
@@ -823,7 +828,7 @@ class Reactions extends Component {
           <MSDropdown
             placeHolder="Select an application"
             label="Reaction Application:"
-            onChanged={this._newReactionAppChanged}
+            onChange={this._newReactionAppChanged}
             id="Basicdrop1"
             required={true}
             options={this.state.apps}
@@ -834,7 +839,7 @@ class Reactions extends Component {
             type="text"
             label="Reaction Name"
             borderless
-            onChanged={this._newReactionNameChanged}
+            onChange={this._newReactionNameChanged}
             value={this.state.attrDialogOps.data.name}
             title="Enter new reaction name"
             placeholder="my_reaction_1"
@@ -844,7 +849,7 @@ class Reactions extends Component {
           <MSDropdown
             placeHolder="Select a Template"
             label="Reaction Template:"
-            onChanged={this._newReactionTemplateChanged}
+            onChange={this._newReactionTemplateChanged}
             id="Basicdrop122"
             required={false}
             options={this.state.templates}
@@ -855,7 +860,7 @@ class Reactions extends Component {
             type="text"
             label="Target Regex"
             borderless
-            onChanged={this._newReactionRegexChanged}
+            onChange={this._newReactionRegexChanged}
             value={this.state.attrDialogOps.data.targets.keys[0]}
             title="Enter a valid Regex"
             placeholder="Enter a valid Regex. ex: [\w\d]* "
@@ -867,7 +872,7 @@ class Reactions extends Component {
             type="url"
             label="Callback Webhook"
             borderless
-            onChanged={this._newReactionWebhookChanged}
+            onChange={this._newReactionWebhookChanged}
             value={this.state.attrDialogOps.data.webhook}
             title="Enter a valid url"
             placeholder="https://www.example.org/red9/callbacks"

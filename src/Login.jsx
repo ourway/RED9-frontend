@@ -4,6 +4,7 @@ import sample from 'lodash/sample'
 import { distinctUntilChanged } from 'rxjs/operators'
 import {
   sendLoginRequest,
+  sendStudio54LoginRequest,
   titleChangeSignal,
   redirectSignal,
   reporterSignal
@@ -32,6 +33,7 @@ class Login extends Component {
       activateButton: false
     }
     this.doLogin = this.doLogin.bind(this)
+    this.doStudio54Login = this.doStudio54Login.bind(this)
     this.handleUUID = this.handleUUID.bind(this)
     this.sendLoginRequest = sendLoginRequest.bind(this)
     this.loadDayquote = this.loadDayquote.bind(this)
@@ -106,9 +108,12 @@ class Login extends Component {
 
   handleUUID = e => {
     const pat = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i //uuid4
-    let activateButton = e.length === 36 && e.match(pat) !== null ? true : false
+    let activateButton =
+      e.target.value.length === 36 && e.target.value.match(pat) !== null
+        ? true
+        : false
     this.setState({
-      uuid: e,
+      uuid: e.target.value,
       activateButton: activateButton
     })
   }
@@ -123,10 +128,18 @@ class Login extends Component {
         this.setState({ isLoggingIn: false })
       }
     })
-    //    this.setState({
-    //      uuid: ''
-    //    });
-    //e.preventDefault();
+  }
+
+  doStudio54Login = e => {
+    this.setState({
+      activateButton: false,
+      isLoggingIn: true
+    })
+    this.sendStudio54LoginRequest(this.state.uuid, true, true).then(resp => {
+      if (resp.status !== 200) {
+        this.setState({ isLoggingIn: false })
+      }
+    })
   }
 
   render() {
@@ -190,11 +203,11 @@ class Login extends Component {
                       <b style={{ color: 'teal' }}>Client Key</b>:
                     </Label>
                     <TextField
-                      onChanged={this.handleUUID}
+                      onChange={this.handleUUID}
                       value={this.state.uuid}
                       autoComplete="false"
                       required={true}
-                      autoFocus="true"
+                      autoFocus={true}
                       type="password"
                       placeholder="00000000-0000-0000-0000-000000000000"
                     />
@@ -210,6 +223,35 @@ class Login extends Component {
                     >
                       Login
                     </CompoundButton>
+                    {env.company === 'MCI ' ? (
+                      <span>
+                        {' '}
+                        <h1
+                          style={{
+                            display: 'inline-flex',
+                            fontWeight: 100,
+                            color: 'teal'
+                          }}
+                        >
+                          OR
+                        </h1>{' '}
+                        <CompoundButton
+                          style={{
+                            backgroundColor:
+                              this.state.activateButton === true
+                                ? 'teal'
+                                : 'lightgrey'
+                          }}
+                          primary={true}
+                          onClick={this.doStudio54Login}
+                          secondaryText="MCI&trade; Revenue Assurance Console"
+                          disabled={this.state.activateButton === false}
+                          checked={false}
+                        >
+                          Enter
+                        </CompoundButton>
+                      </span>
+                    ) : null}
                   </section>
                 </form>
 
@@ -226,7 +268,8 @@ class Login extends Component {
                       }?subject=Service%20Delivery%20Platform`}
                     >
                       <span style={{ color: 'teal' }}> contact us</span>
-                    </a>.
+                    </a>
+                    .
                   </small>
                 </p>
               </div>

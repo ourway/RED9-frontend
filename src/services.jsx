@@ -135,19 +135,19 @@ class Services extends Component {
 
   ftpPing = ftp_key => {
     ftpServicePing(ftp_key).then(resp => {
-      let connection = false
       if (resp.status === 200) {
-        connection = true
+        resp.json().then(data => {
+          this.setState({
+            activeService: {
+              ...this.state.activeService,
+              meta: {
+                ...this.state.activeService.meta,
+                is_ftp_connected: data.info.exists_sub_entry === true
+              }
+            }
+          })
+        })
       }
-      this.setState({
-        activeService: {
-          ...this.state.activeService,
-          meta: {
-            ...this.state.activeService.meta,
-            is_ftp_connected: connection
-          }
-        }
-      })
     })
   }
 
@@ -163,7 +163,7 @@ class Services extends Component {
       this.someAjaxCalls = setTimeout(() => {
         this.ftpPing(data.meta.ftp_key)
         this.getCode51(data.name)
-      }, 10)
+      }, 0)
     }
     redirectSignal.next(`/services/${uuid}`)
     titleChangeSignal.next(`${title} - Services`)
@@ -385,7 +385,7 @@ class Services extends Component {
           required={true}
           selectedKey={this.state.attrDialogOps.operator}
           id="service_operator"
-          onChanged={this.OperatorChanged}
+          onChange={this.OperatorChanged}
           ariaLabel=""
           options={[
             { key: 'IMI', text: 'MCI IMI VAS' },
@@ -407,7 +407,7 @@ class Services extends Component {
                 type={p.type}
                 label={S(p.name.split('_').join(' ')).capitalize().s}
                 borderless
-                onChanged={v => this.DialogValueChanged(v, p.name)}
+                onChange={v => this.DialogValueChanged(v, p.name)}
                 value={this.state.attrDialogOps.data[p.name]}
                 title={p.description}
                 placeholder={p.placeholder}

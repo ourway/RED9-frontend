@@ -86,20 +86,15 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
       case 200:
         if (login_mode === true) {
           store.set('uuid', btoa(uuid))
-          redirectSignal.next('/?m=welcome')
           const gwr = getClientGateways(uuid)
           gwr.then(resp => {
             resp.json().then(result => {
               const gws = result.gateways
               if (gws.filter(i => i.operator === 'MTN/IRANCELL').length === 0) {
-                createClientGateway(uuid, 'irancell').then(r => {
-                  console.log(r.status)
-                })
+                createClientGateway(uuid, 'irancell').then(r => {})
               }
               if (gws.filter(i => i.operator === 'MCI').length === 0) {
-                createClientGateway(uuid, 'imi').then(r => {
-                  console.log(r.status)
-                })
+                createClientGateway(uuid, 'imi').then(r => {})
               }
             })
           })
@@ -107,7 +102,10 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
         resp.json().then(data => {
           nowUpdate.next(data.now)
           usernameAssigned.next(data.company)
-          if (!no_admin) {
+          if (data.is_admin === true) {
+            redirectSignal.next('/client-management')
+          } else {
+            redirectSignal.next('/?m=welcome')
           }
 
           store.set('acl', { admin: data.is_admin === true })

@@ -441,9 +441,9 @@ class ClientManagement extends Component {
                 This will change status of client{' '}
                 <code>
                   {this.state.selected ? this.state.selected.email : null}
-                </code>. This will{' '}
-                <u>effect user application keys (API keys)</u>. A notification
-                email will be sent to{' '}
+                </code>
+                . This will <u>effect user application keys (API keys)</u>. A
+                notification email will be sent to{' '}
                 {this.state.selected ? this.state.selected.company : null} email
                 account.
               </span>
@@ -477,11 +477,11 @@ class ClientManagement extends Component {
                 <b>new client key</b> for{' '}
                 <code>
                   {this.state.selected ? this.state.selected.email : null}
-                </code>. This will not effect user application keys (API keys).
-                Not any email will be sent to user and user will not be able to
-                login to their panel nor use client related operations like
-                reportings. This can not be undone. Please do not forget to
-                inform{' '}
+                </code>
+                . This will not effect user application keys (API keys). Not any
+                email will be sent to user and user will not be able to login to
+                their panel nor use client related operations like reportings.
+                This can not be undone. Please do not forget to inform{' '}
                 {this.state.selected ? this.state.selected.company : null}.
               </span>
             )
@@ -550,7 +550,7 @@ class ClientManagement extends Component {
                 label={p.name}
                 type={p.type}
                 borderless
-                onChanged={v => this.DialogValueChanged(v, p.key)}
+                onChange={v => this.DialogValueChanged(v, p.key)}
                 value={this.state.attrDialogOps.data[p.key] || p.default}
                 title={p.description}
                 placeholder={p.placeholder}

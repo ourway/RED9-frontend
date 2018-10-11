@@ -19,7 +19,7 @@ const sabaidea_env = {
   FTP_BASE: 'https://aparat.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://aparat.red9.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.7.4 / 12 Aug 2018',
+  product_version: '0.7.6 / 25 Aug 2018',
   codename: 'Heavy Hurricane',
   logo: 'sabaidea',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
@@ -42,10 +42,10 @@ const sabaidea_env = {
 }
 
 const rashavas_env = {
-  company: 'Rashavas ',
+  company: 'MCI ',
   company_email: 'ashouri@rashavas.com',
   company_contact_gsm: '9120228207',
-  product: 'RED9',
+  product: 'RA Console',
   product_color: '#00182f',
   API_BASE:
     servermode === 'local' ? 'http://localhost:6051' : 'https://red9.ir',
@@ -55,9 +55,9 @@ const rashavas_env = {
   FTP_BASE: 'https://ftp.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://api.appido.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.7.5 / 25 Jul 2018',
+  product_version: '0.7.7 / 31 Aug 2018',
   codename: 'Ice Wicket',
-  logo: 'red9',
+  logo: 'mci',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
   copyright_logo: 'rashavas.logo',
   copyright_company: "Tose'e Ide'e Rasha Co",

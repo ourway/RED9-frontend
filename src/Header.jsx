@@ -349,7 +349,8 @@ class Header extends Component {
                       <Statistic.Value>
                         <small style={{ color: 'lightgreen' }}>
                           {this.state.stats.yesterday.subscriptions}
-                        </small>/
+                        </small>
+                        /
                         <small style={{ color: 'orange' }}>
                           {this.state.stats.yesterday.unsubscriptions}
                         </small>{' '}
@@ -397,7 +398,8 @@ class Header extends Component {
                       <Statistic.Value>
                         <small style={{ color: 'lightgreen' }}>
                           {this.state.stats.overall.subscriptions}
-                        </small>/
+                        </small>
+                        /
                         <small style={{ color: 'orange' }}>
                           {this.state.stats.overall.unsubscriptions}
                         </small>{' '}
@@ -484,8 +486,7 @@ class Header extends Component {
                         size="mini"
                       >
                         <Statistic.Value>
-                          <small>{this.state.wappush_revenue.total}</small>
-                          |
+                          <small>{this.state.wappush_revenue.total}</small>|
                           <small style={{ fontSize: 10 }}>
                             <a href="/reports">
                               {this.state.wappush_revenue.count} charge events

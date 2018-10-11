@@ -77,11 +77,12 @@ class FTPRenewal extends Component {
           <Message color="black">
             <Message.Header color="green">
               <Icon name="money" color="orange" />
-              FTP renewal data (<small>
+              FTP renewal data (
+              <small>
                 {this.state.ftp_events.length}
                 <code /> events / last 90 days
-              </small>)
-              <Divider />
+              </small>
+              )<Divider />
               <Icon name="code" color="orange" />
               <code className="red9_samples">
                 {`curl -X POST '${

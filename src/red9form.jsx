@@ -256,7 +256,7 @@ class Red9Form extends Component {
         <br />
 
         <TextField
-          onChanged={this.attrDialogKeyChanged}
+          onChange={this.attrDialogKeyChanged}
           prefix="Key"
           description="No spaces, -, digits, ... "
           value={this.state.attrDialogOps.key}
@@ -264,7 +264,7 @@ class Red9Form extends Component {
         <br />
         <TextField
           prefix="Value"
-          onChanged={this.attrDialogValueChanged}
+          onChange={this.attrDialogValueChanged}
           disabled={this.state.attrDialogOps.key === ''}
           description={`Avoid large ${this.state.attrDialogOps.type}s`}
           value={this.state.attrDialogOps.value}
@@ -462,7 +462,10 @@ class Red9Form extends Component {
         style={{ padding: 0 }}
       >
         {this.state.data.meta.is_active === false ? (
-          <MessageBar messageBarType={MessageBarType.blocked}>
+          <MessageBar
+            messageBarType={MessageBarType.blocked}
+            style={{ color: 'grey' }}
+          >
             This service has been deactivated. Reactivation of a service is
             might be problematic in some cases. Please
             <a className="dark" href={`mailto:${env.company_email}`}>

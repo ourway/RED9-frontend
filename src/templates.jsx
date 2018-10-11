@@ -352,7 +352,7 @@ class Templates extends Component {
             type="text"
             label="Template Name"
             borderless
-            onChanged={this._newTemplateNameChanged}
+            onChange={this._newTemplateNameChanged}
             value={this.state.attrDialogOps.data.name}
             title="Enter new  template name"
             placeholder="welcome_message_template"
@@ -366,7 +366,7 @@ class Templates extends Component {
             borderless
             multiline
             resizable={false}
-            onChanged={this._newTemplateBodyChanged}
+            onChange={this._newTemplateBodyChanged}
             value={this.state.attrDialogOps.data.body}
             title="Enter your template body body"
             placeholder="Your message can be included with variables.  for ex: <%= national_number %>"
