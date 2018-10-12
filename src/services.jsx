@@ -664,18 +664,8 @@ class Services extends Component {
                               {this.state.activeService.meta.apps.map(
                                 (app, i) => {
                                   return (
-                                    <Button
-                                      content={app.name}
-                                      href={
-                                        this.state.reporter !== 'true'
-                                          ? `/apps/${app.uuid}`
-                                          : '/getting-started'
-                                      }
-                                      key={app.name}
-                                      size="small"
-                                      icon="adn"
-                                      color="black"
-                                    />
+                                    <Link key={i} to={'/apps'}>
+                                        <Button style={{marginTop: 3}}>{app.name}</Button></Link>
                                   )
                                 }
                               )}
@@ -839,7 +829,7 @@ class Services extends Component {
                           ) : null}
 
                           {this.state.testSmsResult.resp ? (
-                            <a>
+                            <em style={{cursor: "pointer"}}>
                               <Icon
                                 name="circle"
                                 color={
@@ -849,7 +839,7 @@ class Services extends Component {
                                 }
                               />
                               {this.state.testSmsResult.status}
-                            </a>
+                            </em>
                           ) : (
                             <span>
                               Click button to update the status of test

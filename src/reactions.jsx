@@ -496,24 +496,24 @@ class Reactions extends Component {
                     </Table.Cell>
 
                     <Table.Cell>
-                      <a onClick={() => this._toggleReactionDeactivate(t, i)}>
+                      <em style={{cursor: 'pointer'}} onClick={() => this._toggleReactionDeactivate(t, i)}>
                         {t.is_active === true ? (
                           <Icon name="check square" color="green" />
                         ) : (
                           <Icon name="square outline" color="grey" />
                         )}
-                      </a>
-                      <a onClick={() => this._toggleReactionMute(t, i)}>
+                      </em>
+                      <em style={{cursor: "pointer"}} onClick={() => this._toggleReactionMute(t, i)}>
                         {t.mute === false ? (
                           <Icon name="circle outline" color="green" />
                         ) : (
                           <Icon name="check square" color="yellow" />
                         )}
-                      </a>
+                      </em>
                     </Table.Cell>
 
                     <Table.Cell>
-                      <a
+                      <em
                         style={{ cursor: 'pointer' }}
                         onClick={() => this._toggleRegisterUsersOnly(t, i)}
                       >
@@ -532,9 +532,9 @@ class Reactions extends Component {
                         >
                           For subs
                         </small>
-                      </a>
+                      </em>
                       <br />
-                      <a
+                      <em
                         style={{ cursor: 'pointer' }}
                         onClick={() => this._toggleUnregisterUsersOnly(t, i)}
                       >
@@ -555,11 +555,11 @@ class Reactions extends Component {
                         >
                           For unsubs
                         </small>
-                      </a>
+                      </em>
                     </Table.Cell>
 
                     <Table.Cell>
-                      <a
+                      <em
                         style={{ cursor: 'pointer' }}
                         onClick={() => this._toggleSubscribe(t, i)}
                       >
@@ -573,9 +573,9 @@ class Reactions extends Component {
                         >
                           Sub
                         </small>
-                      </a>
+                      </em>
                       <br />
-                      <a
+                      <em
                         style={{ cursor: 'pointer' }}
                         onClick={() => this._toggleUnsubscribe(t, i)}
                       >
@@ -584,7 +584,7 @@ class Reactions extends Component {
                           color={t.is_optout === true ? 'orange' : 'grey'}
                         />
                         <small>Uns</small>
-                      </a>
+                      </em>
                     </Table.Cell>
 
                     <Table.Cell collapsing>

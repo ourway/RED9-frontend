@@ -19,7 +19,9 @@ class APIDocs extends Component {
           <List.Item>
             <List.Content>
               <List.Header>
-                <a>Complete API documentation</a>
+                <a alt="api docs link" href="https://docs.red9.ir">
+                  Complete API documentation
+                </a>
               </List.Header>
               This page includes all API options and documentation. Must be
               studied as a reference. Important ones are included in this page

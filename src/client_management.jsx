@@ -371,12 +371,12 @@ class ClientManagement extends Component {
                   <Table.Row key={i}>
                     <Table.Cell>{i + 1}</Table.Cell>
                     <Table.Cell>
-                      <a
+                      <em
                         style={{ cursor: 'pointer' }}
                         onClick={() => this.goToLoginPage(c.client_key)}
                       >
                         <strong>{c.company}</strong>
-                      </a>
+                      </em>
                     </Table.Cell>
                     <Table.Cell>
                       <a

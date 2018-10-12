@@ -351,7 +351,7 @@ class App extends Component {
                     {env.company} {env.product}
                   </b>{' '}
                   is not designed to work on small screens. Your{' '}
-                  <i>{browser.os}</i> <a>{S(browser.name).capitalize().s}</a>{' '}
+                  <i>{browser.os}</i> <em>{S(browser.name).capitalize().s}</em>{' '}
                   browser screen is too small. Please consider resizing your
                   browser.
                   <br />

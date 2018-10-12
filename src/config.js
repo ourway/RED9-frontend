@@ -42,10 +42,10 @@ const sabaidea_env = {
 }
 
 const rashavas_env = {
-  company: 'MCI ',
+  company: 'Rashavas ',
   company_email: 'ashouri@rashavas.com',
   company_contact_gsm: '9120228207',
-  product: 'RA Console',
+  product: 'RED9',
   product_color: '#00182f',
   API_BASE:
     servermode === 'local' ? 'http://localhost:6051' : 'https://red9.ir',
@@ -55,9 +55,9 @@ const rashavas_env = {
   FTP_BASE: 'https://ftp.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://api.appido.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.7.7 / 31 Aug 2018',
-  codename: 'Ice Wicket',
-  logo: 'mci',
+  product_version: '0.7.8 / 13 OCT 2018',
+  codename: 'Sentinel Wolf',
+  logo: 'red9',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
   copyright_logo: 'rashavas.logo',
   copyright_company: "Tose'e Ide'e Rasha Co",

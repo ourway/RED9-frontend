@@ -346,13 +346,13 @@ class Applications extends Component {
                             {JSON.stringify(
                               this.state.original_apps[i].apikeys[aki]
                             ) !== JSON.stringify(ak) ? (
-                              <a style={{ float: 'right' }}>
+                              <em style={{ float: 'right', cursor: 'pointer' }}>
                                 <Icon
                                   name="save"
                                   color="green"
                                   onClick={() => this.handleAppUpdate(a)}
                                 />
-                              </a>
+                              </em>
                             ) : null}
                             <Icon name="key" color="teal" />
                             <code style={{ fontSize: 14 }}>{ak.key}</code>
@@ -442,7 +442,7 @@ class Applications extends Component {
                                           <tr key={cr}>
                                             <td>{cr} </td>
                                             <td>
-                                              <a
+                                              <em style={{cursor: "pointer"}}
                                                 onClick={() =>
                                                   this.toggleACLStatus(
                                                     i,
@@ -462,7 +462,7 @@ class Applications extends Component {
                                                     color="grey"
                                                   />
                                                 )}
-                                              </a>
+                                              </em>
                                             </td>
                                           </tr>
                                         )
