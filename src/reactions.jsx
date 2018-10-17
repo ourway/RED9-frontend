@@ -355,7 +355,8 @@ class Reactions extends Component {
     })
   }
 
-  _newReactionNameChanged = v => {
+  _newReactionNameChanged = o => {
+    let v = o.target.value
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
@@ -364,11 +365,11 @@ class Reactions extends Component {
     })
   }
 
-  _newReactionWebhookChanged = v => {
+  _newReactionWebhookChanged = o => {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
-        data: { ...this.state.attrDialogOps.data, webhook: v }
+        data: { ...this.state.attrDialogOps.data, webhook: o.target.value }
       }
     })
   }
@@ -382,11 +383,14 @@ class Reactions extends Component {
     })
   }
 
-  _newReactionRegexChanged = v => {
+  _newReactionRegexChanged = o => {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
-        data: { ...this.state.attrDialogOps.data, targets: { keys: [v] } }
+        data: {
+          ...this.state.attrDialogOps.data,
+          targets: { keys: [o.target.value] }
+        }
       }
     })
   }
@@ -496,14 +500,20 @@ class Reactions extends Component {
                     </Table.Cell>
 
                     <Table.Cell>
-                      <em style={{cursor: 'pointer'}} onClick={() => this._toggleReactionDeactivate(t, i)}>
+                      <em
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => this._toggleReactionDeactivate(t, i)}
+                      >
                         {t.is_active === true ? (
                           <Icon name="check square" color="green" />
                         ) : (
                           <Icon name="square outline" color="grey" />
                         )}
                       </em>
-                      <em style={{cursor: "pointer"}} onClick={() => this._toggleReactionMute(t, i)}>
+                      <em
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => this._toggleReactionMute(t, i)}
+                      >
                         {t.mute === false ? (
                           <Icon name="circle outline" color="green" />
                         ) : (

@@ -162,7 +162,7 @@ class Messaging extends Component {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
-        bulk: { ...this.state.attrDialogOps.bulk, name: v }
+        bulk: { ...this.state.attrDialogOps.bulk, name: v.target.value }
       }
     })
   }
@@ -202,7 +202,10 @@ class Messaging extends Component {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
-        single: { ...this.state.attrDialogOps.single, national_number: v }
+        single: {
+          ...this.state.attrDialogOps.single,
+          national_number: v.target.value
+        }
       }
     })
   }

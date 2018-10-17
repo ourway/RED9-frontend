@@ -242,7 +242,8 @@ class ClientManagement extends Component {
     this.setState({ filter: o.value.toLowerCase().trim() })
   }
 
-  DialogValueChanged = (value, key) => {
+  DialogValueChanged = (elem, key) => {
+    let value = elem.target.value
     let data = {}
 
     if (key.match('config.') === null) {

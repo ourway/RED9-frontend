@@ -150,15 +150,15 @@ class Applications extends Component {
     })
   }
 
-  DialogValueChanged = (value, key) => {
+  DialogValueChanged = (elem, key) => {
     let data = {
       ...this.state.attrDialogOps.data,
-      [key]: value
+      [key]: elem.target.value
         .trim()
         .toString()
         .toLowerCase()
     }
-    if (!value) {
+    if (!elem.target.value) {
       let raw_data = this.state.attrDialogOps.data
       delete raw_data[key]
       data = raw_data
@@ -442,7 +442,8 @@ class Applications extends Component {
                                           <tr key={cr}>
                                             <td>{cr} </td>
                                             <td>
-                                              <em style={{cursor: "pointer"}}
+                                              <em
+                                                style={{ cursor: 'pointer' }}
                                                 onClick={() =>
                                                   this.toggleACLStatus(
                                                     i,

@@ -184,7 +184,7 @@ class Templates extends Component {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
-        data: { ...this.state.attrDialogOps.data, name: v }
+        data: { ...this.state.attrDialogOps.data, name: v.target.value }
       }
     })
   }
@@ -193,7 +193,7 @@ class Templates extends Component {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
-        data: { ...this.state.attrDialogOps.data, body: v }
+        data: { ...this.state.attrDialogOps.data, body: v.target.value }
       }
     })
   }

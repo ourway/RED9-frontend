@@ -264,7 +264,7 @@ class Services extends Component {
     })
   }
 
-  DialogValueChanged = (v, option) => {
+  DialogValueChanged = (option, v) => {
     const value = v.split(' ').join('_')
     this.setState({
       attrDialogOps: {
@@ -307,9 +307,9 @@ class Services extends Component {
     })
   }
 
-  OperatorChanged = (e, options) => {
+  OperatorChanged = (options, e) => {
     const jsonParams = serviceParams.filter(
-      i => i.gateway.includes(e.key) && i.type === 'json'
+      i => i.gateway.includes(options.target) && i.type === 'json'
     )
 
     const gwr = getClientGateways(this.state.uuid)
@@ -665,7 +665,10 @@ class Services extends Component {
                                 (app, i) => {
                                   return (
                                     <Link key={i} to={'/apps'}>
-                                        <Button style={{marginTop: 3}}>{app.name}</Button></Link>
+                                      <Button style={{ marginTop: 3 }}>
+                                        {app.name}
+                                      </Button>
+                                    </Link>
                                   )
                                 }
                               )}
@@ -829,7 +832,7 @@ class Services extends Component {
                           ) : null}
 
                           {this.state.testSmsResult.resp ? (
-                            <em style={{cursor: "pointer"}}>
+                            <em style={{ cursor: 'pointer' }}>
                               <Icon
                                 name="circle"
                                 color={
