@@ -264,14 +264,14 @@ class Services extends Component {
     })
   }
 
-  DialogValueChanged = (option, v) => {
-    const value = v.split(' ').join('_')
+  DialogValueChanged = (e, target) => {
+    const value = e.target.value.split(' ').join('_')
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
         data: {
           ...this.state.attrDialogOps.data,
-          [option]: value
+          [target]: value
         }
       }
     })

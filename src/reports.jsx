@@ -215,6 +215,7 @@ class Reports extends Component {
           </Menu>
 
           <Segment id="mci_report_panel" inverted>
+              <div style={{display: "None"}} >
             <h1 align="center">Daily Subscription Stats</h1>
             <ResponsiveContainer width="99%" height={200}>
               <ComposedChart
@@ -286,29 +287,8 @@ class Reports extends Component {
                 />
               </ComposedChart>
             </ResponsiveContainer>
+        </div>
 
-            <h1 align="center">Subscription Chart</h1>
-            <ResponsiveContainer width="99%" height={200}>
-              <ComposedChart
-                data={this.state.all_reports}
-                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
-              >
-                <XAxis dataKey="jday" />
-                <YAxis />
-                <Tooltip
-                  wrapperStyle={{ backgroundColor: '#222' }}
-                  cursor={{ stroke: '#515151', strokeWidth: 1 }}
-                />
-                <Legend verticalAlign="top" height={36} />
-
-                <Area
-                  type="monotone"
-                  dataKey="total_subs"
-                  fill="teal"
-                  stroke="green"
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
 
             <h1 align="center">MO/MT Stats</h1>
             <ResponsiveContainer width="99%" height={200}>

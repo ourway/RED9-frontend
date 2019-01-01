@@ -313,6 +313,19 @@ class Login extends Component {
               </Card>
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row>
+              <Grid.Column>
+
+                  <div>
+                      <iframe className="logs" src="https://red9.ir/goaccess"></iframe>
+                  </div>
+
+                  <hr />
+                  <div>
+                  <iframe className="monitor" src={env.monitor}></iframe>
+                  </div>
+              </Grid.Column>
+          </Grid.Row>
         </Grid>
 
         <Footer />

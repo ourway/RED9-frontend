@@ -16,6 +16,32 @@ label:focus,
 }
 
 
+iframe.logs{ 
+  outline: none;
+  display: block;
+  border: 5px dashed #3B444C;
+  overflow: hidden;
+  width: 100%;
+  height: 640px;
+  margin: auto;
+}
+
+iframe.monitor{ 
+  outline: none;
+  display: block;
+  border: 5px dotted #ccc;
+  transform: scale3d(0.75, 0.75, 1);
+  box-shadow: 5px 6px 10px #ccc;
+  overflow: hidden;
+  width: 90%;
+  height: 640px;
+  margin: auto;
+}
+
+
+
+
+
 textarea: {
     border-top: 1px solid red !important;
 
