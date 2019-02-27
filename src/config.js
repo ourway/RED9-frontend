@@ -50,7 +50,7 @@ const rashavas_env = {
   product: 'RED9',
   product_color: '#00182f',
   API_BASE:
-    servermode === 'local' ? 'http://localhost:6051' : 'https://red9.ir',
+    servermode === 'local' ? 'http://localhost:6051' : 'https://wolf.red9.ir',
   SELF_IP: 'http://10.20.197.211',
   SELF_PORT: 6051,
   IMI_PORT: 8090,
