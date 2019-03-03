@@ -346,7 +346,7 @@ class Reactions extends Component {
     this.setState({ is_add_dialog_hidden: true })
   }
 
-  _newReactionAppChanged = v => {
+  _newReactionAppChanged = (_, v) => {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
@@ -374,7 +374,7 @@ class Reactions extends Component {
     })
   }
 
-  _newReactionTemplateChanged = v => {
+  _newReactionTemplateChanged = (_o, v) => {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
