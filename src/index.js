@@ -17,7 +17,27 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { initializeIcons } from '@uifabric/icons'
 import App from './App'
 
+import {Socket} from 'phoenix/priv/static/phoenix'
+
 import registerServiceWorker from './registerServiceWorker'
+
+
+
+            const socket_connection = new Socket("wss://wolf.red9.ir/socket", {params: {token: "start"}})
+            socket_connection.connect()
+socket_connection.onError( () => console.log("there was an error with the connection!") )
+socket_connection.onClose( () => console.log("the connection dropped") )
+
+            const channel = socket_connection.channel("stats:homepage", {})
+            channel.join()
+
+            .receive("ok", _resp => { console.info('Connected to upstream websocket server.') })
+              .receive("error", ({reason}) => console.log("failed join", reason) )
+  .receive("timeout", () => console.log("Networking issue. Still waiting..."))
+  channel.on("new_msg", msg => console.log("Got message", msg) )
+
+
+
 
 initializeIcons()
 const is_supported =

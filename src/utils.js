@@ -85,6 +85,7 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
     switch (resp.status) {
       case 200:
         if (login_mode === true) {
+
           store.set('uuid', btoa(uuid))
           const gwr = getClientGateways(uuid)
           gwr.then(resp => {
@@ -102,9 +103,17 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
         resp.json().then(data => {
           nowUpdate.next(data.now)
           usernameAssigned.next(data.company)
+
+
+
+
           if (data.is_admin === true) {
             redirectSignal.next('/client-management')
           } else {
+
+
+
+
             redirectSignal.next('/?m=welcome')
           }
 
