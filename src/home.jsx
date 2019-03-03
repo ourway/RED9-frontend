@@ -11,7 +11,7 @@ class Home extends Component {
     this.state = { services: [] }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const uuidKey = store.get('uuid')
     if (uuidKey) {
       getClientServices(atob(uuidKey)).then(resp => {

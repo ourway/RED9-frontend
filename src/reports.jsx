@@ -215,80 +215,79 @@ class Reports extends Component {
           </Menu>
 
           <Segment id="mci_report_panel" inverted>
-              <div style={{display: "None"}} >
-            <h1 align="center">Daily Subscription Stats</h1>
-            <ResponsiveContainer width="99%" height={200}>
-              <ComposedChart
-                data={this.state.all_reports}
-                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
-              >
-                <XAxis dataKey="jday" />
-                <YAxis />
-                <Tooltip
-                  wrapperStyle={{ backgroundColor: '#222' }}
-                  cursor={{ stroke: '#515151', strokeWidth: 1 }}
-                />
-                <Legend verticalAlign="top" height={36} />
+            <div style={{ display: 'None' }}>
+              <h1 align="center">Daily Subscription Stats</h1>
+              <ResponsiveContainer width="99%" height={200}>
+                <ComposedChart
+                  data={this.state.all_reports}
+                  margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                >
+                  <XAxis dataKey="jday" />
+                  <YAxis />
+                  <Tooltip
+                    wrapperStyle={{ backgroundColor: '#222' }}
+                    cursor={{ stroke: '#515151', strokeWidth: 1 }}
+                  />
+                  <Legend verticalAlign="top" height={36} />
 
-                <Area
-                  type="monotone"
-                  dataKey="deactivations"
-                  fill="Pink"
-                  stroke="red"
-                />
+                  <Area
+                    type="monotone"
+                    dataKey="deactivations"
+                    fill="Pink"
+                    stroke="red"
+                  />
 
-                <Area
-                  type="monotone"
-                  dataKey="activations"
-                  fill="lightgreen"
-                  stroke="green"
-                />
+                  <Area
+                    type="monotone"
+                    dataKey="activations"
+                    fill="lightgreen"
+                    stroke="green"
+                  />
 
-                <Area
-                  type="monotone"
-                  dataKey="bounced"
-                  fill="hotpink"
-                  stroke="pink"
-                />
+                  <Area
+                    type="monotone"
+                    dataKey="bounced"
+                    fill="hotpink"
+                    stroke="pink"
+                  />
 
-                <Area
-                  type="monotone"
-                  dataKey="pure"
-                  fill="teal"
-                  stroke="black"
-                />
+                  <Area
+                    type="monotone"
+                    dataKey="pure"
+                    fill="teal"
+                    stroke="black"
+                  />
 
-                <Area
-                  type="monotone"
-                  dataKey="postpaid_deactivations"
-                  fill="LightPink"
-                  stroke="darkred"
-                />
+                  <Area
+                    type="monotone"
+                    dataKey="postpaid_deactivations"
+                    fill="LightPink"
+                    stroke="darkred"
+                  />
 
-                <Area
-                  type="monotone"
-                  dataKey="prepaid_deactivations"
-                  fill="LightPink"
-                  stroke="darkred"
-                />
+                  <Area
+                    type="monotone"
+                    dataKey="prepaid_deactivations"
+                    fill="LightPink"
+                    stroke="darkred"
+                  />
 
-                <Area
-                  type="monotone"
-                  dataKey="new_postpaid_subscribers"
-                  fill="PaleGoldenrod"
-                  stroke="LimeGreen"
-                />
+                  <Area
+                    type="monotone"
+                    dataKey="new_postpaid_subscribers"
+                    fill="PaleGoldenrod"
+                    stroke="LimeGreen"
+                  />
 
-                <Area
-                  type="monotone"
-                  dataKey="new_prepaid_subscribers"
-                  fill="PaleGoldenrod"
-                  stroke="LimeGreen"
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-        </div>
-
+                  <Area
+                    type="monotone"
+                    dataKey="new_prepaid_subscribers"
+                    fill="PaleGoldenrod"
+                    stroke="LimeGreen"
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
 
             <h1 align="center">MO/MT Stats</h1>
             <ResponsiveContainer width="99%" height={200}>
@@ -522,93 +521,102 @@ class Reports extends Component {
             <h2 align="center">DB Data</h2>
             <Grid columns="equal" divided>
               <Grid.Row key="activations">
-                {['API', 'SMS', 'OTP', 'WAP'].map((method, i) => {
-                  const data = this.state.red9_sub_data.reports.activations.filter(
-                    (x, i) => {
-                      return x.source === method
-                    }
-                  )
-                  if (data.length > 0) {
-                    return (
-                      <Grid.Column key={`${method}_ac`}>
-                        <h5 align="center" key="label">{`${method ||
-                          'N/A'} activations`}</h5>
-                        <ResponsiveContainer
-                          width="100%"
-                          height={200}
-                          key="chart"
-                        >
-                          <LineChart
-                            data={data}
-                            margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
-                          >
-                            <XAxis dataKey="date_time" />
-                            <YAxis />
-                            <Tooltip
-                              wrapperStyle={{ backgroundColor: '#222' }}
-                              cursor={{ stroke: '#515151', strokeWidth: 1 }}
-                            />
-                            <Line
-                              type="monotone"
-                              dataKey="activations"
-                              stroke="lightgreen"
-                              activeDot={{ r: 1 }}
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </Grid.Column>
+                {['API', 'SMS', 'OTP', 'WAP', 'TAJMI', 'USSD'].map(
+                  (method, i) => {
+                    const data = this.state.red9_sub_data.reports.activations.filter(
+                      (x, i) => {
+                        return x.source === method
+                      }
                     )
-                  } else {
-                    return []
+                    if (data.length > 0) {
+                      return (
+                        <Grid.Column key={`${method}_ac`}>
+                          <h5 align="center" key="label">{`${method ||
+                            'N/A'} activations`}</h5>
+                          <ResponsiveContainer
+                            width="100%"
+                            height={200}
+                            key="chart"
+                          >
+                            <LineChart
+                              data={data}
+                              margin={{
+                                top: 5,
+                                right: 10,
+                                left: 10,
+                                bottom: 5
+                              }}
+                            >
+                              <XAxis dataKey="date_time" />
+                              <YAxis />
+                              <Tooltip
+                                wrapperStyle={{ backgroundColor: '#222' }}
+                                cursor={{ stroke: '#515151', strokeWidth: 1 }}
+                              />
+                              <Line
+                                type="monotone"
+                                dataKey="activations"
+                                stroke="lightgreen"
+                                activeDot={{ r: 1 }}
+                              />
+                            </LineChart>
+                          </ResponsiveContainer>
+                        </Grid.Column>
+                      )
+                    } else {
+                      return []
+                    }
                   }
-                })}
+                )}
               </Grid.Row>
               <Grid.Row key="deactivations">
-                {['API', 'SMS', 'OTP', 'WAP', 'TAJMI'].map((method, i) => {
-                  const data = this.state.red9_sub_data.reports.deactivations.filter(
-                    (x, i) => {
-                      return x.source === method
-                    }
-                  )
-                  if (data.length > 0) {
-                    return (
-                      <Grid.Column key={`${method}_da`}>
-                        <h5 key="label" align="center">{`${method ||
-                          'N/A'} deactivations`}</h5>
-                        <ResponsiveContainer
-                          width="100%"
-                          height={200}
-                          key="chart"
-                        >
-                          <LineChart
-                            data={data}
-                            margin={{
-                              top: 5,
-                              right: 10,
-                              left: 10,
-                              bottom: 5
-                            }}
-                          >
-                            <XAxis dataKey="date_time" />
-                            <YAxis />
-                            <Tooltip
-                              wrapperStyle={{ backgroundColor: '#222' }}
-                              cursor={{ stroke: '#515151', strokeWidth: 1 }}
-                            />
-                            <Line
-                              type="monotone"
-                              dataKey="deactivations"
-                              stroke="red"
-                              activeDot={{ r: 1 }}
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </Grid.Column>
+                {['API', 'SMS', 'OTP', 'WAP', 'TAJMI', 'USSD'].map(
+                  (method, i) => {
+                    const data = this.state.red9_sub_data.reports.deactivations.filter(
+                      (x, i) => {
+                        return x.source === method
+                      }
                     )
-                  } else {
-                    return []
+                    if (data.length > 0) {
+                      return (
+                        <Grid.Column key={`${method}_da`}>
+                          <h5 key="label" align="center">{`${method ||
+                            'N/A'} deactivations`}</h5>
+                          <ResponsiveContainer
+                            width="100%"
+                            height={200}
+                            key="chart"
+                          >
+                            <LineChart
+                              data={data}
+                              margin={{
+                                top: 5,
+                                right: 10,
+                                left: 10,
+                                bottom: 5
+                              }}
+                            >
+                              <XAxis dataKey="date_time" />
+                              <YAxis />
+                              <Tooltip
+                                wrapperStyle={{ backgroundColor: '#222' }}
+                                cursor={{ stroke: '#515151', strokeWidth: 1 }}
+                              />
+                              <Line
+                                type="monotone"
+                                dataKey="deactivations"
+                                stroke="red"
+                                activeDot={{ r: 1 }}
+                              />
+                            </LineChart>
+                          </ResponsiveContainer>
+                        </Grid.Column>
+                      )
+                    } else {
+                      return []
+                    }
                   }
-                })}
+                )}
               </Grid.Row>
             </Grid>
 

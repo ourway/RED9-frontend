@@ -50,7 +50,7 @@ class Leftbar extends Component {
       if (service) {
         this.setState({ selected_service: service })
       }
-    }, 100)
+    }, 0)
 
     this.serviceSelection = selectService$
       .pipe(

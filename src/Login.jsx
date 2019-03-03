@@ -314,17 +314,24 @@ class Login extends Component {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
-              <Grid.Column>
+            <Grid.Column>
+              <div>
+                <iframe
+                  title="server http logs"
+                  className="logs"
+                  src="https://red9.ir/goaccess"
+                />
+              </div>
 
-                  <div>
-                      <iframe title="server http logs" className="logs" src="https://red9.ir/goaccess"></iframe>
-                  </div>
-
-                  <hr />
-                  <div>
-                  <iframe title="server status" className="monitor" src={env.monitor}></iframe>
-                  </div>
-              </Grid.Column>
+              <hr />
+              <div>
+                <iframe
+                  title="server status"
+                  className="monitor"
+                  src={env.monitor}
+                />
+              </div>
+            </Grid.Column>
           </Grid.Row>
         </Grid>
 

@@ -38,7 +38,7 @@ export const getIp = () => {
 
 export const browser = () => {}
 
-titleChangeSignal.pipe(distinctUntilChanged()).subscribe({
+titleChangeSignal.subscribe({
   next: t => {
     document.title = `${t} - ${env.company} ${env.product}`
   }
@@ -90,6 +90,8 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
           const gwr = getClientGateways(uuid)
           gwr.then(resp => {
             resp.json().then(result => {
+
+              redirectSignal.next('/?m=welcome')
               const gws = result.gateways
               if (gws.filter(i => i.operator === 'MTN/IRANCELL').length === 0) {
                 createClientGateway(uuid, 'irancell').then(r => {})
@@ -114,7 +116,6 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
 
 
 
-            redirectSignal.next('/?m=welcome')
           }
 
           store.set('acl', { admin: data.is_admin === true })
