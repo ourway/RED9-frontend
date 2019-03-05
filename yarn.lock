@@ -860,9 +860,9 @@
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
 "@microsoft/load-themed-styles@^1.7.13":
-  version "1.8.62"
-  resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.8.62.tgz#36f5349c922312b12d14f86b286e2bb7e4b7b112"
-  integrity sha512-T9yplfIBWV6R5n0y9TuAnF8og7lUTFRqiOD/F8y3J4ziAkg3RD2Gih7p0TdTD4vmqbFJOpuuXMNMpERFFMgvvg==
+  version "1.8.63"
+  resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.8.63.tgz#f189edeb8343ffa624365eb0f39a05462ce0d4d5"
+  integrity sha512-LKZqaKaMcxJ7dQ8eiwByOIZkn0pnhdzobkGRjA7LipstSyX1LKIYIbaUWTaZjADnDP0N7NZ6eZvikA2XUBiWDw==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -1071,21 +1071,21 @@
   dependencies:
     tslib "^1.7.1"
 
-"@uifabric/styling@>=6.41.0 <7.0.0", "@uifabric/styling@>=6.43.0 <7.0.0":
-  version "6.43.0"
-  resolved "https://registry.yarnpkg.com/@uifabric/styling/-/styling-6.43.0.tgz#d15a88a16f1c415429e6b91cb267925f83273fb6"
-  integrity sha512-ogBJWVFf88yNlDReFBn1oDkJyh+SziSWRc3LIe+SA2QlQrAIe/eGfty8GunswfZwmke8R5bO/vfUYvI7ZIBKkA==
+"@uifabric/styling@>=6.41.0 <7.0.0", "@uifabric/styling@>=6.44.0 <7.0.0":
+  version "6.44.0"
+  resolved "https://registry.yarnpkg.com/@uifabric/styling/-/styling-6.44.0.tgz#7906c60704d6b2486b11a6642d24d90e090f7d78"
+  integrity sha512-88U1WvidZgC5/xtT7hZpOCzJb4wxugnTkpfbh+HN71KewvVrQn9yLGjqlPwXjqug3OzsWsurHwTBO94wBVI5Rw==
   dependencies:
     "@microsoft/load-themed-styles" "^1.7.13"
     "@uifabric/merge-styles" ">=6.16.0 <7.0.0"
     "@uifabric/set-version" ">=1.1.3 <2.0.0"
-    "@uifabric/utilities" ">=6.30.0 <7.0.0"
+    "@uifabric/utilities" ">=6.32.1 <7.0.0"
     tslib "^1.7.1"
 
-"@uifabric/utilities@>=6.29.0 <7.0.0", "@uifabric/utilities@>=6.30.0 <7.0.0", "@uifabric/utilities@>=6.31.0 <7.0.0":
-  version "6.31.0"
-  resolved "https://registry.yarnpkg.com/@uifabric/utilities/-/utilities-6.31.0.tgz#a81b82a98d3536c83e28179a8fca51a4baa9ff9d"
-  integrity sha512-kEQU25AIT3V8UnvFqmnNfHR/Iv/lsMUTFm82BKv+LPw7NAWCgBNwJxJJbX50a5+GRmwgzjPf5H1svP8BaF/xsg==
+"@uifabric/utilities@>=6.29.0 <7.0.0", "@uifabric/utilities@>=6.32.1 <7.0.0":
+  version "6.32.1"
+  resolved "https://registry.yarnpkg.com/@uifabric/utilities/-/utilities-6.32.1.tgz#775d18a43b4c2187fa1e40706df67fbccef59264"
+  integrity sha512-EJQADM3SAQ8WV5/SDbKpM4zt+aK1l1c1EfIlDjwBzk8iKdzX6U+ydfKrqipmzIGuV/l2Plwctplbxt/O2VuHmg==
   dependencies:
     "@uifabric/merge-styles" ">=6.16.0 <7.0.0"
     "@uifabric/set-version" ">=1.1.3 <2.0.0"
@@ -7312,17 +7312,17 @@ obuf@^1.0.0, obuf@^1.1.2:
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
 
 office-ui-fabric-react@^6.124.1:
-  version "6.148.1"
-  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-6.148.1.tgz#37ee44e93f916f0d903c467ca99333d107548e5c"
-  integrity sha512-LFQsQMf/zcH1AohedcBZD1hCoLZmUn2YHkDOqhO7HbWKKggvFtaRDvai6+tAuZoVnt94uQadkSMIAzIHdrFGkA==
+  version "6.150.0"
+  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-6.150.0.tgz#8ed17c29eb027db8a0a637e1f3af9bf9be05e025"
+  integrity sha512-pzkI0FZ7X7c+03dsckbysF8234t/qUBJ5uh0+e4Lo35y5rzOJKfhJSobLhKgqPmBJnnPSy3kQYdkewbqu+bi1w==
   dependencies:
     "@microsoft/load-themed-styles" "^1.7.13"
     "@uifabric/foundation" ">=0.7.1 <1.0.0"
     "@uifabric/icons" ">=6.4.0 <7.0.0"
     "@uifabric/merge-styles" ">=6.16.0 <7.0.0"
     "@uifabric/set-version" ">=1.1.3 <2.0.0"
-    "@uifabric/styling" ">=6.43.0 <7.0.0"
-    "@uifabric/utilities" ">=6.31.0 <7.0.0"
+    "@uifabric/styling" ">=6.44.0 <7.0.0"
+    "@uifabric/utilities" ">=6.32.1 <7.0.0"
     prop-types "^15.5.10"
     tslib "^1.7.1"
 
@@ -8411,6 +8411,11 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha1-gV7R9uvGWSb4ZbMQwHE7yzMVzks=
+
+prettier@^1.16.4:
+  version "1.16.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.4.tgz#73e37e73e018ad2db9c76742e2647e21790c9717"
+  integrity sha512-ZzWuos7TI5CKUeQAtFd6Zhm2s6EpAD/ZLApIhsF9pRvRtM1RFo61dM/4MSRUA0SuLugA/zgrZD8m0BaY46Og7g==
 
 pretty-bytes@^4.0.2:
   version "4.0.2"
@@ -10422,10 +10427,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typeface-inconsolata@^0.0.54:
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/typeface-inconsolata/-/typeface-inconsolata-0.0.54.tgz#9a7f7726eb615a3ab53dc19732f6c77adc65d5b5"
-  integrity sha512-T7hV2VUY4cPkdEHSC7/iKw/mFA3VbQFnxqr9Kl/T7mGK5Me73z+TBCo0uN5KZPER12ud6rqxldnh5JsglgzwFA==
+typeface-inconsolata@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-inconsolata/-/typeface-inconsolata-0.0.72.tgz#6b5c92132c7d3e83f7a17025087d8d717ada63d5"
+  integrity sha512-ITFhcI2ANWmSEPVgQgPJHh6RyiCf1pnkRXj1VxjsxfSwRrXFGgGITRJV+HxW7kTRDx+3/6RReT2/SWsMPqJaTA==
 
 uglify-js@2.4.x:
   version "2.4.24"

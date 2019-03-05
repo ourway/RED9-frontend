@@ -21,6 +21,7 @@ export const changeColorCode$ = new Subject()
 export const searching$ = new Subject()
 export const startLoading$ = new Subject()
 export const stopLoading$ = new Subject()
+export const handle_message_count_receive$ = new Subject()
 
 //export const ab_controller = new AbortController()
 //export const ab_signal = ab_controller.signal
@@ -85,12 +86,10 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
     switch (resp.status) {
       case 200:
         if (login_mode === true) {
-
           store.set('uuid', btoa(uuid))
           const gwr = getClientGateways(uuid)
           gwr.then(resp => {
             resp.json().then(result => {
-
               redirectSignal.next('/?m=welcome')
               const gws = result.gateways
               if (gws.filter(i => i.operator === 'MTN/IRANCELL').length === 0) {
@@ -106,16 +105,9 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
           nowUpdate.next(data.now)
           usernameAssigned.next(data.company)
 
-
-
-
           if (data.is_admin === true) {
             redirectSignal.next('/client-management')
           } else {
-
-
-
-
           }
 
           store.set('acl', { admin: data.is_admin === true })

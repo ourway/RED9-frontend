@@ -5,6 +5,7 @@ import {
   usernameAssigned,
   selectService$,
   changeColorCode$,
+  handle_message_count_receive$,
   selectApp$
 } from './utils'
 import S from 'string'
@@ -27,6 +28,7 @@ class Header extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      message_count: '000000',
       colorCode: env.product_color,
       wappush_revenue: 0,
       company: DASH,
@@ -54,6 +56,16 @@ class Header extends Component {
         }
       }
     }
+  }
+
+  componentWillMount() {
+    handle_message_count_receive$.pipe(distinctUntilChanged()).subscribe({
+      next: msg => {
+        this.setState({
+          message_count: msg.result
+        })
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -272,6 +284,23 @@ class Header extends Component {
                       padding: 2
                     }}
                   >
+                    <small
+                      style={{
+                        clear: 'both',
+                        fontSize: 14,
+                        paddingBottom: 10,
+                        color: 'lightgrey',
+                        opacity: 0.6
+                      }}
+                    >
+                      Proccessed /
+                      <code style={{ fontSize: 18, color: 'gold' }}>
+                        {this.state.message_count}
+                      </code>
+                      / messages.
+                    </small>
+                    <br />
+                    <hr style={{ opacity: 0.25 }} />
                     {env.company === 'SabaIdea' ? ' ' : env.company}
                     <strong style={{ fontWeight: 800 }}>
                       {' '}

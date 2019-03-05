@@ -16,28 +16,30 @@ import Login from './Login'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { initializeIcons } from '@uifabric/icons'
 import App from './App'
-
-import {Socket} from 'phoenix/priv/static/phoenix'
+import { handle_message_count_receive$ } from './utils'
+import { Socket } from 'phoenix/priv/static/phoenix'
 
 import registerServiceWorker from './registerServiceWorker'
 
+const socket_connection = new Socket('wss://wolf.red9.ir/socket', {
+  params: { token: 'start' }
+})
+socket_connection.connect()
+socket_connection.onClose(() => console.log('the connection dropped'))
+socket_connection.onOpen(() => join_channels())
 
+const join_channels = () => {
+  const channel = socket_connection.channel('stats:homepage', {})
+  channel
+    .join()
 
-            const socket_connection = new Socket("wss://wolf.red9.ir/socket", {params: {token: "start"}})
-            socket_connection.connect()
-socket_connection.onError( () => console.log("there was an error with the connection!") )
-socket_connection.onClose( () => console.log("the connection dropped") )
-
-            const channel = socket_connection.channel("stats:homepage", {})
-            channel.join()
-
-            .receive("ok", _resp => { console.info('Connected to upstream websocket server.') })
-              .receive("error", ({reason}) => console.log("failed join", reason) )
-  .receive("timeout", () => console.log("Networking issue. Still waiting..."))
-  channel.on("new_msg", msg => console.log("Got message", msg) )
-
-
-
+    .receive('ok', _resp => {
+      console.info('Connected to upstream websocket server.')
+    })
+    .receive('error', ({ reason }) => console.log('failed join', reason))
+    .receive('timeout', () => console.log('Networking issue. Still waiting...'))
+  channel.on('messages_count', msg => handle_message_count_receive$.next(msg))
+}
 
 initializeIcons()
 const is_supported =
