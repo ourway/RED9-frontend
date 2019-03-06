@@ -35,6 +35,7 @@ const join_channels = () => {
 
     .receive('ok', _resp => {
       console.info('Connected to upstream websocket server.')
+      channel.push("get_stats")
     })
     .receive('error', ({ reason }) => console.log('failed join', reason))
     .receive('timeout', () => console.log('Networking issue. Still waiting...'))

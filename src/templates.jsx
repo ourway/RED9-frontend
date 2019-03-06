@@ -4,6 +4,7 @@ import { Subject } from 'rxjs'
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import {
   Table,
+  Icon,
   Menu,
   Input,
   TextArea,
@@ -263,13 +264,46 @@ class Templates extends Component {
           <Table.Body>
             {this.state.templates.map((t, i) => {
               return (
-                <Table.Row key={t.name} className="formRow">
+                <Table.Row key={i} className="formRow">
                   <Table.Cell>
                     <code> {i + 1} </code>
                   </Table.Cell>
 
                   <Table.Cell>
                     <code> {t.name} </code>
+                    {t.reactions.length !== 0 ? (
+                      <>
+                        <hr style={{ opacity: 0.1 }} />
+                      </>
+                    ) : null}
+                    {t.reactions.map((r, i) => {
+                      return (
+                        <ol
+                          key={i}
+                          style={{
+                            backgroundColor: '#233',
+                            padding: 2,
+                            margin: 2
+                          }}
+                        >
+                          <span>
+                            <small>
+                              <b>
+                                <Icon
+                                  color="yellow"
+                                  size="mini"
+                                  name="long arrow alternate right"
+                                />
+
+                                {r.name}
+                              </b>
+                              <Icon color="grey" name="cloudsmith" />
+                              <code>{r.targets.keys}</code>
+                            </small>
+                          </span>
+                        </ol>
+                      )
+                    })}
                   </Table.Cell>
                   <Table.Cell collapsing>
                     <TextArea
