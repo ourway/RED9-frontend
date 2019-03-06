@@ -28,7 +28,7 @@ class Header extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      message_count: '000000',
+      message_count: '-------',
       colorCode: env.product_color,
       wappush_revenue: 0,
       company: DASH,
@@ -460,14 +460,15 @@ class Header extends Component {
                   <Grid.Column width={5}>
                     {this.state.stats.subscribers ? (
                       <Statistic
-                        color="blue"
+                        style={{ filter: 'brightness(100%)' }}
+                        color="green"
                         className={
                           this.state.service.name !== DASH
                             ? 'topStatistics active info'
                             : 'topStatistics deactive'
                         }
                         inverted
-                        size="mini"
+                        size="tiny"
                       >
                         <Statistic.Value>
                           <small>{this.state.stats.subscribers}</small>

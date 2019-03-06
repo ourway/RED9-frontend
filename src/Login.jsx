@@ -7,6 +7,7 @@ import {
   //sendStudio54LoginRequest,
   titleChangeSignal,
   redirectSignal,
+  handle_message_count_receive$,
   reporterSignal
 } from './utils'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
@@ -24,6 +25,7 @@ class Login extends Component {
     this.state = {
       dayquote: {},
       quotes: [],
+      message_count: '-------',
       isLoadingDayquote: false,
       isLoggingIn: false,
       uuid: props.match.params.client_key,
@@ -40,6 +42,15 @@ class Login extends Component {
     this.startQuoteInterval = this.startQuoteInterval.bind(this)
   }
 
+  componentWillMount() {
+    handle_message_count_receive$.pipe(distinctUntilChanged()).subscribe({
+      next: msg => {
+        this.setState({
+          message_count: msg.result
+        })
+      }
+    })
+  }
   componentWillUnmount() {
     this.redirectSubscription.unsubscribe()
     clearInterval(this.quoteLoadInterval)
@@ -170,6 +181,23 @@ class Login extends Component {
                   name="Login_Form"
                   className="form-signin"
                 >
+                  <small
+                    style={{
+                      clear: 'both',
+                      fontSize: 14,
+                      paddingBottom: 10,
+                      color: 'grey',
+                      opacity: 0.6
+                    }}
+                  >
+                    Proccessed /
+                    <code style={{ fontSize: 18, color: '#515151' }}>
+                      {this.state.message_count}
+                    </code>
+                    / messages.
+                  </small>
+                  <br />
+
                   <small style={{ color: 'grey' }}>
                     Verison <b>{env.product_version.split('/')[0]}</b>
                     {env.product_version.split('/')[1]}
