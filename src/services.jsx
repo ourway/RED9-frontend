@@ -740,117 +740,158 @@ class Services extends Component {
                   </Grid.Column>
 
                   {this.state.activeService.meta.is_active === true ? (
-                    <Grid.Column width={15}>
-                      <Card color="orange">
-                        <Card.Content>
-                          <Card.Header>
-                            <CompoundButton
-                              onClick={this.doTestService}
-                              secondaryText={
-                                <p>
-                                  {' '}
-                                  Click to send a test SMS to{' '}
-                                  {this.state.activeService.meta.client_gsm}
-                                </p>
-                              }
-                              disabled={this.state.testSmsIsSending === true}
-                              checked={true}
-                            >
-                              Send Test SMS
-                            </CompoundButton>
-                          </Card.Header>
-                          <Card.Meta>
-                            <span className="date" />
-                          </Card.Meta>
-                          <Card.Description>
-                            {this.state.testSmsResult.resp
-                              ? this.state.testSmsResult.status === 'error'
-                                ? [
-                                    <h4 key="header">
-                                      We tried to send a message from{' '}
-                                      <code>
-                                        {this.state.activeService.short_code}
-                                      </code>{' '}
-                                      to{' '}
-                                      <code>
-                                        {this.state.testSmsResult.msisdn}
-                                      </code>{' '}
-                                      and we got this error:
-                                    </h4>,
-                                    <ul key="errorlist">
-                                      <li>
-                                        Error ID:{' '}
+                    <>
+                      <Grid.Column width={4}>
+                        <Card color="orange">
+                          <Card.Content>
+                            <Card.Header>
+                              <CompoundButton
+                                onClick={this.doTestService}
+                                secondaryText={
+                                  <p>
+                                    {' '}
+                                    Click to send a test SMS to{' '}
+                                    {this.state.activeService.meta.client_gsm}
+                                  </p>
+                                }
+                                disabled={this.state.testSmsIsSending === true}
+                                checked={true}
+                              >
+                                Send Test SMS
+                              </CompoundButton>
+                            </Card.Header>
+                            <Card.Meta>
+                              <span className="date" />
+                            </Card.Meta>
+                            <Card.Description>
+                              {this.state.testSmsResult.resp
+                                ? this.state.testSmsResult.status === 'error'
+                                  ? [
+                                      <h4 key="header">
+                                        We tried to send a message from{' '}
                                         <code>
-                                          {this.state.testSmsResult.resp.id}
-                                        </code>
-                                      </li>
-                                      <li>
-                                        Fault:{' '}
+                                          {this.state.activeService.short_code}
+                                        </code>{' '}
+                                        to{' '}
                                         <code>
-                                          {this.state.testSmsResult.resp.fault}
-                                        </code>
-                                      </li>
-                                      <li>
-                                        Description:{' '}
-                                        <code>
-                                          {
-                                            this.state.testSmsResult.resp
-                                              .description
-                                          }
-                                        </code>
-                                      </li>
-                                      <li>
-                                        Correlator:{' '}
-                                        <Link
-                                          className="dark"
-                                          to={`/messaging/status/${
-                                            this.state.testSmsResult.correlator
-                                          }`}
-                                        >
-                                          <small style={{ color: 'darkgreen' }}>
+                                          {this.state.testSmsResult.msisdn}
+                                        </code>{' '}
+                                        and we got this error:
+                                      </h4>,
+                                      <ul key="errorlist">
+                                        <li>
+                                          Error ID:{' '}
+                                          <code>
+                                            {this.state.testSmsResult.resp.id}
+                                          </code>
+                                        </li>
+                                        <li>
+                                          Fault:{' '}
+                                          <code>
                                             {
+                                              this.state.testSmsResult.resp
+                                                .fault
+                                            }
+                                          </code>
+                                        </li>
+                                        <li>
+                                          Description:{' '}
+                                          <code>
+                                            {
+                                              this.state.testSmsResult.resp
+                                                .description
+                                            }
+                                          </code>
+                                        </li>
+                                        <li>
+                                          Correlator:{' '}
+                                          <Link
+                                            className="dark"
+                                            to={`/messaging/status/${
                                               this.state.testSmsResult
                                                 .correlator
-                                            }
-                                          </small>
-                                        </Link>
-                                      </li>
-                                    </ul>
-                                  ]
-                                : null
-                              : null}
-                          </Card.Description>
-                        </Card.Content>
-                        <Card.Content extra>
-                          {this.state.testSmsIsSending === true ? (
-                            <Icon
-                              loading
-                              size="small"
-                              name="spinner"
-                              color="blue"
-                            />
-                          ) : null}
-
-                          {this.state.testSmsResult.resp ? (
-                            <em style={{ cursor: 'pointer' }}>
+                                            }`}
+                                          >
+                                            <small
+                                              style={{ color: 'darkgreen' }}
+                                            >
+                                              {
+                                                this.state.testSmsResult
+                                                  .correlator
+                                              }
+                                            </small>
+                                          </Link>
+                                        </li>
+                                      </ul>
+                                    ]
+                                  : null
+                                : null}
+                            </Card.Description>
+                          </Card.Content>
+                          <Card.Content extra>
+                            {this.state.testSmsIsSending === true ? (
                               <Icon
-                                name="circle"
-                                color={
-                                  this.state.testSmsResult.status === 'ok'
-                                    ? 'green'
-                                    : 'red'
-                                }
+                                loading
+                                size="small"
+                                name="spinner"
+                                color="blue"
                               />
-                              {this.state.testSmsResult.status}
-                            </em>
-                          ) : (
-                            <span>
-                              Click button to update the status of test
-                            </span>
-                          )}
-                        </Card.Content>
-                      </Card>
-                    </Grid.Column>
+                            ) : null}
+
+                            {this.state.testSmsResult.resp ? (
+                              <em style={{ cursor: 'pointer' }}>
+                                <Icon
+                                  name="circle"
+                                  color={
+                                    this.state.testSmsResult.status === 'ok'
+                                      ? 'green'
+                                      : 'red'
+                                  }
+                                />
+                                {this.state.testSmsResult.status}
+                              </em>
+                            ) : (
+                              <span>
+                                Click button to update the status of test
+                              </span>
+                            )}
+                          </Card.Content>
+                        </Card>
+                      </Grid.Column>
+
+                      <Grid.Column width={1}>
+                        <Header as="h6" icon color="orange">
+                          <Icon name="travel" circular inverted />
+                          Live Feedback
+                        </Header>
+                      </Grid.Column>
+                      <Grid.Column
+                        width={10}
+                        style={{
+                          border: `1px solid ${this.state.colorCode}`,
+                          padding: 5,
+                          backgroundColor: this.state.colorCode + 55,
+                          lineHeight: '0.3em'
+                        }}
+                      >
+                        <pre>
+                          {' '}
+                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
+                        </pre>
+                        <pre>
+                          {' '}
+                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
+                        </pre>
+                        <pre>
+                          {' '}
+                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
+                        </pre>
+                        <pre>
+                          {' '}
+                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
+                        </pre>
+                      </Grid.Column>
+                    </>
                   ) : null}
                 </Grid.Row>
                 <Divider />

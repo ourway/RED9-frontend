@@ -3,6 +3,7 @@ import { Segment, Menu, Input, Table, Divider, Grid } from 'semantic-ui-react'
 import JDate from 'jalali-date'
 import accounting from 'accounting-js'
 import _ from 'lodash'
+import { titleChangeSignal } from './utils'
 import store from 'store'
 import {
   LineChart,
@@ -156,6 +157,7 @@ class Reports extends Component {
   }
 
   componentDidMount() {
+    titleChangeSignal.next(`Reports`)
     this.fetchTimeout = setTimeout(() => {
       this.fetchReportData()
       this.doGetAllReports()
@@ -352,6 +354,7 @@ class Reports extends Component {
             <Divider />
 
             <h1 align="center">MO/MT Stats</h1>
+
             <ResponsiveContainer width="99%" height={200}>
               <ComposedChart
                 data={this.state.all_reports}
