@@ -9,7 +9,10 @@ import {
   LineChart,
   Line,
   XAxis,
+  ZAxis,
   ComposedChart,
+  ScatterChart,
+  Scatter,
   ResponsiveContainer,
   YAxis,
   CartesianGrid,
@@ -22,6 +25,7 @@ import {
 import {
   getFTPAggregateReport,
   getSubscriptionDetails,
+  getMoTrendData,
   getAllReports
 } from './apis'
 
@@ -44,12 +48,39 @@ class Reports extends Component {
     )}-${str_pad(lastMonth.getDate())}`
     this.state = {
       raw_data: [],
+      mo_trends: {},
       data: [],
       all_reports: [],
       red9_sub_data: { reports: { activations: [], deactivations: [] } },
       endDate: today,
       startDate: lastM,
-      service: {}
+      service: {},
+      data02: [
+        { hour: '12a', index: 1, value: 160 },
+        { hour: '1a', index: 1, value: 180 },
+        { hour: '2a', index: 1, value: 150 },
+        { hour: '3a', index: 1, value: 120 },
+        { hour: '4a', index: 1, value: 200 },
+        { hour: '5a', index: 1, value: 3000 },
+        { hour: '6a', index: 1, value: 100 },
+        { hour: '7a', index: 1, value: 200 },
+        { hour: '8a', index: 1, value: 100 },
+        { hour: '9a', index: 1, value: 150 },
+        { hour: '10a', index: 1, value: 160 },
+        { hour: '11a', index: 1, value: 160 },
+        { hour: '12a', index: 1, value: 180 },
+        { hour: '1p', index: 1, value: 144 },
+        { hour: '2p', index: 1, value: 166 },
+        { hour: '3p', index: 1, value: 145 },
+        { hour: '4p', index: 1, value: 150 },
+        { hour: '5p', index: 1, value: 160 },
+        { hour: '6p', index: 1, value: 180 },
+        { hour: '7p', index: 1, value: 165 },
+        { hour: '8p', index: 1, value: 130 },
+        { hour: '9p', index: 1, value: 140 },
+        { hour: '10p', index: 1, value: 160 },
+        { hour: '11p', index: 1, value: 180 }
+      ]
     }
   }
 
@@ -97,6 +128,18 @@ class Reports extends Component {
           this.setState({ all_reports: final.reverse() })
         })
       }
+    })
+  }
+
+  fetchTrendData = () => {
+    const service = store.get('service')
+    const apikey = store.get('uuid')
+    getMoTrendData(atob(apikey), service.meta.id).then(resp => {
+      resp.json().then(data => {
+        const result = data.result
+
+        this.setState({ mo_trends: result })
+      })
     })
   }
 
@@ -160,8 +203,9 @@ class Reports extends Component {
     titleChangeSignal.next(`Reports`)
     this.fetchTimeout = setTimeout(() => {
       this.fetchReportData()
+      this.fetchTrendData()
       this.doGetAllReports()
-    }, 200)
+    }, 100)
   }
 
   componentWillUnmount() {
@@ -354,7 +398,70 @@ class Reports extends Component {
             <Divider />
 
             <h1 align="center">MO/MT Stats</h1>
+            <h3 align="center">
+              Inbound Trends <small>Last 7 days</small>
+            </h3>
+            {Object.keys(this.state.mo_trends)
+              .splice(0, 7)
+              .map((ev, i) => {
+                const td = this.state.mo_trends[ev].splice(0, 20)
+                //const counts = td.flatMap((x, _) => x.count)
+                //const re = Math.max(...counts)
+                //const rs = Math.min(...counts)
+                return (
+                  <div key={`${i}_section`} style={{ width: '99%' }}>
+                    <ResponsiveContainer
+                      width="90%"
+                      height={65}
+                      float="right"
+                      key={`${i}_graph`}
+                    >
+                      <ScatterChart
+                        margin={{ top: 10, right: 0, bottom: 0, left: 0 }}
+                      >
+                        <XAxis
+                          type="category"
+                          dataKey="msg"
+                          name="msg"
+                          interval={0}
+                          tick={{ fontSize: 12, stroke: 'grey' }}
+                          tickLine={{ transform: 'translate(0, -6)' }}
+                        />
+                        <YAxis
+                          type="number"
+                          dataKey="count"
+                          domain={[0, 'dataMax']}
+                          tick={{ fill: 'grey', fontSize: 10 }}
+                          label={{
+                            value: ev,
+                            fill: 'lightgrey',
+                            position: 'insideLeft',
+                            offset: 0
+                          }}
+                        />
+                        <ZAxis
+                          type="number"
+                          dataKey="count"
+                          range={[20, 300]}
+                          sclae="log"
+                        />
+                        <Tooltip
+                          cursor={{ strokeDasharray: '3 3' }}
+                          wrapperStyle={{ zIndex: 100 }}
+                        />
+                        <Scatter
+                          data={td}
+                          fill={_.shuffle(['teal', 'gold', 'hotpink'])[0]}
+                        />
+                      </ScatterChart>
+                    </ResponsiveContainer>
+                  </div>
+                )
+              })}
 
+            <h3 align="center">
+              MO History <small />
+            </h3>
             <ResponsiveContainer width="99%" height={200}>
               <ComposedChart
                 data={this.state.all_reports}

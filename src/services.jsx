@@ -871,6 +871,7 @@ class Services extends Component {
                           border: `1px solid ${this.state.colorCode}`,
                           padding: 5,
                           backgroundColor: this.state.colorCode + 55,
+                          display: 'none',
                           lineHeight: '0.3em'
                         }}
                       >

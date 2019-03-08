@@ -363,7 +363,7 @@ class Header extends Component {
                   textAlign="right"
                 >
                   <Grid.Column width={8} className="info">
-                    <Label color="grey">Yesterday</Label>
+                    <Label color="grey">Today</Label>
                     <Statistic color="blue" inverted size="mini">
                       <Statistic.Value>
                         <small>
@@ -400,14 +400,6 @@ class Header extends Component {
                         />
                       </Statistic.Value>
                       <Statistic.Label>Subscriptions</Statistic.Label>
-                    </Statistic>
-                    <Statistic color="grey" inverted size="mini">
-                      <Statistic.Value>
-                        <small>
-                          {this.state.stats.yesterday.success_rate}%
-                        </small>
-                      </Statistic.Value>
-                      <Statistic.Label>Success Rate</Statistic.Label>
                     </Statistic>
                   </Grid.Column>
 
