@@ -74,8 +74,8 @@ class Services extends Component {
     super(props)
     this.state = {
       editMode: false,
-      incoming_mo: [],
-      incoming_event: [],
+      incoming_mo: {},
+      incoming_event: {},
       testSmsResult: {},
       overview: [],
       reporter: atob(store.get('reporter') || 'ZmFsc2U='),
@@ -159,8 +159,6 @@ class Services extends Component {
   handleServiceClick = (e, { uuid, title, data }) => {
     this.setState({
       testSmsResult: {},
-      incoming_mo: [],
-      incoming_event: [],
       activeService: data,
       filter: '',
       editMode: false
@@ -169,7 +167,7 @@ class Services extends Component {
     if (data.meta.operator === 'MCI') {
       this.someAjaxCalls = setTimeout(() => {
         this.ftpPing(data.meta.ftp_key)
-        this.getCode51(data.name)
+        //this.getCode51(data.name)
       }, 0)
     }
     redirectSignal.next(`/services/${uuid}`)
@@ -210,7 +208,7 @@ class Services extends Component {
             if (asl[0].meta.operator === 'MCI') {
               this.extraTimeouts = setTimeout(() => {
                 this.ftpPing(asl[0].meta.ftp_key)
-                this.getCode51(asl[0].name)
+                //this.getCode51(asl[0].name)
               }, 10)
             }
           }
@@ -242,27 +240,37 @@ class Services extends Component {
     this.incomingMosSubscription = incomingMoSubject$.subscribe(msg => {
       if (
         msg.message.indexOf('sms') === -1 &&
-        msg.message.indexOf('unsub') === -1 &&
-        service.meta.uuid === msg.service_id
+        msg.message.indexOf('unsub') === -1
       ) {
         this.setState({
-          incoming_mo: [
+          incoming_mo: {
             ...this.state.incoming_mo,
-            { ...msg, date: new Date().toLocaleTimeString() }
-          ]
+            [msg.service_id]: [
+              ...(this.state.incoming_mo[msg.service_id] || []),
+              {
+                ...msg,
+                message: msg.message
+                  .replace('\n', ' ')
+                  .replace(']', '|')
+                  .replace('[', '|'),
+                date: new Date().toLocaleTimeString()
+              }
+            ]
+          }
         })
       }
     })
 
     this.newEventsSubscription = newEventSubject$.subscribe(ev => {
-      if (service.meta.uuid === ev.service_id) {
-        this.setState({
-          incoming_event: [
-            ...this.state.incoming_event,
+      this.setState({
+        incoming_event: {
+          ...this.state.incoming_event,
+          [ev.service_id]: [
+            ...(this.state.incoming_event[ev.service_id] || []),
             { ...ev, date: new Date().toLocaleTimeString() }
           ]
-        })
-      }
+        }
+      })
     })
 
     this.colorCodeChangeSubscription = changeColorCode$
@@ -776,7 +784,7 @@ class Services extends Component {
 
                   {this.state.activeService.meta.is_active === true ? (
                     <>
-                      <Grid.Column width={4}>
+                      <Grid.Column width={3}>
                         <Card color="orange">
                           <Card.Content>
                             <Card.Header>
@@ -900,104 +908,153 @@ class Services extends Component {
                           Live Feedback
                         </Header>
                       </Grid.Column>
-                      <Grid.Column
-                        width={5}
-                        style={{
-                          fontSize: 11,
-                          borderLeft: `1px solid ${this.state.colorCode}`,
-                          borderTop: `3px solid grey`,
-                          padding: 5,
-                          overflowX: 'hidden',
-                          overflowY: 'auto',
-                          maxHeight: 400,
-                          backgroundColor: this.state.colorCode + 85,
-                          lineHeight: '0.3em'
-                        }}
-                      >
-                        {this.state.incoming_mo.map((im, i) => {
-                          return (
-                            <pre key={i}>
-                              {' '}
-                              <span style={{ color: 'grey' }}>></span>{' '}
-                              <span style={{ color: 'lightgrey' }}>
-                                {im.date}
-                              </span>
-                              <span style={{ color: 'grey' }}> MESSAGE:</span>{' '}
-                              {_.slice(im.message, 0, 16).join('')}{' '}
-                              <span style={{ color: 'grey' }}>FROM:</span>{' '}
-                              {im.national_number}{' '}
-                            </pre>
-                          )
-                        })}
+                      <Grid.Column width={6} style={{ margin: 0, padding: 0 }}>
+                        <h5 style={{ color: 'grey' }} align="center">
+                          Incoming Messages
+                        </h5>
+
+                        <div
+                          style={{
+                            fontSize: 11,
+                            borderLeft: `1px solid ${this.state.colorCode}`,
+                            borderTop: `3px solid grey`,
+                            padding: 3,
+                            overflowX: 'hidden',
+                            overflowY: 'auto',
+                            height: 200,
+                            maxHeight: 400,
+                            backgroundColor: this.state.colorCode + 85,
+                            lineHeight: '0.3em'
+                          }}
+                        >
+                          {this.state.incoming_mo[
+                            this.state.activeService.meta.uuid
+                          ]
+                            ? this.state.incoming_mo[
+                                this.state.activeService.meta.uuid
+                              ].map((im, i) => {
+                                return (
+                                  <pre key={i}>
+                                    {' '}
+                                    <span style={{ color: 'grey' }}>
+                                      >
+                                    </span>{' '}
+                                    <span style={{ color: 'lightgrey' }}>
+                                      {im.date}
+                                    </span>
+                                    <span style={{ color: 'grey' }}>
+                                      {' '}
+                                      MESSAGE:
+                                    </span>{' '}
+                                    {_.slice(im.message, 0, 16).join('')}{' '}
+                                    <span style={{ color: 'grey' }}>FROM:</span>{' '}
+                                    {im.national_number}{' '}
+                                  </pre>
+                                )
+                              })
+                            : null}
+                        </div>
                       </Grid.Column>
 
-                      <Grid.Column
-                        width={2}
-                        style={{
-                          fontSize: 11,
-                          borderLeft: `3px dashed #233`,
-                          borderTop: `3px solid teal`,
-                          overflowX: 'hidden',
-                          overflowY: 'auto',
-                          maxHeight: 400,
-                          padding: 5,
-                          backgroundColor: this.state.colorCode + 75,
-                          lineHeight: '0.3em'
-                        }}
-                      >
-                        {this.state.incoming_event
-                          .filter((e, _) => {
-                            return e.action === 'subscribe'
-                          })
-                          .map((ev, i) => {
-                            return (
-                              <pre key={i}>
-                                <span style={{ color: 'green' }}> + </span>
-                                <span style={{ color: 'lightgrey' }}>
-                                  {ev.date}
-                                </span>{' '}
-                                <span
-                                  style={{ color: 'white', fontWeight: 800 }}
-                                >
-                                  {ev.msisdn}
-                                </span>{' '}
-                              </pre>
-                            )
-                          })}
+                      <Grid.Column width={2} style={{ margin: 0, padding: 0 }}>
+                        <h5 style={{ color: 'green' }} align="center">
+                          + Sub<span style={{ color: 'grey' }}>scriptions</span>
+                        </h5>
+                        <div
+                          style={{
+                            fontSize: 11,
+                            borderLeft: `3px dashed #233`,
+                            borderTop: `3px solid teal`,
+                            overflowX: 'hidden',
+                            overflowY: 'auto',
+                            maxHeight: 400,
+                            height: 200,
+                            padding: 3,
+                            backgroundColor: this.state.colorCode + 75,
+                            lineHeight: '0.3em'
+                          }}
+                        >
+                          {this.state.incoming_event[
+                            this.state.activeService.meta.uuid
+                          ]
+                            ? this.state.incoming_event[
+                                this.state.activeService.meta.uuid
+                              ]
+                                .filter((e, _) => {
+                                  return e.action === 'subscribe'
+                                })
+                                .map((ev, i) => {
+                                  return (
+                                    <pre key={i}>
+                                      <span style={{ color: 'green' }}>
+                                        {' '}
+                                        +{' '}
+                                      </span>
+                                      <span style={{ color: 'lightgrey' }}>
+                                        {ev.date}
+                                      </span>{' '}
+                                      <span
+                                        style={{
+                                          color: 'white',
+                                          fontWeight: 800
+                                        }}
+                                      >
+                                        {ev.msisdn}
+                                      </span>{' '}
+                                    </pre>
+                                  )
+                                })
+                            : null}
+                        </div>
                       </Grid.Column>
-                      <Grid.Column
-                        width={2}
-                        style={{
-                          fontSize: 11,
-                          borderLeft: `3px dashed #233`,
-                          borderTop: `3px solid darkred`,
-                          overflowX: 'hidden',
-                          overflowY: 'auto',
-                          maxHeight: 400,
-                          padding: 5,
-                          backgroundColor: this.state.colorCode + 65,
-                          lineHeight: '0.3em'
-                        }}
-                      >
-                        {this.state.incoming_event
-                          .filter((e, _) => {
-                            return e.action === 'unsubscribe'
-                          })
-                          .map((ev, i) => {
-                            return (
-                              <pre key={i}>
-                                <span style={{ color: 'red' }}> - </span>
-                                <span style={{ color: 'lightgrey' }}>
-                                  {ev.date}
-                                </span>{' '}
-                                <span
-                                  style={{ color: 'white', fontWeight: 800 }}
-                                >
-                                  {ev.msisdn}
-                                </span>{' '}
-                              </pre>
-                            )
-                          })}
+                      <Grid.Column width={2} style={{ margin: 0, padding: 0 }}>
+                        <h5 style={{ color: 'darkred' }} align="center">
+                          - Unsub
+                          <span style={{ color: 'grey' }}>scriptions</span>
+                        </h5>
+                        <div
+                          style={{
+                            fontSize: 11,
+                            borderLeft: `3px dashed #233`,
+                            borderTop: `3px solid darkred`,
+                            overflowX: 'hidden',
+                            overflowY: 'auto',
+                            maxHeight: 400,
+                            height: 200,
+                            padding: 3,
+                            backgroundColor: this.state.colorCode + 65,
+                            lineHeight: '0.3em'
+                          }}
+                        >
+                          {this.state.incoming_event[
+                            this.state.activeService.meta.uuid
+                          ]
+                            ? this.state.incoming_event[
+                                this.state.activeService.meta.uuid
+                              ]
+                                .filter((e, _) => {
+                                  return e.action === 'unsubscribe'
+                                })
+                                .map((ev, i) => {
+                                  return (
+                                    <pre key={i}>
+                                      <span style={{ color: 'red' }}> - </span>
+                                      <span style={{ color: 'lightgrey' }}>
+                                        {ev.date}
+                                      </span>{' '}
+                                      <span
+                                        style={{
+                                          color: 'white',
+                                          fontWeight: 800
+                                        }}
+                                      >
+                                        {ev.msisdn}
+                                      </span>{' '}
+                                    </pre>
+                                  )
+                                })
+                            : null}
+                        </div>
                       </Grid.Column>
                     </>
                   ) : null}

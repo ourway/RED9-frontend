@@ -62,7 +62,6 @@ const join_channels = () => {
     })
     .receive('error', ({ reason }) => console.log('failed join', reason))
     .receive('timeout', () => console.log('Networking issue. Still waiting...'))
-  console.log(channel)
   channel.on('messages_count', msg => handle_message_count_receive$.next(msg))
 }
 
