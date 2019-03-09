@@ -48,39 +48,13 @@ class Reports extends Component {
     )}-${str_pad(lastMonth.getDate())}`
     this.state = {
       raw_data: [],
-      mo_trends: {},
+      mo_trends: { '00/00/00': [{ msg: null, date: null, count: -1 }] },
       data: [],
       all_reports: [],
       red9_sub_data: { reports: { activations: [], deactivations: [] } },
       endDate: today,
       startDate: lastM,
-      service: {},
-      data02: [
-        { hour: '12a', index: 1, value: 160 },
-        { hour: '1a', index: 1, value: 180 },
-        { hour: '2a', index: 1, value: 150 },
-        { hour: '3a', index: 1, value: 120 },
-        { hour: '4a', index: 1, value: 200 },
-        { hour: '5a', index: 1, value: 3000 },
-        { hour: '6a', index: 1, value: 100 },
-        { hour: '7a', index: 1, value: 200 },
-        { hour: '8a', index: 1, value: 100 },
-        { hour: '9a', index: 1, value: 150 },
-        { hour: '10a', index: 1, value: 160 },
-        { hour: '11a', index: 1, value: 160 },
-        { hour: '12a', index: 1, value: 180 },
-        { hour: '1p', index: 1, value: 144 },
-        { hour: '2p', index: 1, value: 166 },
-        { hour: '3p', index: 1, value: 145 },
-        { hour: '4p', index: 1, value: 150 },
-        { hour: '5p', index: 1, value: 160 },
-        { hour: '6p', index: 1, value: 180 },
-        { hour: '7p', index: 1, value: 165 },
-        { hour: '8p', index: 1, value: 130 },
-        { hour: '9p', index: 1, value: 140 },
-        { hour: '10p', index: 1, value: 160 },
-        { hour: '11p', index: 1, value: 180 }
-      ]
+      service: {}
     }
   }
 
@@ -136,9 +110,7 @@ class Reports extends Component {
     const apikey = store.get('uuid')
     getMoTrendData(atob(apikey), service.meta.id).then(resp => {
       resp.json().then(data => {
-        const result = data.result
-
-        this.setState({ mo_trends: result })
+        this.setState({ mo_trends: data.result })
       })
     })
   }
@@ -402,6 +374,8 @@ class Reports extends Component {
               Inbound Trends <small>Last 7 days</small>
             </h3>
             {Object.keys(this.state.mo_trends)
+              .sort()
+              .reverse()
               .splice(0, 7)
               .map((ev, i) => {
                 const td = this.state.mo_trends[ev].splice(0, 20)
@@ -409,116 +383,58 @@ class Reports extends Component {
                 //const re = Math.max(...counts)
                 //const rs = Math.min(...counts)
                 return (
-                  <div key={`${i}_section`} style={{ width: '99%' }}>
-                    <ResponsiveContainer
-                      width="90%"
-                      height={65}
-                      float="right"
-                      key={`${i}_graph`}
+                  <ResponsiveContainer height={80} key={`${i}_graph`}>
+                    <ScatterChart
+                      margin={{ top: 10, right: 0, bottom: 0, left: 0 }}
                     >
-                      <ScatterChart
-                        margin={{ top: 10, right: 0, bottom: 0, left: 0 }}
-                      >
-                        <XAxis
-                          type="category"
-                          dataKey="msg"
-                          name="msg"
-                          interval={0}
-                          tick={{ fontSize: 12, stroke: 'grey' }}
-                          tickLine={{ transform: 'translate(0, -6)' }}
-                        />
-                        <YAxis
-                          type="number"
-                          dataKey="count"
-                          domain={[0, 'dataMax']}
-                          tick={{ fill: 'grey', fontSize: 10 }}
-                          label={{
-                            value: ev,
-                            fill: 'lightgrey',
-                            position: 'insideLeft',
-                            offset: 0
-                          }}
-                        />
-                        <ZAxis
-                          type="number"
-                          dataKey="count"
-                          range={[20, 300]}
-                          sclae="log"
-                        />
-                        <Tooltip
-                          cursor={{ strokeDasharray: '3 3' }}
-                          wrapperStyle={{ zIndex: 100 }}
-                        />
-                        <Scatter
-                          data={td}
-                          fill={_.shuffle(['teal', 'gold', 'hotpink'])[0]}
-                        />
-                      </ScatterChart>
-                    </ResponsiveContainer>
-                  </div>
+                      <XAxis
+                        type="category"
+                        dataKey="msg"
+                        name="msg"
+                        interval={0}
+                        tick={{ fontSize: 12, stroke: 'grey' }}
+                        tickLine={{ transform: 'translate(0, -6)' }}
+                      />
+                      <YAxis
+                        type="number"
+                        dataKey="count"
+                        tick={false}
+                        tickLine={false}
+                        axisLine={false}
+                        label={{
+                          value: td.length > 0 ? td[0].date : null,
+                          fill: 'gold',
+                          position: 'insideBottomLeft'
+                        }}
+                      />
+                      <ZAxis
+                        type="number"
+                        dataKey="count"
+                        range={[20, 300]}
+                        sclae="log"
+                      />
+                      <Tooltip
+                        cursor={{ strokeDasharray: '3 3' }}
+                        wrapperStyle={{ zIndex: 100 }}
+                      />
+                      <Scatter
+                        data={td}
+                        fill={
+                          _.shuffle([
+                            'teal',
+                            '#b7fbff',
+                            '#ffe0a3',
+                            '#acc6aa',
+                            '#d2c8c8'
+                          ])[0]
+                        }
+                      />
+                    </ScatterChart>
+                  </ResponsiveContainer>
                 )
               })}
-
-            <h3 align="center">
-              MO History <small />
-            </h3>
-            <ResponsiveContainer width="99%" height={200}>
-              <ComposedChart
-                data={this.state.all_reports}
-                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
-              >
-                <XAxis dataKey="jday" />
-                <YAxis />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#ccc', color: '#111' }}
-                  cursor={{ stroke: '#515151', strokeWidth: 1 }}
-                />
-                <Legend verticalAlign="top" height={36} />
-
-                <Area
-                  type="monotone"
-                  dataKey="postpaid_mo_count"
-                  fill="green"
-                  stroke="darkgreen"
-                />
-
-                <Area
-                  type="monotone"
-                  dataKey="prepaid_mo_count"
-                  fill="green"
-                  stroke="darkgreen"
-                />
-
-                <Area
-                  type="monotone"
-                  dataKey="postpaid_mt_count"
-                  fill="teal"
-                  stroke="teal"
-                />
-
-                <Area
-                  type="monotone"
-                  dataKey="prepaid_mt_count"
-                  fill="darkgreen"
-                  stroke="green"
-                />
-
-                <Area
-                  type="monotone"
-                  dataKey="postpaid_delivery_count"
-                  fill="lightgrey"
-                  stroke="grey"
-                />
-
-                <Area
-                  type="monotone"
-                  dataKey="prepaid_delivery_count"
-                  fill="lightgrey"
-                  stroke="grey"
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
           </Segment>
+          <Divider />
 
           {this.state.service.meta &&
           this.state.service.wappush !== 'true' &&
