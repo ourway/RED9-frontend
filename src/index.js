@@ -16,12 +16,18 @@ import Login from './Login'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { initializeIcons } from '@uifabric/icons'
 import App from './App'
-import { handle_message_count_receive$ } from './utils'
+import {
+  handle_message_count_receive$,
+  joinSubject$,
+  newEventSubject$,
+  incomingMoSubject$
+} from './utils'
+
 import { Socket } from 'phoenix/priv/static/phoenix'
 
 import registerServiceWorker from './registerServiceWorker'
 
-const socket_connection = new Socket('wss://wolf.red9.ir/socket', {
+let socket_connection = new Socket('wss://wolf.red9.ir/socket', {
   params: { token: 'start' }
 })
 socket_connection.connect()
@@ -29,7 +35,24 @@ socket_connection.onClose(() => console.log('the connection dropped'))
 socket_connection.onOpen(() => join_channels())
 
 const join_channels = () => {
-  const channel = socket_connection.channel('stats:homepage', {})
+  joinSubject$.subscribe({
+    next: c => {
+      let cnl = socket_connection.channel(c, {})
+      cnl.join().receive('ok', _resp => {
+        cnl.on('incoming_mo', msg => {
+          incomingMoSubject$.next(msg)
+        })
+
+        cnl.on('new_event', msg => {
+          newEventSubject$.next(msg)
+        })
+
+        //jnewc.on('new_event', msg => console.log(msg))
+      })
+    }
+  })
+
+  let channel = socket_connection.channel('stats:homepage', {})
   channel
     .join()
 
@@ -39,6 +62,7 @@ const join_channels = () => {
     })
     .receive('error', ({ reason }) => console.log('failed join', reason))
     .receive('timeout', () => console.log('Networking issue. Still waiting...'))
+  console.log(channel)
   channel.on('messages_count', msg => handle_message_count_receive$.next(msg))
 }
 

@@ -3,6 +3,7 @@ import swal from 'sweetalert2'
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import Gist from 'react-gist'
 import sample from 'lodash/sample'
+import _ from 'lodash'
 import store from 'store'
 import {
   Menu,
@@ -43,7 +44,9 @@ import {
   stopLoading$,
   changeColorCode$,
   redirectSignal,
-  toggleFormEdit$
+  toggleFormEdit$,
+  incomingMoSubject$,
+  newEventSubject$
 } from './utils'
 import { Icon as MsIcon } from 'office-ui-fabric-react/lib/Icon'
 import { CompoundButton } from 'office-ui-fabric-react/lib/Button'
@@ -71,6 +74,8 @@ class Services extends Component {
     super(props)
     this.state = {
       editMode: false,
+      incoming_mo: [],
+      incoming_event: [],
       testSmsResult: {},
       overview: [],
       reporter: atob(store.get('reporter') || 'ZmFsc2U='),
@@ -154,6 +159,8 @@ class Services extends Component {
   handleServiceClick = (e, { uuid, title, data }) => {
     this.setState({
       testSmsResult: {},
+      incoming_mo: [],
+      incoming_event: [],
       activeService: data,
       filter: '',
       editMode: false
@@ -219,6 +226,8 @@ class Services extends Component {
 
   componentWillUnmount() {
     this.colorCodeChangeSubscription.unsubscribe()
+    this.incomingMosSubscription.unsubscribe()
+    this.newEventsSubscription.unsubscribe()
     clearTimeout(this.someAjaxCalls)
     clearTimeout(this.extraTimeouts)
     // stopLoading$.next(true);
@@ -229,6 +238,32 @@ class Services extends Component {
     if (service && !this.state.activeService.meta.uuid) {
       this.setState({ activeService: service })
     }
+
+    this.incomingMosSubscription = incomingMoSubject$.subscribe(msg => {
+      if (
+        msg.message.indexOf('sms') === -1 &&
+        msg.message.indexOf('unsub') === -1 &&
+        service.meta.uuid === msg.service_id
+      ) {
+        this.setState({
+          incoming_mo: [
+            ...this.state.incoming_mo,
+            { ...msg, date: new Date().toLocaleTimeString() }
+          ]
+        })
+      }
+    })
+
+    this.newEventsSubscription = newEventSubject$.subscribe(ev => {
+      if (service.meta.uuid === ev.service_id) {
+        this.setState({
+          incoming_event: [
+            ...this.state.incoming_event,
+            { ...ev, date: new Date().toLocaleTimeString() }
+          ]
+        })
+      }
+    })
 
     this.colorCodeChangeSubscription = changeColorCode$
       .pipe(
@@ -866,31 +901,103 @@ class Services extends Component {
                         </Header>
                       </Grid.Column>
                       <Grid.Column
-                        width={10}
+                        width={5}
                         style={{
-                          border: `1px solid ${this.state.colorCode}`,
+                          fontSize: 11,
+                          borderLeft: `1px solid ${this.state.colorCode}`,
+                          borderTop: `3px solid grey`,
                           padding: 5,
-                          backgroundColor: this.state.colorCode + 55,
-                          display: 'none',
+                          overflowX: 'hidden',
+                          overflowY: 'auto',
+                          maxHeight: 400,
+                          backgroundColor: this.state.colorCode + 85,
                           lineHeight: '0.3em'
                         }}
                       >
-                        <pre>
-                          {' '}
-                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
-                        </pre>
-                        <pre>
-                          {' '}
-                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
-                        </pre>
-                        <pre>
-                          {' '}
-                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
-                        </pre>
-                        <pre>
-                          {' '}
-                          > 2016-08-95 17:32 MESSAGE: "wow" FROM: "989120228207"{' '}
-                        </pre>
+                        {this.state.incoming_mo.map((im, i) => {
+                          return (
+                            <pre key={i}>
+                              {' '}
+                              <span style={{ color: 'grey' }}>></span>{' '}
+                              <span style={{ color: 'lightgrey' }}>
+                                {im.date}
+                              </span>
+                              <span style={{ color: 'grey' }}> MESSAGE:</span>{' '}
+                              {_.slice(im.message, 0, 16).join('')}{' '}
+                              <span style={{ color: 'grey' }}>FROM:</span>{' '}
+                              {im.national_number}{' '}
+                            </pre>
+                          )
+                        })}
+                      </Grid.Column>
+
+                      <Grid.Column
+                        width={2}
+                        style={{
+                          fontSize: 11,
+                          borderLeft: `3px dashed #233`,
+                          borderTop: `3px solid teal`,
+                          overflowX: 'hidden',
+                          overflowY: 'auto',
+                          maxHeight: 400,
+                          padding: 5,
+                          backgroundColor: this.state.colorCode + 75,
+                          lineHeight: '0.3em'
+                        }}
+                      >
+                        {this.state.incoming_event
+                          .filter((e, _) => {
+                            return e.action === 'subscribe'
+                          })
+                          .map((ev, i) => {
+                            return (
+                              <pre key={i}>
+                                <span style={{ color: 'green' }}> + </span>
+                                <span style={{ color: 'lightgrey' }}>
+                                  {ev.date}
+                                </span>{' '}
+                                <span
+                                  style={{ color: 'white', fontWeight: 800 }}
+                                >
+                                  {ev.msisdn}
+                                </span>{' '}
+                              </pre>
+                            )
+                          })}
+                      </Grid.Column>
+                      <Grid.Column
+                        width={2}
+                        style={{
+                          fontSize: 11,
+                          borderLeft: `3px dashed #233`,
+                          borderTop: `3px solid darkred`,
+                          overflowX: 'hidden',
+                          overflowY: 'auto',
+                          maxHeight: 400,
+                          padding: 5,
+                          backgroundColor: this.state.colorCode + 65,
+                          lineHeight: '0.3em'
+                        }}
+                      >
+                        {this.state.incoming_event
+                          .filter((e, _) => {
+                            return e.action === 'unsubscribe'
+                          })
+                          .map((ev, i) => {
+                            return (
+                              <pre key={i}>
+                                <span style={{ color: 'red' }}> - </span>
+                                <span style={{ color: 'lightgrey' }}>
+                                  {ev.date}
+                                </span>{' '}
+                                <span
+                                  style={{ color: 'white', fontWeight: 800 }}
+                                >
+                                  {ev.msisdn}
+                                </span>{' '}
+                              </pre>
+                            )
+                          })}
                       </Grid.Column>
                     </>
                   ) : null}

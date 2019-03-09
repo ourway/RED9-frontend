@@ -9,6 +9,9 @@ export const usernameAssigned = new Subject()
 export const isAdmin = new Subject()
 export const nowUpdate = new Subject()
 export const redirectSignal = new Subject()
+export const joinSubject$ = new Subject()
+export const incomingMoSubject$ = new Subject()
+export const newEventSubject$ = new Subject()
 export const clientKeySignal = new Subject()
 export const reloadReports = new Subject()
 export const titleChangeSignal = new Subject()
@@ -125,6 +128,7 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
           }
         })
 
+        joinSubject$.next('client:6af8a5c8-8e2b-4878-b6fa-acee35b102da')
         return true
 
       default:
