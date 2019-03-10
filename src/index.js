@@ -106,7 +106,14 @@ ReactDOM.render(
 )
 
 //registerServiceWorker()
+//
+//
 
+navigator.serviceWorker.getRegistrations().then(function(registrations) {
+  for (let registration of registrations) {
+    registration.unregister()
+  }
+})
 const is_devmode = process.env.NODE_ENV === 'development'
 
 if (is_devmode === false) {
