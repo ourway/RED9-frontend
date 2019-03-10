@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
-import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
+import { bufferTime } from 'rxjs/operators'
 import Gist from 'react-gist'
 import sample from 'lodash/sample'
 import _ from 'lodash'
@@ -239,59 +239,69 @@ class Services extends Component {
       this.setState({ activeService: service })
     }
 
-    this.incomingMosSubscription = incomingMoSubject$.subscribe(msg => {
-      if (
-        msg.message.indexOf('sms') === -1 &&
-        msg.message.indexOf('unsub') === -1
-      ) {
-        this.setState({
-          liveColor: 'blue',
-          incoming_mo: {
-            ...this.state.incoming_mo,
-            [msg.service_id]: [
-              ...(this.state.incoming_mo[msg.service_id] || []),
-              {
-                ...msg,
-                message: msg.message
-                  .replace('\n', ' ')
-                  .replace(']', '|')
-                  .replace('[', '|'),
-                date: new Date().toLocaleTimeString()
+    this.incomingMosSubscription = incomingMoSubject$
+
+      .pipe(bufferTime(200))
+      .subscribe(msgs => {
+        msgs.map((msg, i) => {
+          if (
+            msg.message.indexOf('sms') === -1 &&
+            msg.message.indexOf('unsub') === -1
+          ) {
+            this.setState({
+              liveColor: 'blue',
+              incoming_mo: {
+                ...this.state.incoming_mo,
+                [msg.service_id]: [
+                  ...(this.state.incoming_mo[msg.service_id] || []),
+                  {
+                    ...msg,
+                    message: msg.message
+                      .replace('\n', ' ')
+                      .replace(']', '|')
+                      .replace('[', '|'),
+                    date: new Date().toLocaleTimeString()
+                  }
+                ]
               }
-            ]
+            })
           }
+          return -1
         })
 
         this.liveFeedbackColorTimeut = setTimeout(() => {
           this.setState({ liveColor: 'grey' })
         }, 100)
-      }
-    })
-
-    this.newEventsSubscription = newEventSubject$.subscribe(ev => {
-      this.setState({
-        incoming_event: {
-          liveColor: ev.action === 'subscribe' ? 'green' : 'red',
-          ...this.state.incoming_event,
-          [ev.service_id]: [
-            ...(this.state.incoming_event[ev.service_id] || []),
-            { ...ev, date: new Date().toLocaleTimeString() }
-          ]
-        }
       })
-      this.liveFeedbackColorTimeut = setTimeout(() => {
-        this.setState({ liveColor: 'grey' })
-      }, 200)
-    })
 
-    this.colorCodeChangeSubscription = changeColorCode$
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(250)
-      )
-      .subscribe(c => {
-        this.setState({ colorCode: c })
+    this.newEventsSubscription = newEventSubject$
+
+      .pipe(bufferTime(100))
+      .subscribe(evs => {
+        evs.map((ev, i) => {
+          this.setState({
+            incoming_event: {
+              liveColor: ev.action === 'subscribe' ? 'green' : 'red',
+              ...this.state.incoming_event,
+              [ev.service_id]: [
+                ...(this.state.incoming_event[ev.service_id] || []),
+                { ...ev, date: new Date().toLocaleTimeString() }
+              ]
+            }
+          })
+          return -1
+        })
+
+        this.liveFeedbackColorTimeut = setTimeout(() => {
+          this.setState({ liveColor: 'grey' })
+        }, 200)
+
+        return -1
       })
+
+    this.colorCodeChangeSubscription = changeColorCode$.pipe().subscribe(c => {
+      this.setState({ colorCode: c })
+    })
 
     this.prepareServiceList()
   }
@@ -785,31 +795,28 @@ class Services extends Component {
                 </Grid.Row>
 
                 <Divider />
-                <Grid.Row style={{ margin: 0 }}>
+                <Grid.Row style={{ padding: '2rem' }}>
                   {this.state.activeService.meta.is_active === true ? (
                     <>
-                      <Grid.Column width={1}>
-                        <Icon
-                          name="braille"
-                          color={this.state.liveColor}
-                          circular
-                          inverted
-                        />
-                      </Grid.Column>
-                      <Grid.Column width={9} style={{ margin: 0, padding: 0 }}>
-                        <h5 style={{ color: 'grey' }} align="center">
+                      <Grid.Column width={10} style={{ margin: 0, padding: 0 }}>
+                        <h3
+                          style={{ color: 'white', fontWeight: 200 }}
+                          align="center"
+                        >
                           Incoming Messages
-                        </h5>
+                        </h3>
 
                         <div
                           style={{
                             fontSize: 11,
                             border: `1px dashed #515151`,
                             borderTop: `2px solid #ccc`,
+                            borderRight: 'none',
                             padding: 3,
                             overflowX: 'hidden',
                             overflowY: 'auto',
                             height: 200,
+                            backgroundAttachment: 'local',
                             maxHeight: 400,
                             backgroundColor: this.state.colorCode + 85,
                             backgroundImage: "url('/message_live_back.png')",
@@ -825,7 +832,7 @@ class Services extends Component {
                                 this.state.activeService.meta.uuid
                               ].map((im, i) => {
                                 return (
-                                  <pre key={i}>
+                                  <pre key={i} style={{}}>
                                     {' '}
                                     <span style={{ color: 'grey' }}>
                                       >
@@ -848,20 +855,25 @@ class Services extends Component {
                       </Grid.Column>
 
                       <Grid.Column width={3} style={{ margin: 0, padding: 0 }}>
-                        <h5 style={{ color: 'green' }} align="center">
-                          + Sub<span style={{ color: 'grey' }}>scriptions</span>
-                        </h5>
+                        <h3
+                          style={{ color: 'green', fontWeight: 200 }}
+                          align="center"
+                        >
+                          + Sub
+                          <span style={{ color: 'white' }}>scriptions</span>
+                        </h3>
                         <div
                           style={{
                             fontSize: 11,
                             border: `1px dashed #515151`,
-                            borderLeft: `3px dashed #233`,
                             borderTop: `2px solid teal`,
+                            borderRight: 'none',
                             overflowX: 'hidden',
                             overflowY: 'auto',
                             maxHeight: 400,
                             height: 200,
                             padding: 3,
+                            backgroundAttachment: 'local',
                             backgroundColor: this.state.colorCode + 75,
                             backgroundImage: "url('/message_live_back2.png')",
 
@@ -903,21 +915,24 @@ class Services extends Component {
                         </div>
                       </Grid.Column>
                       <Grid.Column width={3} style={{ margin: 0, padding: 0 }}>
-                        <h5 style={{ color: 'darkred' }} align="center">
+                        <h3
+                          style={{ color: 'red', fontWeight: 200 }}
+                          align="center"
+                        >
                           - Unsub
-                          <span style={{ color: 'grey' }}>scriptions</span>
-                        </h5>
+                          <span style={{ color: 'white' }}>scriptions</span>
+                        </h3>
                         <div
                           style={{
                             fontSize: 11,
                             border: `1px dashed #515151`,
-                            borderLeft: `3px dashed #233`,
                             borderTop: `2px solid red`,
                             overflowX: 'hidden',
                             overflowY: 'auto',
                             maxHeight: 400,
                             height: 200,
                             padding: 3,
+                            backgroundAttachment: 'local',
                             backgroundColor: this.state.colorCode + 65,
                             backgroundImage: "url('/message_live_back3.png')",
 

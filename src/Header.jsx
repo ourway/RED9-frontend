@@ -59,13 +59,17 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    handle_message_count_receive$.pipe(distinctUntilChanged()).subscribe({
-      next: msg => {
-        this.setState({
-          message_count: msg.result
-        })
-      }
-    })
+    handle_message_count_receive$
+      .pipe(distinctUntilChanged())
+
+      .pipe(debounceTime(50))
+      .subscribe({
+        next: msg => {
+          this.setState({
+            message_count: msg.result
+          })
+        }
+      })
   }
 
   componentWillUnmount() {
