@@ -74,6 +74,7 @@ class Services extends Component {
     super(props)
     this.state = {
       editMode: false,
+      liveColor: 'grey',
       incoming_mo: {},
       incoming_event: {},
       testSmsResult: {},
@@ -228,6 +229,7 @@ class Services extends Component {
     this.newEventsSubscription.unsubscribe()
     clearTimeout(this.someAjaxCalls)
     clearTimeout(this.extraTimeouts)
+    clearTimeout(this.liveFeedbackColorTimeut)
     // stopLoading$.next(true);
   }
 
@@ -243,6 +245,7 @@ class Services extends Component {
         msg.message.indexOf('unsub') === -1
       ) {
         this.setState({
+          liveColor: 'blue',
           incoming_mo: {
             ...this.state.incoming_mo,
             [msg.service_id]: [
@@ -258,12 +261,17 @@ class Services extends Component {
             ]
           }
         })
+
+        this.liveFeedbackColorTimeut = setTimeout(() => {
+          this.setState({ liveColor: 'grey' })
+        }, 100)
       }
     })
 
     this.newEventsSubscription = newEventSubject$.subscribe(ev => {
       this.setState({
         incoming_event: {
+          liveColor: ev.action === 'subscribe' ? 'green' : 'red',
           ...this.state.incoming_event,
           [ev.service_id]: [
             ...(this.state.incoming_event[ev.service_id] || []),
@@ -271,6 +279,9 @@ class Services extends Component {
           ]
         }
       })
+      this.liveFeedbackColorTimeut = setTimeout(() => {
+        this.setState({ liveColor: 'grey' })
+      }, 200)
     })
 
     this.colorCodeChangeSubscription = changeColorCode$
@@ -774,141 +785,18 @@ class Services extends Component {
                 </Grid.Row>
 
                 <Divider />
-                <Grid.Row>
-                  <Grid.Column width={1}>
-                    <Header as="h6" icon color="orange">
-                      <Icon name="travel" circular inverted />
-                      Tools
-                    </Header>
-                  </Grid.Column>
-
+                <Grid.Row style={{ margin: 0 }}>
                   {this.state.activeService.meta.is_active === true ? (
                     <>
-                      <Grid.Column width={3}>
-                        <Card color="orange">
-                          <Card.Content>
-                            <Card.Header>
-                              <CompoundButton
-                                onClick={this.doTestService}
-                                secondaryText={
-                                  <p>
-                                    {' '}
-                                    Click to send a test SMS to{' '}
-                                    {this.state.activeService.meta.client_gsm}
-                                  </p>
-                                }
-                                disabled={this.state.testSmsIsSending === true}
-                                checked={true}
-                              >
-                                Send Test SMS
-                              </CompoundButton>
-                            </Card.Header>
-                            <Card.Meta>
-                              <span className="date" />
-                            </Card.Meta>
-                            <Card.Description>
-                              {this.state.testSmsResult.resp
-                                ? this.state.testSmsResult.status === 'error'
-                                  ? [
-                                      <h4 key="header">
-                                        We tried to send a message from{' '}
-                                        <code>
-                                          {this.state.activeService.short_code}
-                                        </code>{' '}
-                                        to{' '}
-                                        <code>
-                                          {this.state.testSmsResult.msisdn}
-                                        </code>{' '}
-                                        and we got this error:
-                                      </h4>,
-                                      <ul key="errorlist">
-                                        <li>
-                                          Error ID:{' '}
-                                          <code>
-                                            {this.state.testSmsResult.resp.id}
-                                          </code>
-                                        </li>
-                                        <li>
-                                          Fault:{' '}
-                                          <code>
-                                            {
-                                              this.state.testSmsResult.resp
-                                                .fault
-                                            }
-                                          </code>
-                                        </li>
-                                        <li>
-                                          Description:{' '}
-                                          <code>
-                                            {
-                                              this.state.testSmsResult.resp
-                                                .description
-                                            }
-                                          </code>
-                                        </li>
-                                        <li>
-                                          Correlator:{' '}
-                                          <Link
-                                            className="dark"
-                                            to={`/messaging/status/${
-                                              this.state.testSmsResult
-                                                .correlator
-                                            }`}
-                                          >
-                                            <small
-                                              style={{ color: 'darkgreen' }}
-                                            >
-                                              {
-                                                this.state.testSmsResult
-                                                  .correlator
-                                              }
-                                            </small>
-                                          </Link>
-                                        </li>
-                                      </ul>
-                                    ]
-                                  : null
-                                : null}
-                            </Card.Description>
-                          </Card.Content>
-                          <Card.Content extra>
-                            {this.state.testSmsIsSending === true ? (
-                              <Icon
-                                loading
-                                size="small"
-                                name="spinner"
-                                color="blue"
-                              />
-                            ) : null}
-
-                            {this.state.testSmsResult.resp ? (
-                              <em style={{ cursor: 'pointer' }}>
-                                <Icon
-                                  name="circle"
-                                  color={
-                                    this.state.testSmsResult.status === 'ok'
-                                      ? 'green'
-                                      : 'red'
-                                  }
-                                />
-                                {this.state.testSmsResult.status}
-                              </em>
-                            ) : (
-                              <span>
-                                Click button to update the status of test
-                              </span>
-                            )}
-                          </Card.Content>
-                        </Card>
-                      </Grid.Column>
-
                       <Grid.Column width={1}>
-                        <Header as="h6" icon color="orange">
-                          <Icon name="travel" circular inverted />
-                          Live Feedback
-                        </Header>
+                        <Icon
+                          name="braille"
+                          color={this.state.liveColor}
+                          circular
+                          inverted
+                        />
                       </Grid.Column>
-                      <Grid.Column width={6} style={{ margin: 0, padding: 0 }}>
+                      <Grid.Column width={9} style={{ margin: 0, padding: 0 }}>
                         <h5 style={{ color: 'grey' }} align="center">
                           Incoming Messages
                         </h5>
@@ -916,14 +804,17 @@ class Services extends Component {
                         <div
                           style={{
                             fontSize: 11,
-                            borderLeft: `1px solid ${this.state.colorCode}`,
-                            borderTop: `3px solid grey`,
+                            border: `1px dashed #515151`,
+                            borderTop: `2px solid #ccc`,
                             padding: 3,
                             overflowX: 'hidden',
                             overflowY: 'auto',
                             height: 200,
                             maxHeight: 400,
                             backgroundColor: this.state.colorCode + 85,
+                            backgroundImage: "url('/message_live_back.png')",
+
+                            backgroundSize: 512,
                             lineHeight: '0.3em'
                           }}
                         >
@@ -956,21 +847,25 @@ class Services extends Component {
                         </div>
                       </Grid.Column>
 
-                      <Grid.Column width={2} style={{ margin: 0, padding: 0 }}>
+                      <Grid.Column width={3} style={{ margin: 0, padding: 0 }}>
                         <h5 style={{ color: 'green' }} align="center">
                           + Sub<span style={{ color: 'grey' }}>scriptions</span>
                         </h5>
                         <div
                           style={{
                             fontSize: 11,
+                            border: `1px dashed #515151`,
                             borderLeft: `3px dashed #233`,
-                            borderTop: `3px solid teal`,
+                            borderTop: `2px solid teal`,
                             overflowX: 'hidden',
                             overflowY: 'auto',
                             maxHeight: 400,
                             height: 200,
                             padding: 3,
                             backgroundColor: this.state.colorCode + 75,
+                            backgroundImage: "url('/message_live_back2.png')",
+
+                            backgroundSize: 64,
                             lineHeight: '0.3em'
                           }}
                         >
@@ -1007,7 +902,7 @@ class Services extends Component {
                             : null}
                         </div>
                       </Grid.Column>
-                      <Grid.Column width={2} style={{ margin: 0, padding: 0 }}>
+                      <Grid.Column width={3} style={{ margin: 0, padding: 0 }}>
                         <h5 style={{ color: 'darkred' }} align="center">
                           - Unsub
                           <span style={{ color: 'grey' }}>scriptions</span>
@@ -1015,14 +910,18 @@ class Services extends Component {
                         <div
                           style={{
                             fontSize: 11,
+                            border: `1px dashed #515151`,
                             borderLeft: `3px dashed #233`,
-                            borderTop: `3px solid darkred`,
+                            borderTop: `2px solid red`,
                             overflowX: 'hidden',
                             overflowY: 'auto',
                             maxHeight: 400,
                             height: 200,
                             padding: 3,
                             backgroundColor: this.state.colorCode + 65,
+                            backgroundImage: "url('/message_live_back3.png')",
+
+                            backgroundSize: 96,
                             lineHeight: '0.3em'
                           }}
                         >
@@ -1059,6 +958,124 @@ class Services extends Component {
                     </>
                   ) : null}
                 </Grid.Row>
+                <Divider />
+
+                <Grid.Row>
+                  <Grid.Column width={1}>
+                    <Header as="h6" icon color="orange">
+                      <Icon name="travel" circular inverted />
+                      Tools
+                    </Header>
+                  </Grid.Column>
+
+                  <Grid.Column width={3}>
+                    <Card color="orange">
+                      <Card.Content>
+                        <Card.Header>
+                          <CompoundButton
+                            onClick={this.doTestService}
+                            secondaryText={
+                              <p>
+                                {' '}
+                                Click to send a test SMS to{' '}
+                                {this.state.activeService.meta.client_gsm}
+                              </p>
+                            }
+                            disabled={this.state.testSmsIsSending === true}
+                            checked={true}
+                          >
+                            Send Test SMS
+                          </CompoundButton>
+                        </Card.Header>
+                        <Card.Meta>
+                          <span className="date" />
+                        </Card.Meta>
+                        <Card.Description>
+                          {this.state.testSmsResult.resp
+                            ? this.state.testSmsResult.status === 'error'
+                              ? [
+                                  <h4 key="header">
+                                    We tried to send a message from{' '}
+                                    <code>
+                                      {this.state.activeService.short_code}
+                                    </code>{' '}
+                                    to{' '}
+                                    <code>
+                                      {this.state.testSmsResult.msisdn}
+                                    </code>{' '}
+                                    and we got this error:
+                                  </h4>,
+                                  <ul key="errorlist">
+                                    <li>
+                                      Error ID:{' '}
+                                      <code>
+                                        {this.state.testSmsResult.resp.id}
+                                      </code>
+                                    </li>
+                                    <li>
+                                      Fault:{' '}
+                                      <code>
+                                        {this.state.testSmsResult.resp.fault}
+                                      </code>
+                                    </li>
+                                    <li>
+                                      Description:{' '}
+                                      <code>
+                                        {
+                                          this.state.testSmsResult.resp
+                                            .description
+                                        }
+                                      </code>
+                                    </li>
+                                    <li>
+                                      Correlator:{' '}
+                                      <Link
+                                        className="dark"
+                                        to={`/messaging/status/${
+                                          this.state.testSmsResult.correlator
+                                        }`}
+                                      >
+                                        <small style={{ color: 'darkgreen' }}>
+                                          {this.state.testSmsResult.correlator}
+                                        </small>
+                                      </Link>
+                                    </li>
+                                  </ul>
+                                ]
+                              : null
+                            : null}
+                        </Card.Description>
+                      </Card.Content>
+                      <Card.Content extra>
+                        {this.state.testSmsIsSending === true ? (
+                          <Icon
+                            loading
+                            size="small"
+                            name="spinner"
+                            color="blue"
+                          />
+                        ) : null}
+
+                        {this.state.testSmsResult.resp ? (
+                          <em style={{ cursor: 'pointer' }}>
+                            <Icon
+                              name="circle"
+                              color={
+                                this.state.testSmsResult.status === 'ok'
+                                  ? 'green'
+                                  : 'red'
+                              }
+                            />
+                            {this.state.testSmsResult.status}
+                          </em>
+                        ) : (
+                          <span>Click button to update the status of test</span>
+                        )}
+                      </Card.Content>
+                    </Card>
+                  </Grid.Column>
+                </Grid.Row>
+
                 <Divider />
 
                 <Grid.Row>

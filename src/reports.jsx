@@ -203,7 +203,7 @@ class Reports extends Component {
   render() {
     return (
       <div style={{ marginBottom: 64 }}>
-        <Segment id="mci_panel" inverted>
+        <Segment id="mci_panel" inverted style={{ textShadow: 'none' }}>
           <Menu attached="top" inverted>
             <Menu.Menu position="left">
               <Menu.Item>

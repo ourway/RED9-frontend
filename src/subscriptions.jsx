@@ -30,6 +30,7 @@ class Subscriptions extends Component {
     return (
       <Segment inverted loading={this.state.is_loading}>
         <Table
+          style={{ textShadow: 'none' }}
           celled
           inverted
           selectable

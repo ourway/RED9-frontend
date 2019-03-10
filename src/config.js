@@ -20,7 +20,7 @@ const rashavas_env = {
   FTP_BASE: 'https://ftp.red9.ir/imi_ftp/v1',
   CODE51_BASE: 'https://api.appido.ir/code51',
   CODE51_TOKEN: 'aa71ee01',
-  product_version: '0.8.47 / 09 MAR 2019',
+  product_version: '0.8.49 / 10 MAR 2019',
   codename: 'Sentinel Wolf',
   logo: 'red9',
   author: 'RmFyc2hlZWQgQXNob3VyaQ==',
