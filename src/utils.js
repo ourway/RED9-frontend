@@ -128,7 +128,7 @@ export const sendLoginRequest = (uuid, hora, login_mode, no_admin) => {
           }
         })
 
-        joinSubject$.next('client:6af8a5c8-8e2b-4878-b6fa-acee35b102da')
+        joinSubject$.next(`client:${uuid}`)
         return true
 
       default:
@@ -178,4 +178,8 @@ export const invertColor = (hex, bw) => {
   b = (255 - b).toString(16)
   // pad each with zeros and return
   return '#' + padZero(r) + padZero(g) + padZero(b)
+}
+
+export const msisdn_prettefy = target => {
+  return `${target.slice(0, 3)}-${target.slice(3, 7)}-${target.slice(7, 10)}`
 }

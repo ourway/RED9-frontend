@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
-import { bufferTime } from 'rxjs/operators'
+import { bufferTime, distinctUntilChanged } from 'rxjs/operators'
 import Gist from 'react-gist'
 import sample from 'lodash/sample'
 import _ from 'lodash'
@@ -36,6 +36,7 @@ import {
   deactivateService
 } from './apis'
 import {
+  msisdn_prettefy,
   titleChangeSignal,
   onFilter$,
   selectService$,
@@ -229,7 +230,6 @@ class Services extends Component {
     this.newEventsSubscription.unsubscribe()
     clearTimeout(this.someAjaxCalls)
     clearTimeout(this.extraTimeouts)
-    clearTimeout(this.liveFeedbackColorTimeut)
     // stopLoading$.next(true);
   }
 
@@ -241,60 +241,70 @@ class Services extends Component {
 
     this.incomingMosSubscription = incomingMoSubject$
 
-      .pipe(bufferTime(200))
+      .pipe(
+        bufferTime(500),
+        distinctUntilChanged()
+      )
       .subscribe(msgs => {
         msgs.map((msg, i) => {
           if (
             msg.message.indexOf('sms') === -1 &&
             msg.message.indexOf('unsub') === -1
           ) {
+            let bef = this.state.incoming_mo[msg.service_id] || []
+            if (bef.length >= 50) {
+              bef = [...bef.slice(0, 0), ...bef.slice(0 + 1)]
+            }
             this.setState({
-              liveColor: 'blue',
               incoming_mo: {
                 ...this.state.incoming_mo,
                 [msg.service_id]: [
-                  ...(this.state.incoming_mo[msg.service_id] || []),
                   {
                     ...msg,
-                    message: msg.message
+                    national_number: msisdn_prettefy(msg.national_number),
+                    message: `"${_.slice(msg.message, 0, 16)
+                      .join('')
                       .replace('\n', ' ')
                       .replace(']', '|')
-                      .replace('[', '|'),
+                      .replace('[', '|')}"`,
                     date: new Date().toLocaleTimeString()
-                  }
+                  },
+                  ...bef
                 ]
               }
             })
           }
           return -1
         })
-
-        this.liveFeedbackColorTimeut = setTimeout(() => {
-          this.setState({ liveColor: 'grey' })
-        }, 100)
       })
 
     this.newEventsSubscription = newEventSubject$
+      .pipe(
+        bufferTime(500),
+        distinctUntilChanged()
+      )
 
-      .pipe(bufferTime(100))
       .subscribe(evs => {
         evs.map((ev, i) => {
+          let bef = this.state.incoming_event[ev.service_id] || []
+          if (bef.length >= 50) {
+            bef = [...bef.slice(0, 0), ...bef.slice(0 + 1)]
+          }
           this.setState({
             incoming_event: {
-              liveColor: ev.action === 'subscribe' ? 'green' : 'red',
               ...this.state.incoming_event,
               [ev.service_id]: [
-                ...(this.state.incoming_event[ev.service_id] || []),
-                { ...ev, date: new Date().toLocaleTimeString() }
+                {
+                  ...ev,
+                  date: new Date().toLocaleTimeString(),
+                  msisdn: msisdn_prettefy(ev.msisdn.slice(2, 14))
+                },
+                ...bef
               ]
             }
           })
           return -1
         })
-
-        this.liveFeedbackColorTimeut = setTimeout(() => {
-          this.setState({ liveColor: 'grey' })
-        }, 200)
 
         return -1
       })
@@ -832,7 +842,13 @@ class Services extends Component {
                                 this.state.activeService.meta.uuid
                               ].map((im, i) => {
                                 return (
-                                  <pre key={i} style={{}}>
+                                  <pre
+                                    key={i}
+                                    style={{
+                                      fontWeight: 400,
+                                      opacity: 1 - (i + 1) / 100
+                                    }}
+                                  >
                                     {' '}
                                     <span style={{ color: 'grey' }}>
                                       >
@@ -844,9 +860,25 @@ class Services extends Component {
                                       {' '}
                                       MESSAGE:
                                     </span>{' '}
-                                    {_.slice(im.message, 0, 16).join('')}{' '}
+                                    <span
+                                      style={{
+                                        color: 'gold',
+                                        fontFamily:
+                                          'Arial, Helvetica, sans-serif',
+                                        fontSize: 13
+                                      }}
+                                    >
+                                      {im.message}
+                                    </span>{' '}
                                     <span style={{ color: 'grey' }}>FROM:</span>{' '}
-                                    {im.national_number}{' '}
+                                    <span
+                                      style={{
+                                        color: 'white',
+                                        fontWeight: 800
+                                      }}
+                                    >
+                                      {im.national_number}
+                                    </span>{' '}
                                   </pre>
                                 )
                               })
@@ -892,7 +924,13 @@ class Services extends Component {
                                 })
                                 .map((ev, i) => {
                                   return (
-                                    <pre key={i}>
+                                    <pre
+                                      key={i}
+                                      style={{
+                                        fontWeight: 400,
+                                        opacity: 1 - (i + 1) / 100
+                                      }}
+                                    >
                                       <span style={{ color: 'green' }}>
                                         {' '}
                                         +{' '}
@@ -951,7 +989,13 @@ class Services extends Component {
                                 })
                                 .map((ev, i) => {
                                   return (
-                                    <pre key={i}>
+                                    <pre
+                                      key={i}
+                                      style={{
+                                        fontWeight: 400,
+                                        opacity: 1 - (i + 1) / 100
+                                      }}
+                                    >
                                       <span style={{ color: 'red' }}> - </span>
                                       <span style={{ color: 'lightgrey' }}>
                                         {ev.date}

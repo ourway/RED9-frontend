@@ -12,7 +12,7 @@
     "jalali-date": "^1.0.2",
     "lato-font": "^3.0.0",
     "lodash": "^4.17.10",
-    "office-ui-fabric-react": "^6.124.1",
+    "office-ui-fabric-react": "~6.124.1",
     "phoenix": "^1.4.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

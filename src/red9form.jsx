@@ -162,7 +162,7 @@ class Red9Form extends Component {
     })
   }
 
-  attrDialogValueChanged = value => {
+  attrDialogValueChanged = (_, value) => {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
@@ -170,8 +170,8 @@ class Red9Form extends Component {
           this.state.attrDialogOps.type === 'string'
             ? value.toString()
             : isNaN(parseInt(value, 10))
-            ? 0
-            : parseInt(value, 10)
+              ? 0
+              : parseInt(value, 10)
       }
     })
   }
@@ -200,7 +200,7 @@ class Red9Form extends Component {
     this.CloseAttrDialog()
   }
 
-  attrDialogKeyChanged = key => {
+  attrDialogKeyChanged = (_, key) => {
     this.setState({
       attrDialogOps: {
         ...this.state.attrDialogOps,
@@ -226,7 +226,6 @@ class Red9Form extends Component {
     return (
       <Dialog
         hidden={this.state.attrDialogOps.is_hidden}
-        disabled={true}
         onDismiss={this.CloseAttrDialog}
         dialogContentProps={{
           title: `Add an attribute ${
