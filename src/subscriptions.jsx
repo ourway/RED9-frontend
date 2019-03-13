@@ -1,15 +1,32 @@
 import React, { Component } from 'react'
 
-import { fixDatetime } from './utils'
-import { Segment, Table } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { fixDatetime, convertToCSV } from './utils'
+import { Segment, Table, Icon, Menu } from 'semantic-ui-react'
 import { getSubscribers } from './apis'
 import store from 'store'
 import JDate from 'jalali-date'
+import { saveAs } from 'file-saver'
 
 class Subscriptions extends Component {
   constructor(props) {
     super(props)
     this.state = { subscribers: [], is_loading: true }
+  }
+
+  downloadAs = () => {
+    const d = new Date()
+    const today = d
+      .toLocaleString()
+      .split(' ')[0]
+      .split(',')[0]
+
+    var file = new File(
+      [convertToCSV(this.state.total_subscribers)],
+      `RED9_${this.state.service.name}_${today}.csv`,
+      { type: 'text/csv' }
+    )
+    saveAs(file)
   }
 
   componentDidMount() {
@@ -18,7 +35,15 @@ class Subscriptions extends Component {
     getSubscribers(atob(uuidKey), service.name).then(data => {
       if (data.status === 200) {
         data.json().then(resp => {
-          this.setState({ subscribers: resp.results, is_loading: false })
+          this.setState({
+            subscribers: [
+              ...resp.results.splice(0, 0),
+              ...resp.results.splice(0, 1000)
+            ],
+            is_loading: false,
+            total_subscribers: resp.results,
+            service: service
+          })
         })
       }
     })
@@ -29,6 +54,18 @@ class Subscriptions extends Component {
   render() {
     return (
       <Segment inverted loading={this.state.is_loading}>
+        <Menu attached="top" inverted style={{ backgroundColor: '#212931' }}>
+          <Menu.Menu position="left">
+            <Menu.Item
+              icon="download"
+              color="blue"
+              title="Click to download subscriptions as CSV file"
+              name="Download CSV sheet"
+              onClick={this.downloadAs}
+            />
+          </Menu.Menu>
+        </Menu>
+
         <Table
           style={{ textShadow: 'none' }}
           celled
@@ -69,7 +106,11 @@ class Subscriptions extends Component {
                         color: s.deactivated_on === null ? 'PaleGreen' : 'pink'
                       }}
                     >
-                      {s.national_number}
+                      <Link to={`/search/${btoa(s.national_number)}`}>
+                        {' '}
+                        <Icon name="mobile" color="grey" />
+                        {s.national_number}
+                      </Link>
                     </strong>
                   </Table.Cell>
                   <Table.Cell>{s.fake_number}</Table.Cell>

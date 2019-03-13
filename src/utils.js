@@ -183,3 +183,27 @@ export const invertColor = (hex, bw) => {
 export const msisdn_prettefy = target => {
   return `${target.slice(0, 3)}-${target.slice(3, 7)}-${target.slice(7, 10)}`
 }
+
+export const convertToCSV = objArray => {
+  let rows = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
+  let header = ''
+  Object.keys(rows[0]).map(pr => (header += pr + ';'))
+
+  let str = ''
+  rows.forEach(row => {
+    let line = ''
+    let columns = typeof row !== 'object' ? JSON.parse(row) : Object.values(row)
+    columns.forEach(column => {
+      if (line !== '') {
+        line += ';'
+      }
+      if (typeof column === 'object') {
+        line += JSON.stringify(column)
+      } else {
+        line += column
+      }
+    })
+    str += line + '\r\n'
+  })
+  return header + '\r\n' + str
+}

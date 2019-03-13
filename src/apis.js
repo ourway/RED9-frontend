@@ -430,7 +430,7 @@ export const getSubscribers = (client_key, service_name) => {
   return fetch(
     `${
       env.API_BASE
-    }/api/client/history?service=${service_name}&limit=1000&offset=0&country_code=98`,
+    }/api/client/history?service=${service_name}&limit=1000000&offset=0&country_code=98`,
     opts
   )
 }

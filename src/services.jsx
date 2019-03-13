@@ -253,7 +253,7 @@ class Services extends Component {
           ) {
             let bef = this.state.incoming_mo[msg.service_id] || []
             if (bef.length >= 50) {
-              bef = [...bef.slice(0, 0), ...bef.slice(0 + 1)]
+              bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
             }
             this.setState({
               incoming_mo: {
@@ -288,7 +288,7 @@ class Services extends Component {
         evs.map((ev, i) => {
           let bef = this.state.incoming_event[ev.service_id] || []
           if (bef.length >= 50) {
-            bef = [...bef.slice(0, 0), ...bef.slice(0 + 1)]
+            bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
           }
           this.setState({
             incoming_event: {

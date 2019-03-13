@@ -1,11 +1,12 @@
 {
   "name": "red9_console",
-  "version": "0.8.55",
+  "version": "0.8.56",
   "homepage": "https://wlf.red9.ir",
   "private": true,
   "dependencies": {
     "accounting-js": "^1.1.1",
     "detect-browser": "^4.0.3",
+    "file-saver": "^2.0.1",
     "font-awesome": "^4.7.0",
     "iransans": "^1.0.0",
     "jalaali-js": "^1.1.0",
