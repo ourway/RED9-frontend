@@ -249,6 +249,8 @@ class Services extends Component {
         msgs.map((msg, i) => {
           if (
             msg.message.indexOf('sms') === -1 &&
+            msg.message.indexOf('otp') === -1 &&
+            msg.message.indexOf('ussd') === -1 &&
             msg.message.indexOf('unsub') === -1
           ) {
             let bef = this.state.incoming_mo[msg.service_id] || []

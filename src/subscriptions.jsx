@@ -38,7 +38,7 @@ class Subscriptions extends Component {
           this.setState({
             subscribers: [
               ...resp.results.splice(0, 0),
-              ...resp.results.splice(0, 1000)
+              ...resp.results.splice(0, 100)
             ],
             is_loading: false,
             total_subscribers: resp.results,

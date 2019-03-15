@@ -237,7 +237,7 @@ class Templates extends Component {
 
             <Menu.Item>
               <Input
-                size="tiny"
+                size="mini"
                 onChange={this.sendFilterSignal}
                 value={this.state.filter}
                 transparent
@@ -317,11 +317,13 @@ class Templates extends Component {
                         padding: 5,
                         opacity: 0.9,
                         width: '100%',
+                        minHeight: 100,
                         direction: 'rtl',
+                        //unicodeBidi: 'bidi-override',
+                        fontFamily: 'IRANSans',
                         textAlign: 'justify'
                       }}
                       value={t.body}
-                      autoHeight
                       onChange={(o, v) => this._handleBodyChange(o, v, i, t)}
                       placeholder="message body to be used in message/reaction"
                       rows={1}
@@ -347,7 +349,7 @@ class Templates extends Component {
                           color="teal"
                           floated="left"
                           icon="save"
-                          size="tiny"
+                          size="mini"
                         />
                       ) : null}
                     </div>

@@ -1,6 +1,6 @@
 {
   "name": "red9_console",
-  "version": "0.8.56",
+  "version": "0.8.58",
   "homepage": "https://wlf.red9.ir",
   "private": true,
   "dependencies": {
@@ -13,7 +13,8 @@
     "jalali-date": "^1.0.2",
     "lato-font": "^3.0.0",
     "lodash": "^4.17.10",
-    "office-ui-fabric-react": "~6.124.1",
+    "office-ui-fabric-react": "^6.124.1",
+    "less-loader": "^4.1.0",
     "phoenix": "^1.4.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -24,7 +25,7 @@
     "recharts": "^1.4.2",
     "rxjs": "^6.3.2",
     "semantic-ui-css": "^2.3.3",
-    "semantic-ui-react": "^0.85.0",
+    "semantic-ui-react": "^0.86.0",
     "store": "^2.0.12",
     "string": "^3.3.3",
     "sweetalert2": "~7",

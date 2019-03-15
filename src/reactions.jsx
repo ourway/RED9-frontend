@@ -429,7 +429,7 @@ class Reactions extends Component {
 
               <Menu.Item>
                 <Input
-                  size="tiny"
+                  size="mini"
                   onChange={this.sendFilterSignal}
                   value={this.state.filter}
                   transparent
@@ -463,7 +463,7 @@ class Reactions extends Component {
             <Table.Body>
               {this.state.reactions.map((t, i) => {
                 return (
-                  <Table.Row key={t.name} className="formRow">
+                  <Table.Row key={i} className="formRow">
                     <Table.Cell>
                       <code> {t.name} </code>
                     </Table.Cell>
@@ -619,7 +619,7 @@ class Reactions extends Component {
                         onChange={(o, v) =>
                           this._handleTemplateChange(t, i, o, v)
                         }
-                        options={this.state.templates}
+                        options={this.state.templates.map((a, _) => {return {...a, key: Math.random()}})}
                         placeholder="Choose a template"
                       />
                     </Table.Cell>
@@ -670,7 +670,7 @@ class Reactions extends Component {
                             color="teal"
                             floated="left"
                             icon="save"
-                            size="tiny"
+                            size="mini"
                           />
                         ) : null}
                       </div>
@@ -841,7 +841,7 @@ class Reactions extends Component {
             onChange={this._newReactionAppChanged}
             id="Basicdrop1"
             required={true}
-            options={this.state.apps}
+            options={this.state.apps.map((a, _) => {return {...a, key: Math.random()}})}
           />
 
           <TextField
@@ -862,7 +862,7 @@ class Reactions extends Component {
             onChange={this._newReactionTemplateChanged}
             id="Basicdrop122"
             required={false}
-            options={this.state.templates}
+            options={this.state.templates.map((a, _) => {return {...a, key: Math.random()}})}
           />
 
           <TextField

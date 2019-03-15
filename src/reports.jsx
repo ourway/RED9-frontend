@@ -209,7 +209,7 @@ class Reports extends Component {
             <Menu.Menu position="left">
               <Menu.Item>
                 <Input
-                  size="tiny"
+                  size="mini"
                   onChange={(o, v) => this._handleStartDateChange(o, v)}
                   type="date"
                   value={this.state.startDate}
