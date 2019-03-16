@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
-import { Segment, Menu, Input, Table, Divider, Grid } from 'semantic-ui-react'
+import {
+  Segment,
+  Menu,
+  Input,
+  Table,
+  Divider,
+  Grid,
+  Icon
+} from 'semantic-ui-react'
 import JDate from 'jalali-date'
 import accounting from 'accounting-js'
 import _ from 'lodash'
-import { titleChangeSignal } from './utils'
+import { titleChangeSignal, downloadAs } from './utils'
 
 import store from 'store'
 import {
@@ -227,7 +235,7 @@ class Reports extends Component {
             <Menu.Menu position="right">
               <Menu.Item>
                 <Input
-                  size="tiny"
+                  size="mini"
                   onChange={(o, v) => this._handleEndDateChange(o, v)}
                   type="date"
                   value={this.state.endDate}
@@ -248,7 +256,7 @@ class Reports extends Component {
             inverted
             style={{ background: '#2c3843' }}
           >
-            <h2 align="center">DB Data</h2>
+            <h2 align="center">DB Data </h2>
             <Grid columns="equal" divided>
               <Grid.Row key="activations">
                 {['API', 'SMS', 'OTP', 'WAP', 'TAJMI', 'USSD'].map(
@@ -261,8 +269,22 @@ class Reports extends Component {
                     if (data.length > 0) {
                       return (
                         <Grid.Column key={`${method}_ac`}>
-                          <h5 align="center" key="label">{`${method ||
-                            'N/A'} activations`}</h5>
+                          <h5 align="center" key="label">
+                            {`${method || 'N/A'} activations `}
+
+                            <Icon
+                              name="download"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                downloadAs(
+                                  data,
+                                  `${
+                                    this.state.service.name
+                                  }_${method}_activations_history`
+                                )
+                              }}
+                            />
+                          </h5>
                           <ResponsiveContainer
                             width="100%"
                             height={200}
@@ -319,8 +341,22 @@ class Reports extends Component {
                     if (data.length > 0) {
                       return (
                         <Grid.Column key={`${method}_da`}>
-                          <h5 key="label" align="center">{`${method ||
-                            'N/A'} deactivations`}</h5>
+                          <h5 key="label" align="center">
+                            {`${method || 'N/A'} deactivations `}
+
+                            <Icon
+                              name="download"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                downloadAs(
+                                  data,
+                                  `${
+                                    this.state.service.name
+                                  }_${method}_deactivations_history`
+                                )
+                              }}
+                            />
+                          </h5>
                           <ResponsiveContainer
                             width="100%"
                             height={200}
@@ -367,73 +403,76 @@ class Reports extends Component {
                 )}
               </Grid.Row>
             </Grid>
+            {Object.keys(this.state.mo_trends).length > 0 ? (
+              <>
+                <Divider />
 
-            <Divider />
-
-            <h1 align="center">MO/MT Stats</h1>
-            <h3 align="center">
-              Inbound Trends <small>Last 7 days</small>
-            </h3>
-            {Object.keys(this.state.mo_trends)
-              .sort()
-              .reverse()
-              .splice(0, 7)
-              .map((ev, i) => {
-                const td = this.state.mo_trends[ev].splice(0, 20)
-                //const counts = td.flatMap((x, _) => x.count)
-                //const re = Math.max(...counts)
-                //const rs = Math.min(...counts)
-                return (
-                  <ResponsiveContainer height={80} key={`${i}_graph`}>
-                    <ScatterChart
-                      margin={{ top: 10, right: 0, bottom: 0, left: 0 }}
-                    >
-                      <XAxis
-                        type="category"
-                        dataKey="msg"
-                        name="msg"
-                        interval={0}
-                        tick={{ fontSize: 12, stroke: 'grey' }}
-                        tickLine={{ transform: 'translate(0, -6)' }}
-                      />
-                      <YAxis
-                        type="number"
-                        dataKey="count"
-                        tick={false}
-                        tickLine={false}
-                        axisLine={false}
-                        label={{
-                          value: td.length > 0 ? td[0].date : null,
-                          fill: 'gold',
-                          position: 'insideBottomLeft'
-                        }}
-                      />
-                      <ZAxis
-                        type="number"
-                        dataKey="count"
-                        range={[20, 300]}
-                        sclae="log"
-                      />
-                      <Tooltip
-                        cursor={{ strokeDasharray: '3 3' }}
-                        wrapperStyle={{ zIndex: 100 }}
-                      />
-                      <Scatter
-                        data={td}
-                        fill={
-                          _.shuffle([
-                            'teal',
-                            '#b7fbff',
-                            '#ffe0a3',
-                            '#acc6aa',
-                            '#d2c8c8'
-                          ])[0]
-                        }
-                      />
-                    </ScatterChart>
-                  </ResponsiveContainer>
-                )
-              })}
+                <h1 align="center">MO/MT Stats</h1>
+                <h3 align="center">
+                  Inbound Trends <small>Last 7 days</small>
+                </h3>
+                {Object.keys(this.state.mo_trends)
+                  .sort()
+                  .reverse()
+                  .splice(0, 7)
+                  .map((ev, i) => {
+                    const td = this.state.mo_trends[ev].splice(0, 20)
+                    //const counts = td.flatMap((x, _) => x.count)
+                    //const re = Math.max(...counts)
+                    //const rs = Math.min(...counts)
+                    return (
+                      <ResponsiveContainer height={80} key={`${i}_graph`}>
+                        <ScatterChart
+                          margin={{ top: 10, right: 0, bottom: 0, left: 0 }}
+                        >
+                          <XAxis
+                            type="category"
+                            dataKey="msg"
+                            name="msg"
+                            interval={0}
+                            tick={{ fontSize: 12, stroke: 'grey' }}
+                            tickLine={{ transform: 'translate(0, -6)' }}
+                          />
+                          <YAxis
+                            type="number"
+                            dataKey="count"
+                            tick={false}
+                            tickLine={false}
+                            axisLine={false}
+                            label={{
+                              value: td.length > 0 ? td[0].date : null,
+                              fill: 'gold',
+                              position: 'insideBottomLeft'
+                            }}
+                          />
+                          <ZAxis
+                            type="number"
+                            dataKey="count"
+                            range={[20, 300]}
+                            sclae="log"
+                          />
+                          <Tooltip
+                            cursor={{ strokeDasharray: '3 3' }}
+                            wrapperStyle={{ zIndex: 100 }}
+                          />
+                          <Scatter
+                            data={td}
+                            fill={
+                              _.shuffle([
+                                'teal',
+                                '#b7fbff',
+                                '#ffe0a3',
+                                '#acc6aa',
+                                '#d2c8c8'
+                              ])[0]
+                            }
+                          />
+                        </ScatterChart>
+                      </ResponsiveContainer>
+                    )
+                  })}
+              </>
+            ) : null}
           </Segment>
           <Divider />
 
@@ -441,7 +480,20 @@ class Reports extends Component {
           this.state.service.wappush !== 'true' &&
           this.state.service.meta.operator === 'MCI' ? (
             <Segment id="mci_report_panel" inverted>
-              <h1 align="center">FTP server data</h1>
+              <h1 align="center">
+                FTP server data{' '}
+                <Icon
+                  name="download"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    downloadAs(
+                      this.state.data,
+                      `${this.state.service.name}_FTP_data`
+                    )
+                  }}
+                />
+              </h1>
+
               <Grid columns="equal" divided>
                 <Grid.Row>
                   <Grid.Column>

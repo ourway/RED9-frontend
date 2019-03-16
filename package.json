@@ -1,6 +1,6 @@
 {
   "name": "red9_console",
-  "version": "0.8.58",
+  "version": "0.8.59",
   "homepage": "https://wlf.red9.ir",
   "private": true,
   "dependencies": {
@@ -20,7 +20,7 @@
     "react-dom": "^16.7.0",
     "react-gist": "^1.2.1",
     "react-highlight": "^0.12.0",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^4.4",
     "react-scripts": "2.1.8",
     "recharts": "^1.4.2",
     "rxjs": "^6.3.2",

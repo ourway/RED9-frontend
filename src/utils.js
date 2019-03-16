@@ -3,6 +3,7 @@ import { Subject } from 'rxjs'
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import { env } from './config'
 import { getClientGateways, createClientGateway } from './apis'
+import { saveAs } from 'file-saver'
 
 import store from 'store'
 export const usernameAssigned = new Subject()
@@ -206,4 +207,17 @@ export const convertToCSV = objArray => {
     str += line + '\r\n'
   })
   return header + '\r\n' + str
+}
+
+export const downloadAs = (data, name) => {
+  const d = new Date()
+  const today = d
+    .toLocaleString()
+    .split(' ')[0]
+    .split(',')[0]
+
+  var file = new File([convertToCSV(data)], `RED9_${name}_${today}.csv`, {
+    type: 'text/csv'
+  })
+  saveAs(file)
 }

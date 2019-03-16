@@ -1,32 +1,16 @@
 import React, { Component } from 'react'
 
 import { Link } from 'react-router-dom'
-import { fixDatetime, convertToCSV } from './utils'
+import { fixDatetime, downloadAs } from './utils'
 import { Segment, Table, Icon, Menu } from 'semantic-ui-react'
 import { getSubscribers } from './apis'
 import store from 'store'
 import JDate from 'jalali-date'
-import { saveAs } from 'file-saver'
 
 class Subscriptions extends Component {
   constructor(props) {
     super(props)
     this.state = { subscribers: [], is_loading: true }
-  }
-
-  downloadAs = () => {
-    const d = new Date()
-    const today = d
-      .toLocaleString()
-      .split(' ')[0]
-      .split(',')[0]
-
-    var file = new File(
-      [convertToCSV(this.state.total_subscribers)],
-      `RED9_${this.state.service.name}_${today}.csv`,
-      { type: 'text/csv' }
-    )
-    saveAs(file)
   }
 
   componentDidMount() {
@@ -61,7 +45,12 @@ class Subscriptions extends Component {
               color="blue"
               title="Click to download subscriptions as CSV file"
               name="Download CSV sheet"
-              onClick={this.downloadAs}
+              onClick={() => {
+                downloadAs(
+                  this.state.total_subscribers,
+                  this.state.service.name + '_subscribers'
+                )
+              }}
             />
           </Menu.Menu>
         </Menu>

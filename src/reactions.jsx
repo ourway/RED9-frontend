@@ -619,7 +619,9 @@ class Reactions extends Component {
                         onChange={(o, v) =>
                           this._handleTemplateChange(t, i, o, v)
                         }
-                        options={this.state.templates.map((a, _) => {return {...a, key: Math.random()}})}
+                        options={this.state.templates.map((a, _) => {
+                          return { ...a, key: Math.random() }
+                        })}
                         placeholder="Choose a template"
                       />
                     </Table.Cell>
@@ -841,7 +843,9 @@ class Reactions extends Component {
             onChange={this._newReactionAppChanged}
             id="Basicdrop1"
             required={true}
-            options={this.state.apps.map((a, _) => {return {...a, key: Math.random()}})}
+            options={this.state.apps.map((a, _) => {
+              return { ...a, key: Math.random() }
+            })}
           />
 
           <TextField
@@ -862,7 +866,9 @@ class Reactions extends Component {
             onChange={this._newReactionTemplateChanged}
             id="Basicdrop122"
             required={false}
-            options={this.state.templates.map((a, _) => {return {...a, key: Math.random()}})}
+            options={this.state.templates.map((a, _) => {
+              return { ...a, key: Math.random() }
+            })}
           />
 
           <TextField
