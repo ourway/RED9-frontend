@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   Segment,
   Menu,
+  Radio,
   Input,
   Table,
   Divider,
@@ -57,6 +58,7 @@ class Reports extends Component {
     )}-${str_pad(lastMonth.getDate())}`
     this.state = {
       raw_data: [],
+      mo_trend_key: 'count',
       mo_trends: { '00/00/00': [{ msg: null, date: null, count: -1 }] },
       data: [],
       all_reports: [],
@@ -193,6 +195,10 @@ class Reports extends Component {
     clearTimeout(this.fetchTimeout)
     clearTimeout(this.startFetchDataTimeout)
     clearTimeout(this.endFetchDataTimeout)
+  }
+
+  change_mo_trend_key = (_, t) => {
+    this.setState({ mo_trend_key: t.checked === true ? 'count' : 'msg_count' })
   }
 
   _handleEndDateChange = (o, v) => {
@@ -403,20 +409,39 @@ class Reports extends Component {
                 )}
               </Grid.Row>
             </Grid>
-            {Object.keys(this.state.mo_trends).length > 0 ? (
-              <>
-                <Divider />
+            <Segment
+              style={{ minHeight: 100 }}
+              inverted
+              loading={Object.keys(this.state.mo_trends).length < 2}
+            >
+              {Object.keys(this.state.mo_trends).length > 2 ? (
+                <>
+                  <Divider />
 
-                <h1 align="center">MO/MT Stats</h1>
-                <h3 align="center">
-                  Inbound Trends <small>Last 7 days</small>
-                </h3>
-                {Object.keys(this.state.mo_trends)
-                  .sort()
-                  .reverse()
-                  .splice(0, 7)
-                  .map((ev, i) => {
-                    const td = this.state.mo_trends[ev].splice(0, 20)
+                  <h1 align="center">MO/MT Stats</h1>
+                  <h3 align="center">
+                    Inbound Trends{' '}
+                    <small>
+                      Last 7 days <br />
+                      <span style={{ verticalAlign: 'middle' }}>
+                        <span style={{ marginRight: 10, fontWeight: 200 }}>
+                          {this.state.mo_trend_key === 'count' ? '' : 'Non'}{' '}
+                          Unique MSISDNs
+                        </span>
+                        <Radio
+                          size="tiny"
+                          toggle
+                          checked={
+                            this.state.mo_trend_key === 'count' ? true : false
+                          }
+                          onChange={this.change_mo_trend_key}
+                        />
+                      </span>
+                    </small>
+                  </h3>
+
+                  {Object.keys(this.state.mo_trends).map((ev, i) => {
+                    const td = this.state.mo_trends[ev]
                     //const counts = td.flatMap((x, _) => x.count)
                     //const re = Math.max(...counts)
                     //const rs = Math.min(...counts)
@@ -435,9 +460,9 @@ class Reports extends Component {
                           />
                           <YAxis
                             type="number"
-                            dataKey="count"
-                            tick={false}
-                            tickLine={false}
+                            dataKey={this.state.mo_trend_key}
+                            tick={true}
+                            tickLine={true}
                             axisLine={false}
                             label={{
                               value: td.length > 0 ? td[0].date : null,
@@ -471,8 +496,9 @@ class Reports extends Component {
                       </ResponsiveContainer>
                     )
                   })}
-              </>
-            ) : null}
+                </>
+              ) : null}
+            </Segment>
           </Segment>
           <Divider />
 
@@ -693,6 +719,7 @@ class Reports extends Component {
               size="small"
               compact
               basic
+              style={{ textShadow: 'none' }}
             >
               <Table.Header>
                 <Table.Row>

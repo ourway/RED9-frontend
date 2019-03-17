@@ -26,19 +26,13 @@
 
 body {
   margin: 0;
-  -webkit-font-smoothing: antialiased;
+  font-smoothing: none;
+  -webkit-font-smoothing: none;
+  text-rendering: optimizeSpeed;
   padding: 0;
   color: #ccc !important;
   font-weight: 200;
   font-size: 13px !important;
   background-color: #1f262c !important;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    -moz-backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    /* font-feature-settings: 'liga'; */
-    -webkit-perspective: 1000;
-    perspective: 1000;
 
 }
