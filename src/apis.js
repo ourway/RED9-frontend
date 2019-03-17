@@ -465,7 +465,7 @@ export const getMoTrendData = (client_key, service_id) => {
     method: 'GET',
     headers: authHeaders
   }
-  return fetch(`${env.API_BASE}/api/client/mo_trend/${service_id}/30`, opts)
+  return fetch(`${env.API_BASE}/api/client/mo_trend/${service_id}/50`, opts)
 }
 
 export const getAllReports = (client_key, service_name) => {
