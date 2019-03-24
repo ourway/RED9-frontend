@@ -844,6 +844,7 @@ class Reactions extends Component {
             id="Basicdrop1"
             required={true}
             options={this.state.apps.map((a, _) => {
+              console.log(a)
               return { ...a, key: Math.random() }
             })}
           />

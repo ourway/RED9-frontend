@@ -61,8 +61,7 @@ class Header extends Component {
   componentWillMount() {
     handle_message_count_receive$
       .pipe(distinctUntilChanged())
-
-      .pipe(debounceTime(50))
+      .pipe(debounceTime(200))
       .subscribe({
         next: msg => {
           this.setState({

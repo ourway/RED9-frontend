@@ -242,8 +242,7 @@ class Services extends Component {
     this.incomingMosSubscription = incomingMoSubject$
 
       .pipe(
-        bufferTime(500),
-        distinctUntilChanged()
+        bufferTime(200),
       )
       .subscribe(msgs => {
         msgs.map((msg, i) => {
@@ -541,7 +540,7 @@ class Services extends Component {
       <div>
         <Menu attached="top" inverted>
           {this.state.services.map((s, i) => {
-            if (i <= 5) {
+            if (i <= 100) {
               let cc = s.meta.colorCode || sample(env.colorset)
 
               return (
@@ -553,7 +552,7 @@ class Services extends Component {
                   index={i}
                   uuid={s.meta.uuid}
                   title={S(s.name).capitalize().s}
-                  name={s.name}
+                  name={i < 4 ? S(s.name).capitalize().s : s.name.slice(0, 2)}
                   data={s}
                   key={s.meta.uuid}
                   active={this.state.activeService.meta.uuid === s.meta.uuid}
@@ -613,7 +612,7 @@ class Services extends Component {
             this.state.editMode === true ? (
               <Menu.Item>
                 <Input
-                  size="tiny"
+                  size="mini"
                   disabled={this.state.editMode === false}
                   onChange={this.handleFilterParams}
                   value={this.state.filter}
