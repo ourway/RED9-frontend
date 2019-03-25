@@ -412,9 +412,9 @@ class Reports extends Component {
             <Segment
               style={{ minHeight: 100 }}
               inverted
-              loading={Object.keys(this.state.mo_trends).length < 2}
+              loading={Object.keys(this.state.mo_trends).length === 1}
             >
-              {Object.keys(this.state.mo_trends).length > 2 ? (
+              {Object.keys(this.state.mo_trends).length !== 1 ? (
                 <>
                   <Divider />
 

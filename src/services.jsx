@@ -242,9 +242,19 @@ class Services extends Component {
     this.incomingMosSubscription = incomingMoSubject$
 
       .pipe(bufferTime(500))
-      .subscribe(msgs => {
-        const pp = 100
+      .subscribe(rawmsgs => {
+        if (rawmsgs.length === 0) {
+          return -1
+        }
+
         const suuid = this.state.activeService.meta.uuid
+        const msgs = rawmsgs.filter(m => m.service_id === suuid)
+
+        if (msgs.length === 0) {
+          return -1
+        }
+
+        const pp = 200
         let bef = this.state.incoming_mo[suuid] || []
         if (bef.length >= pp) {
           bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
@@ -253,15 +263,12 @@ class Services extends Component {
         let result = []
 
         msgs.map((msg, i) => {
-          if (
-            msg.message.match(/sms|otp|ussd|unsub/) === null &&
-            msg.service_id === suuid
-          ) {
+          if (msg.message.match(/sms|otp|ussd|unsub/) === null) {
             const m = {
               ...msg,
-              message: `"${_.slice(msg.message, 0, 64)
+              message: `${_.slice(msg.message, 0, 64)
                 .join('')
-                .replace('\n', ' ')}"`,
+                .replace('\n', ' ')}`,
               date: new Date().toLocaleTimeString()
             }
             result.push(m)
@@ -279,10 +286,19 @@ class Services extends Component {
 
     this.newEventsSubscription = newEventSubject$
       .pipe(bufferTime(500))
+      .subscribe(rawevs => {
+        if (rawevs.length === 0) {
+          return -1
+        }
 
-      .subscribe(evs => {
-        const pp = 100
         const suuid = this.state.activeService.meta.uuid
+        const evs = rawevs.filter(e => e.service_id === suuid)
+
+        if (evs.length === 0) {
+          return -1
+        }
+
+        const pp = 200
         let bef = this.state.incoming_event[suuid] || []
         if (bef.length >= pp) {
           bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
@@ -838,14 +854,18 @@ class Services extends Component {
                                     <span
                                       style={{
                                         color: 'gold',
-                                        fontFamily:
-                                          'Arial, Helvetica, sans-serif',
-                                        fontSize: 13
+                                        direction: 'rtl',
+                                        textAlign: 'right',
+                                        fontFamily: 'Lato',
+                                        fontSize: 15
                                       }}
                                     >
                                       {im.message}
+                                    </span>
+                                    <span style={{ color: 'grey' }}>
+                                      {' '}
+                                      FROM:
                                     </span>{' '}
-                                    <span style={{ color: 'grey' }}>FROM:</span>{' '}
                                     <span
                                       style={{
                                         color: 'white',

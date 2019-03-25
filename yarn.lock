@@ -3351,10 +3351,10 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-detect-browser@^4.0.3:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-4.1.0.tgz#4f1cd47952be8fb16511053c37275f513b96d74a"
-  integrity sha512-YKQf1QQDXXJrwNE07xHujoD+meBnjhsYFdPwxFEXS1ylJWD9GKd21lKBjuqtXzAkz4CQjwBO3DYXBU/wWwZCGA==
+detect-browser@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-4.2.0.tgz#d46bcb3c69b25bd94c4433a3f90b971c22d0b2f8"
+  integrity sha512-x0kNC8p3pVYoiyGwQskqN7iupBe90jWDwLNThPtl8JxftfkdDWMxL+ESzo3JlAR5xBtl6HMqxkA5kk0scFcSRQ==
 
 detect-indent@^4.0.0:
   version "4.0.0"
@@ -7401,10 +7401,10 @@ obuf@^1.0.0, obuf@^1.1.2:
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
 
-office-ui-fabric-react@^6.159.1:
-  version "6.159.1"
-  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-6.159.1.tgz#59fe835c4e88bdc67c7144d78361a1992d54e538"
-  integrity sha512-nP588+L3/xiJz3meo4ASxvPLro+mfDY65qKOIEeIe6TrdOnzGoTU2fLt9/ZqcHFvLZlkT0Y3n9TcxPOlbnUzAA==
+office-ui-fabric-react@^6.160.0:
+  version "6.160.0"
+  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-6.160.0.tgz#8c971305705d52f97451425221c0dfba089d78a7"
+  integrity sha512-CiUSvMtx83YkHESKgWzgPHH83YtYj0F1USqwaDC5+oCbBLOsTF/iXgKK2UPxI92IhWVBHMVpk8ADsJU2Czv8vA==
   dependencies:
     "@microsoft/load-themed-styles" "^1.7.13"
     "@uifabric/foundation" ">=0.7.2 <1.0.0"

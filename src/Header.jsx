@@ -59,11 +59,13 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    handle_message_count_receive$.pipe(debounceTime(100)).subscribe({
+    handle_message_count_receive$.pipe(debounceTime(200)).subscribe({
       next: msg => {
-        this.setState({
-          message_count: msg.result
-        })
+        if (msg.result !== this.state.message_count) {
+          this.setState({
+            message_count: msg.result
+          })
+        }
       }
     })
   }
@@ -170,13 +172,11 @@ class Header extends Component {
       }, 100)
     }
 
-    this.colorCodeChangeSubscription = changeColorCode$
-      .pipe(debounceTime(100))
-      .subscribe(c => {
-        this.setState({ colorCode: c })
-      })
+    this.colorCodeChangeSubscription = changeColorCode$.subscribe(c => {
+      this.setState({ colorCode: c })
+    })
 
-    this.appSelection = selectApp$.pipe(debounceTime(100)).subscribe(v => {
+    this.appSelection = selectApp$.subscribe(v => {
       if (v) {
         this.setState({ app: v })
         if (v.api_keys) {
@@ -185,7 +185,7 @@ class Header extends Component {
       }
     })
 
-    this.serviceSelection = selectService$.pipe(debounceTime(100)).subscribe({
+    this.serviceSelection = selectService$.subscribe({
       next: s => {
         this.setState({
           service: s,

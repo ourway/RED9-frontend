@@ -43,11 +43,13 @@ class Login extends Component {
   }
 
   componentWillMount() {
-    handle_message_count_receive$.pipe(debounceTime(100)).subscribe({
+    handle_message_count_receive$.pipe(debounceTime(250)).subscribe({
       next: msg => {
-        this.setState({
-          message_count: msg.result
-        })
+        if (msg.result !== this.state.message_count) {
+          this.setState({
+            message_count: msg.result
+          })
+        }
       }
     })
   }

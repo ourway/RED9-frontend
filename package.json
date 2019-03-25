@@ -1,11 +1,11 @@
 {
   "name": "red9_console",
-  "version": "0.8.63",
+  "version": "0.8.64",
   "homepage": "https://wlf.red9.ir",
   "private": true,
   "dependencies": {
     "accounting-js": "^1.1.1",
-    "detect-browser": "^4.0.3",
+    "detect-browser": "^4.2.0",
     "file-saver": "^2.0.1",
     "font-awesome": "^4.7.0",
     "iransans": "^1.0.0",
@@ -13,7 +13,7 @@
     "jalali-date": "^1.0.2",
     "lato-font": "^3.0.0",
     "lodash": "^4.17.10",
-    "office-ui-fabric-react": "^6.159.1",
+    "office-ui-fabric-react": "^6.160.0",
     "less-loader": "^4.1.0",
     "phoenix": "^1.4.1",
     "react": "^16.8.5",
