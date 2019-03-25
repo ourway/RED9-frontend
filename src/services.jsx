@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import swal from 'sweetalert2'
-import { bufferTime, distinctUntilChanged } from 'rxjs/operators'
+import { bufferTime } from 'rxjs/operators'
 import Gist from 'react-gist'
 import sample from 'lodash/sample'
 import _ from 'lodash'
@@ -15,7 +15,7 @@ import {
   Table,
   Icon,
   Card,
-  Dropdown,
+  // Dropdown,
   Header,
   Grid
 } from 'semantic-ui-react'
@@ -36,7 +36,7 @@ import {
   deactivateService
 } from './apis'
 import {
-  msisdn_prettefy,
+  //msisdn_prettefy,
   titleChangeSignal,
   onFilter$,
   selectService$,
@@ -241,73 +241,72 @@ class Services extends Component {
 
     this.incomingMosSubscription = incomingMoSubject$
 
-      .pipe(
-        bufferTime(200),
-      )
+      .pipe(bufferTime(500))
       .subscribe(msgs => {
+        const pp = 100
+        const suuid = this.state.activeService.meta.uuid
+        let bef = this.state.incoming_mo[suuid] || []
+        if (bef.length >= pp) {
+          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
+        }
+
+        let result = []
+
         msgs.map((msg, i) => {
           if (
-            msg.message.indexOf('sms') === -1 &&
-            msg.message.indexOf('otp') === -1 &&
-            msg.message.indexOf('ussd') === -1 &&
-            msg.message.indexOf('unsub') === -1
+            msg.message.match(/sms|otp|ussd|unsub/) === null &&
+            msg.service_id === suuid
           ) {
-            let bef = this.state.incoming_mo[msg.service_id] || []
-            if (bef.length >= 50) {
-              bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
+            const m = {
+              ...msg,
+              message: `"${_.slice(msg.message, 0, 64)
+                .join('')
+                .replace('\n', ' ')}"`,
+              date: new Date().toLocaleTimeString()
             }
-            this.setState({
-              incoming_mo: {
-                ...this.state.incoming_mo,
-                [msg.service_id]: [
-                  {
-                    ...msg,
-                    national_number: msisdn_prettefy(msg.national_number),
-                    message: `"${_.slice(msg.message, 0, 16)
-                      .join('')
-                      .replace('\n', ' ')
-                      .replace(']', '|')
-                      .replace('[', '|')}"`,
-                    date: new Date().toLocaleTimeString()
-                  },
-                  ...bef
-                ]
-              }
-            })
+            result.push(m)
           }
-          return -1
+          return result
+        })
+
+        this.setState({
+          incoming_mo: {
+            ...this.state.incoming_mo,
+            [suuid]: [...result, ...bef]
+          }
         })
       })
 
     this.newEventsSubscription = newEventSubject$
-      .pipe(
-        bufferTime(500),
-        distinctUntilChanged()
-      )
+      .pipe(bufferTime(500))
 
       .subscribe(evs => {
+        const pp = 100
+        const suuid = this.state.activeService.meta.uuid
+        let bef = this.state.incoming_event[suuid] || []
+        if (bef.length >= pp) {
+          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
+        }
+
+        let result = []
+
         evs.map((ev, i) => {
-          let bef = this.state.incoming_event[ev.service_id] || []
-          if (bef.length >= 50) {
-            bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
+          const e = {
+            ...ev,
+            date: new Date().toLocaleTimeString(),
+            msisdn: ev.msisdn.slice(2, 14)
           }
-          this.setState({
-            incoming_event: {
-              ...this.state.incoming_event,
-              [ev.service_id]: [
-                {
-                  ...ev,
-                  date: new Date().toLocaleTimeString(),
-                  msisdn: msisdn_prettefy(ev.msisdn.slice(2, 14))
-                },
-                ...bef
-              ]
-            }
-          })
-          return -1
+
+          result.push(e)
+          return result
         })
 
-        return -1
+        this.setState({
+          incoming_event: {
+            ...this.state.incoming_event,
+            [suuid]: [...result, ...bef]
+          }
+        })
       })
 
     this.colorCodeChangeSubscription = changeColorCode$.pipe().subscribe(c => {
@@ -564,30 +563,6 @@ class Services extends Component {
             }
           })}
 
-          {this.state.services.length > 5 ? (
-            <Dropdown icon="sidebar" pointing="top" className="link item">
-              <Dropdown.Menu>
-                {this.state.services.map((s, i) => {
-                  if (i > 5) {
-                    return (
-                      <Dropdown.Item key={s.meta.uuid}>
-                        <Link
-                          className="ui dark"
-                          onClick={this.handleServiceClick}
-                          to={`/services/${s.meta.uuid}`}
-                        >
-                          {s.name}
-                        </Link>
-                      </Dropdown.Item>
-                    )
-                  } else {
-                    return null
-                  }
-                })}
-              </Dropdown.Menu>
-            </Dropdown>
-          ) : null}
-
           <Menu.Menu position="right">
             {this.state.activeService.meta.inserted_at &&
             this.state.reporter !== 'true' ? (
@@ -826,9 +801,9 @@ class Services extends Component {
                             padding: 3,
                             overflowX: 'hidden',
                             overflowY: 'auto',
-                            height: 200,
+                            height: 400,
                             backgroundAttachment: 'local',
-                            maxHeight: 400,
+                            maxHeight: 600,
                             backgroundColor: this.state.colorCode + 85,
                             backgroundImage: "url('/message_live_back.png')",
 
@@ -846,8 +821,7 @@ class Services extends Component {
                                   <pre
                                     key={i}
                                     style={{
-                                      fontWeight: 400,
-                                      opacity: 1 - (i + 1) / 100
+                                      fontWeight: 400
                                     }}
                                   >
                                     {' '}
@@ -903,8 +877,8 @@ class Services extends Component {
                             borderRight: 'none',
                             overflowX: 'hidden',
                             overflowY: 'auto',
-                            maxHeight: 400,
-                            height: 200,
+                            maxHeight: 600,
+                            height: 400,
                             padding: 3,
                             backgroundAttachment: 'local',
                             backgroundColor: this.state.colorCode + 75,
@@ -928,8 +902,7 @@ class Services extends Component {
                                     <pre
                                       key={i}
                                       style={{
-                                        fontWeight: 400,
-                                        opacity: 1 - (i + 1) / 100
+                                        fontWeight: 400
                                       }}
                                     >
                                       <span style={{ color: 'green' }}>
@@ -968,8 +941,8 @@ class Services extends Component {
                             borderTop: `2px solid red`,
                             overflowX: 'hidden',
                             overflowY: 'auto',
-                            maxHeight: 400,
-                            height: 200,
+                            maxHeight: 600,
+                            height: 400,
                             padding: 3,
                             backgroundAttachment: 'local',
                             backgroundColor: this.state.colorCode + 65,
@@ -993,8 +966,7 @@ class Services extends Component {
                                     <pre
                                       key={i}
                                       style={{
-                                        fontWeight: 400,
-                                        opacity: 1 - (i + 1) / 100
+                                        fontWeight: 400
                                       }}
                                     >
                                       <span style={{ color: 'red' }}> - </span>

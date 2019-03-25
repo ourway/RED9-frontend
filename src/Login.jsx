@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import store from 'store'
 import sample from 'lodash/sample'
-import { distinctUntilChanged } from 'rxjs/operators'
+import { debounceTime } from 'rxjs/operators'
 import {
   sendLoginRequest,
   //sendStudio54LoginRequest,
@@ -43,7 +43,7 @@ class Login extends Component {
   }
 
   componentWillMount() {
-    handle_message_count_receive$.pipe(distinctUntilChanged()).subscribe({
+    handle_message_count_receive$.pipe(debounceTime(100)).subscribe({
       next: msg => {
         this.setState({
           message_count: msg.result
@@ -96,13 +96,11 @@ class Login extends Component {
     if (this.state.only_report === true) {
       reporterSignal.next('OK')
     }
-    this.redirectSubscription = redirectSignal
-      .pipe(distinctUntilChanged())
-      .subscribe({
-        next: (t, history) => {
-          this.props.history.push(t)
-        }
-      })
+    this.redirectSubscription = redirectSignal.subscribe({
+      next: (t, history) => {
+        this.props.history.push(t)
+      }
+    })
 
     store.clearAll()
     store.set('reporter', btoa(this.state.only_report))

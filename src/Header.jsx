@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Grid, Image, Step, Statistic, Label, Icon } from 'semantic-ui-react'
-import { distinctUntilChanged, debounceTime } from 'rxjs/operators'
+import { debounceTime } from 'rxjs/operators'
 import {
   usernameAssigned,
   selectService$,
@@ -59,16 +59,13 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    handle_message_count_receive$
-      .pipe(distinctUntilChanged())
-      .pipe(debounceTime(200))
-      .subscribe({
-        next: msg => {
-          this.setState({
-            message_count: msg.result
-          })
-        }
-      })
+    handle_message_count_receive$.pipe(debounceTime(100)).subscribe({
+      next: msg => {
+        this.setState({
+          message_count: msg.result
+        })
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -174,37 +171,51 @@ class Header extends Component {
     }
 
     this.colorCodeChangeSubscription = changeColorCode$
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(500)
-      )
+      .pipe(debounceTime(100))
       .subscribe(c => {
         this.setState({ colorCode: c })
       })
 
-    this.appSelection = selectApp$
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(500)
-      )
-      .subscribe(v => {
-        if (v) {
-          this.setState({ app: v })
-          if (v.api_keys) {
-            store.set('api-key', btoa(v.api_keys.join('')))
-          }
+    this.appSelection = selectApp$.pipe(debounceTime(100)).subscribe(v => {
+      if (v) {
+        this.setState({ app: v })
+        if (v.api_keys) {
+          store.set('api-key', btoa(v.api_keys.join('')))
         }
-      })
+      }
+    })
 
-    this.serviceSelection = selectService$
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(250)
-      )
-      .subscribe({
-        next: s => {
+    this.serviceSelection = selectService$.pipe(debounceTime(100)).subscribe({
+      next: s => {
+        this.setState({
+          service: s,
+          stats: {
+            yesterday: {
+              revenue: ZERO,
+              subscriptions: ZERO2,
+              unsubscriptions: ZERO2,
+              success_rate: ZERO2
+            },
+            overall: {
+              revenue: ZERO,
+              subscriptions: ZERO2,
+              unsubscriptions: ZERO2,
+              success_rate: ZERO2
+            }
+          }
+        })
+        this.doGetSubscribersCount()
+        this.doGetWapPushRevenue()
+
+        if (s.meta.operator === 'MCI') {
+          this.doGetFtpChargingSubscribersCount()
+          this.ftpDataTimeout = setTimeout(() => {
+            this.doGetFtpData(s.meta.ftp_key, false).then(() => {
+              this.doGetFtpData(s.meta.ftp_key, true)
+            })
+          }, 200)
+        } else {
           this.setState({
-            service: s,
             stats: {
               yesterday: {
                 revenue: ZERO,
@@ -220,46 +231,17 @@ class Header extends Component {
               }
             }
           })
-          this.doGetSubscribersCount()
-          this.doGetWapPushRevenue()
-
-          if (s.meta.operator === 'MCI') {
-            this.doGetFtpChargingSubscribersCount()
-            this.ftpDataTimeout = setTimeout(() => {
-              this.doGetFtpData(s.meta.ftp_key, false).then(() => {
-                this.doGetFtpData(s.meta.ftp_key, true)
-              })
-            }, 200)
-          } else {
-            this.setState({
-              stats: {
-                yesterday: {
-                  revenue: ZERO,
-                  subscriptions: ZERO2,
-                  unsubscriptions: ZERO2,
-                  success_rate: ZERO2
-                },
-                overall: {
-                  revenue: ZERO,
-                  subscriptions: ZERO2,
-                  unsubscriptions: ZERO2,
-                  success_rate: ZERO2
-                }
-              }
-            })
-          }
         }
-      })
+      }
+    })
 
-    this.clientSubscription = usernameAssigned
-      .pipe(distinctUntilChanged())
-      .subscribe({
-        next: v => {
-          this.setState({
-            company: v
-          })
-        }
-      })
+    this.clientSubscription = usernameAssigned.subscribe({
+      next: v => {
+        this.setState({
+          company: v
+        })
+      }
+    })
   }
 
   render() {
