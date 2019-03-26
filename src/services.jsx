@@ -3,7 +3,7 @@ import swal from 'sweetalert2'
 import { bufferTime } from 'rxjs/operators'
 import Gist from 'react-gist'
 import sample from 'lodash/sample'
-import _ from 'lodash'
+//import _ from 'lodash'
 import store from 'store'
 import {
   Menu,
@@ -257,7 +257,7 @@ class Services extends Component {
         const pp = 200
         let bef = this.state.incoming_mo[suuid] || []
         if (bef.length >= pp) {
-          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
+          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - msgs.length)]
         }
 
         let result = []
@@ -266,9 +266,7 @@ class Services extends Component {
           if (msg.message.match(/sms|otp|ussd|unsub/) === null) {
             const m = {
               ...msg,
-              message: `${_.slice(msg.message, 0, 64)
-                .join('')
-                .replace('\n', ' ')}`,
+              message: msg.message.slice(0, 64).replace(/\n/g, '. '),
               date: new Date().toLocaleTimeString()
             }
             result.push(m)
@@ -301,7 +299,7 @@ class Services extends Component {
         const pp = 200
         let bef = this.state.incoming_event[suuid] || []
         if (bef.length >= pp) {
-          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - 1)]
+          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - evs.length)]
         }
 
         let result = []
@@ -851,29 +849,31 @@ class Services extends Component {
                                       {' '}
                                       MESSAGE:
                                     </span>{' '}
-                                    <span
-                                      style={{
-                                        color: 'gold',
-                                        direction: 'rtl',
-                                        textAlign: 'right',
-                                        fontFamily: 'Lato',
-                                        fontSize: 15
-                                      }}
-                                    >
-                                      {im.message}
+                                    <span style={{ float: 'right' }}>
+                                      <span
+                                        style={{
+                                          color: 'gold',
+                                          direction: 'rtl',
+                                          textAlign: 'right',
+                                          fontFamily: 'Lato',
+                                          fontSize: 15
+                                        }}
+                                      >
+                                        {im.message}
+                                      </span>
+                                      <span style={{ color: 'grey' }}>
+                                        {' '}
+                                        FROM:
+                                      </span>{' '}
+                                      <span
+                                        style={{
+                                          color: 'white',
+                                          fontWeight: 800
+                                        }}
+                                      >
+                                        {im.national_number}
+                                      </span>{' '}
                                     </span>
-                                    <span style={{ color: 'grey' }}>
-                                      {' '}
-                                      FROM:
-                                    </span>{' '}
-                                    <span
-                                      style={{
-                                        color: 'white',
-                                        fontWeight: 800
-                                      }}
-                                    >
-                                      {im.national_number}
-                                    </span>{' '}
                                   </pre>
                                 )
                               })

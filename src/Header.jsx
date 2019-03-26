@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Grid, Image, Step, Statistic, Label, Icon } from 'semantic-ui-react'
-import { debounceTime } from 'rxjs/operators'
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
 import {
   usernameAssigned,
   selectService$,
@@ -59,15 +59,18 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    handle_message_count_receive$.pipe(debounceTime(200)).subscribe({
-      next: msg => {
-        if (msg.result !== this.state.message_count) {
-          this.setState({
-            message_count: msg.result
-          })
+    handle_message_count_receive$
+      .pipe(debounceTime(200))
+      .pipe(distinctUntilChanged())
+      .subscribe({
+        next: msg => {
+          if (msg.result !== this.state.message_count) {
+            this.setState({
+              message_count: msg.result
+            })
+          }
         }
-      }
-    })
+      })
   }
 
   componentWillUnmount() {
@@ -172,50 +175,32 @@ class Header extends Component {
       }, 100)
     }
 
-    this.colorCodeChangeSubscription = changeColorCode$.subscribe(c => {
-      this.setState({ colorCode: c })
-    })
+    this.colorCodeChangeSubscription = changeColorCode$
+      .pipe(debounceTime(500))
+      .pipe(distinctUntilChanged())
+      .subscribe(c => {
+        this.setState({ colorCode: c })
+      })
 
-    this.appSelection = selectApp$.subscribe(v => {
-      if (v) {
-        this.setState({ app: v })
-        if (v.api_keys) {
-          store.set('api-key', btoa(v.api_keys.join('')))
-        }
-      }
-    })
-
-    this.serviceSelection = selectService$.subscribe({
-      next: s => {
-        this.setState({
-          service: s,
-          stats: {
-            yesterday: {
-              revenue: ZERO,
-              subscriptions: ZERO2,
-              unsubscriptions: ZERO2,
-              success_rate: ZERO2
-            },
-            overall: {
-              revenue: ZERO,
-              subscriptions: ZERO2,
-              unsubscriptions: ZERO2,
-              success_rate: ZERO2
-            }
+    this.appSelection = selectApp$
+      .pipe(debounceTime(500))
+      .pipe(distinctUntilChanged())
+      .subscribe(v => {
+        if (v) {
+          this.setState({ app: v })
+          if (v.api_keys) {
+            store.set('api-key', btoa(v.api_keys.join('')))
           }
-        })
-        this.doGetSubscribersCount()
-        this.doGetWapPushRevenue()
+        }
+      })
 
-        if (s.meta.operator === 'MCI') {
-          this.doGetFtpChargingSubscribersCount()
-          this.ftpDataTimeout = setTimeout(() => {
-            this.doGetFtpData(s.meta.ftp_key, false).then(() => {
-              this.doGetFtpData(s.meta.ftp_key, true)
-            })
-          }, 200)
-        } else {
+    this.serviceSelection = selectService$
+      .pipe(debounceTime(500))
+      .pipe(distinctUntilChanged())
+      .subscribe({
+        next: s => {
           this.setState({
+            service: s,
             stats: {
               yesterday: {
                 revenue: ZERO,
@@ -231,17 +216,46 @@ class Header extends Component {
               }
             }
           })
-        }
-      }
-    })
+          this.doGetSubscribersCount()
+          this.doGetWapPushRevenue()
 
-    this.clientSubscription = usernameAssigned.subscribe({
-      next: v => {
-        this.setState({
-          company: v
-        })
-      }
-    })
+          if (s.meta.operator === 'MCI') {
+            this.doGetFtpChargingSubscribersCount()
+            this.ftpDataTimeout = setTimeout(() => {
+              this.doGetFtpData(s.meta.ftp_key, false).then(() => {
+                this.doGetFtpData(s.meta.ftp_key, true)
+              })
+            }, 200)
+          } else {
+            this.setState({
+              stats: {
+                yesterday: {
+                  revenue: ZERO,
+                  subscriptions: ZERO2,
+                  unsubscriptions: ZERO2,
+                  success_rate: ZERO2
+                },
+                overall: {
+                  revenue: ZERO,
+                  subscriptions: ZERO2,
+                  unsubscriptions: ZERO2,
+                  success_rate: ZERO2
+                }
+              }
+            })
+          }
+        }
+      })
+
+    this.clientSubscription = usernameAssigned
+      .pipe(debounceTime(200))
+      .subscribe({
+        next: v => {
+          this.setState({
+            company: v
+          })
+        }
+      })
   }
 
   render() {
