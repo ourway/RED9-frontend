@@ -286,6 +286,9 @@ class App extends Component {
                     name="services"
                     component={Services}
                   />
+
+                  <Route exact path="/overview" name="home" component={Home} />
+
                   <Route
                     exact
                     path="/services/:uuid"

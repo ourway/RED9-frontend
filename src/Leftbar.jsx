@@ -106,6 +106,8 @@ class Leftbar extends Component {
     const sections =
       this.state.reporter !== 'true'
         ? [
+            ':Console:',
+            'Overview',
             ':Definitions:',
             'Services',
             'Apps',

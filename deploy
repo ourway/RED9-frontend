@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+rm -rf build
+yarn build
+rsync -ra -e "ssh -p 4520" -P build/ red9@wolf.red9.ir:/usr/local/platform/panel --delete

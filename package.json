@@ -1,6 +1,6 @@
 {
   "name": "red9_console",
-  "version": "0.8.65",
+  "version": "0.8.67",
   "homepage": "https://wlf.red9.ir",
   "private": true,
   "dependencies": {
@@ -13,7 +13,7 @@
     "jalali-date": "^1.0.2",
     "lato-font": "^3.0.0",
     "lodash": "^4.17.10",
-    "office-ui-fabric-react": "^6.160.1",
+    "office-ui-fabric-react": "^6",
     "less-loader": "^4.1.0",
     "phoenix": "^1.4.1",
     "react": "^16.8.5",
