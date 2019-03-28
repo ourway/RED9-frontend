@@ -347,7 +347,7 @@ class Login extends Component {
                 <iframe
                   title="server http logs"
                   className="logs"
-                  src="https://red9.ir/goaccess"
+                  src="https://wolf.red9.ir/goaccess"
                 />
               </div>
 

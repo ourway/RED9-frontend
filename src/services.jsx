@@ -77,6 +77,9 @@ class Services extends Component {
       editMode: false,
       liveColor: 'grey',
       incoming_mo: {},
+      incoming_mo_notif: {},
+      incoming_event_notif: {},
+      live_users: 0,
       incoming_event: {},
       testSmsResult: {},
       overview: [],
@@ -159,8 +162,20 @@ class Services extends Component {
   }
 
   handleServiceClick = (e, { uuid, title, data }) => {
+    clearInterval(this.liveUserInterval)
     this.setState({
+      live_users: 0,
       testSmsResult: {},
+      incoming_mo_notif: {
+        ...this.state.incoming_mo_notif,
+        [uuid]: false
+      },
+
+      incoming_event_notif: {
+        ...this.state.incoming_event_notif,
+        [uuid]: false
+      },
+
       activeService: data,
       filter: '',
       editMode: false
@@ -180,6 +195,23 @@ class Services extends Component {
       return true
     })[0] || { name: 'N/A' }
     selectApp$.next(app)
+    this.doCalcLiveUsers(uuid)
+  }
+
+  doCalcLiveUsers = uuid => {
+    this.liveUserInterval = setInterval(() => {
+      let live = (this.state.incoming_mo[uuid] || []).reduce((cur, msg) => {
+        const nowepoch = new Date().getTime()
+        if (nowepoch - msg.epoch < 60 * 1000) {
+          return cur + 1
+        } else {
+          return cur
+        }
+      }, 0)
+      this.setState({
+        live_users: live
+      })
+    }, 1000)
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
@@ -230,11 +262,15 @@ class Services extends Component {
     this.newEventsSubscription.unsubscribe()
     clearTimeout(this.someAjaxCalls)
     clearTimeout(this.extraTimeouts)
+    clearInterval(this.liveUserInterval)
     // stopLoading$.next(true);
   }
 
   componentDidMount() {
     const service = store.get('service')
+    if (service) {
+      this.doCalcLiveUsers(service.meta.uuid)
+    }
     if (service && !this.state.activeService.meta.uuid) {
       this.setState({ activeService: service })
     }
@@ -247,38 +283,50 @@ class Services extends Component {
           return -1
         }
 
-        const suuid = this.state.activeService.meta.uuid
-        const msgs = rawmsgs.filter(m => m.service_id === suuid)
+        //const suuid = this.state.activeService.meta.uuid
+        //const msgs = rawmsgs.filter(m => m.service_id === suuid)
 
-        if (msgs.length === 0) {
-          return -1
-        }
+        //if (msgs.length === 0) {
+        //  return -1
+        //}
 
         const pp = 200
-        let bef = this.state.incoming_mo[suuid] || []
-        if (bef.length >= pp) {
-          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - msgs.length)]
-        }
+        let result = {}
 
-        let result = []
-
-        msgs.map((msg, i) => {
+        rawmsgs.map((msg, i) => {
+          const sid = msg.service_id
           if (msg.message.match(/sms|otp|ussd|unsub/) === null) {
             const m = {
               ...msg,
-              message: msg.message.slice(0, 64).replace(/\n/g, '. '),
-              date: new Date().toLocaleTimeString()
+              message: msg.message.slice(0, 48).replace(/\n/g, '. '),
+              date: new Date().toLocaleTimeString(),
+              epoch: new Date().getTime()
             }
-            result.push(m)
+            if (!result[sid]) {
+              result[sid] = []
+            }
+            result[sid].push(m)
           }
           return result
         })
 
-        this.setState({
-          incoming_mo: {
-            ...this.state.incoming_mo,
-            [suuid]: [...result, ...bef]
+        Object.keys(result).map((r, i) => {
+          let bef = this.state.incoming_mo[r] || []
+          if (bef.length >= pp) {
+            bef = [...bef.slice(0, 0), ...bef.slice(0, result[r].length)]
           }
+
+          this.setState({
+            incoming_mo_notif: {
+              ...this.state.incoming_mo_notif,
+              [r]: r === this.state.activeService.meta.uuid ? false : true
+            },
+            incoming_mo: {
+              ...this.state.incoming_mo,
+              [r]: [...result[r], ...bef]
+            }
+          })
+          return -1
         })
       })
 
@@ -289,37 +337,46 @@ class Services extends Component {
           return -1
         }
 
-        const suuid = this.state.activeService.meta.uuid
-        const evs = rawevs.filter(e => e.service_id === suuid)
-
-        if (evs.length === 0) {
-          return -1
-        }
-
         const pp = 200
-        let bef = this.state.incoming_event[suuid] || []
-        if (bef.length >= pp) {
-          bef = [...bef.slice(0, 0), ...bef.slice(0, bef.length - evs.length)]
-        }
-
-        let result = []
-
-        evs.map((ev, i) => {
+        let result = {}
+        rawevs.map((ev, i) => {
+          const sid = ev.service_id
           const e = {
             ...ev,
             date: new Date().toLocaleTimeString(),
+            epoch: new Date().getTime(),
             msisdn: ev.msisdn.slice(2, 14)
           }
 
-          result.push(e)
+          if (!result[sid]) {
+            result[sid] = []
+          }
+          result[sid].push(e)
+          result[sid].push(e)
           return result
         })
 
-        this.setState({
-          incoming_event: {
-            ...this.state.incoming_event,
-            [suuid]: [...result, ...bef]
+        Object.keys(result).map((r, i) => {
+          let bef = this.state.incoming_event[r] || []
+          if (bef.length >= pp) {
+            bef = [
+              ...bef.slice(0, 0),
+              ...bef.slice(0, bef.length - result[r].length)
+            ]
           }
+
+          this.setState({
+            incoming_event_notif: {
+              ...this.state.incoming_event_notif,
+              [r]: r === this.state.activeService.meta.uuid ? false : true
+            },
+
+            incoming_event: {
+              ...this.state.incoming_event,
+              [r]: [...result[r], ...bef]
+            }
+          })
+          return -1
         })
       })
 
@@ -560,17 +617,57 @@ class Services extends Component {
                 <Menu.Item
                   style={{ borderRight: `10px solid ${cc}aa` }}
                   as="a"
-                  icon={s.meta.is_active === true ? 'toggle on' : 'toggle off'}
                   fitted="vertically"
                   index={i}
                   uuid={s.meta.uuid}
                   title={S(s.name).capitalize().s}
-                  name={i < 4 ? S(s.name).capitalize().s : s.name.slice(0, 2)}
                   data={s}
                   key={s.meta.uuid}
                   active={this.state.activeService.meta.uuid === s.meta.uuid}
                   onClick={this.handleServiceClick}
-                />
+                >
+                  <Icon
+                    style={{ marginRight: 3 }}
+                    name={s.meta.is_active === true ? 'circle' : 'toggle off'}
+                    color={
+                      this.state.activeService.meta.uuid === s.meta.uuid
+                        ? 'green'
+                        : 'grey'
+                    }
+                  />{' '}
+                  {i < 4 ? S(s.name).capitalize().s : s.name.slice(0, 2)}
+                  {this.state.incoming_mo_notif[s.meta.uuid] === true ? (
+                    <span
+                      style={{
+                        width: 3,
+                        height: 3,
+                        backgroundColor: 'grey',
+                        radius: '50%',
+                        boxShadow: '0px 1px 6px white',
+                        fontSize: 8,
+                        position: 'absolute',
+                        top: 5,
+                        right: 5,
+                        color: 'gold'
+                      }}
+                    />
+                  ) : null}
+                  {this.state.incoming_event_notif[s.meta.uuid] === true ? (
+                    <span
+                      style={{
+                        width: 3,
+                        height: 3,
+                        backgroundColor: 'orange',
+                        radius: '50%',
+                        boxShadow: '0px 1px 6px yellow',
+                        fontSize: 8,
+                        position: 'absolute',
+                        top: 10,
+                        right: 5
+                      }}
+                    />
+                  ) : null}
+                </Menu.Item>
               )
             } else {
               return null
@@ -687,7 +784,9 @@ class Services extends Component {
                             {' '}
                             ShortCode{' '}
                           </Table.HeaderCell>
-                          <Table.HeaderCell rowSpan="2">Name</Table.HeaderCell>
+                          <Table.HeaderCell rowSpan="2">
+                            Identifier
+                          </Table.HeaderCell>
                           <Table.HeaderCell rowSpan="2">
                             Activation Date
                           </Table.HeaderCell>
@@ -712,11 +811,15 @@ class Services extends Component {
                           </Table.Cell>
 
                           <Table.Cell textAlign="center">
-                            <h4>{this.state.activeService.short_code}</h4>
+                            <code style={{ fontSize: 24, color: 'gold' }}>
+                              {this.state.activeService.short_code}
+                            </code>
                           </Table.Cell>
 
                           <Table.Cell>
-                            {this.state.activeService.service_name}
+                            <code style={{ fontSize: 24 }}>
+                              {this.state.activeService.service_id}
+                            </code>
                           </Table.Cell>
                           <Table.Cell textAlign="center">
                             {new Date(
@@ -803,6 +906,21 @@ class Services extends Component {
                           style={{ color: 'white', fontWeight: 200 }}
                           align="center"
                         >
+                          <span style={{ float: 'left' }}>
+                            <code
+                              style={{
+                                fontSize: 36,
+                                fontWeight: 200,
+                                color: 'lightgreen'
+                              }}
+                            >
+                              {this.state.live_users}
+                            </code>{' '}
+                            Live Users{' '}
+                            <small style={{ fontSize: 10 }}>
+                              (Last 60 seconds)
+                            </small>{' '}
+                          </span>
                           Incoming Messages
                         </h3>
 
