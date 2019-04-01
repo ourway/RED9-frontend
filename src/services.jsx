@@ -47,6 +47,7 @@ import {
   redirectSignal,
   toggleFormEdit$,
   incomingMoSubject$,
+  msisdn_prettefy,
   newEventSubject$
 } from './utils'
 import { Icon as MsIcon } from 'office-ui-fabric-react/lib/Icon'
@@ -76,6 +77,8 @@ class Services extends Component {
     this.state = {
       editMode: false,
       liveColor: 'grey',
+      live_panel_style: { padding: '2rem' },
+      live_panel_style_mode: 'normal',
       incoming_mo: {},
       incoming_mo_notif: {},
       incoming_event_notif: {},
@@ -165,6 +168,7 @@ class Services extends Component {
     clearInterval(this.liveUserInterval)
     this.setState({
       live_users: 0,
+      lives: [],
       testSmsResult: {},
       incoming_mo_notif: {
         ...this.state.incoming_mo_notif,
@@ -200,16 +204,23 @@ class Services extends Component {
 
   doCalcLiveUsers = uuid => {
     this.liveUserInterval = setInterval(() => {
+      let lives = []
       let live = (this.state.incoming_mo[uuid] || []).reduce((cur, msg) => {
         const nowepoch = new Date().getTime()
         if (nowepoch - msg.epoch < 60 * 1000) {
-          return cur + 1
+          if (lives.indexOf(msg.national_number) === -1) {
+            lives.push(msg.national_number)
+            return cur + 1
+          } else {
+            return cur
+          }
         } else {
           return cur
         }
       }, 0)
       this.setState({
-        live_users: live
+        live_users: live,
+        lives: lives
       })
     }, 1000)
   }
@@ -275,6 +286,27 @@ class Services extends Component {
       this.setState({ activeService: service })
     }
 
+    this.toggleLivePanelFullscreen = () => {
+      this.setState({
+        live_panel_style_mode:
+          this.state.live_panel_style_mode === 'normal' ? 'full' : 'normal',
+        live_panel_style:
+          this.state.live_panel_style_mode === 'normal'
+            ? {
+                position: 'fixed',
+                width: '100%',
+                height: '100%',
+                paddingTop: '4em',
+                padding: '2em',
+                left: 0,
+                top: 0,
+                background: `${this.state.colorCode}ee`,
+                zIndex: 10
+              }
+            : { padding: '2em' }
+      })
+    }
+
     this.incomingMosSubscription = incomingMoSubject$
 
       .pipe(bufferTime(500))
@@ -313,7 +345,7 @@ class Services extends Component {
         Object.keys(result).map((r, i) => {
           let bef = this.state.incoming_mo[r] || []
           if (bef.length >= pp) {
-            bef = [...bef.slice(0, 0), ...bef.slice(0, result[r].length)]
+            bef = [...bef.slice(0, 0), ...bef.slice(0, pp - result[r].length)]
           }
 
           this.setState({
@@ -352,7 +384,6 @@ class Services extends Component {
             result[sid] = []
           }
           result[sid].push(e)
-          result[sid].push(e)
           return result
         })
 
@@ -361,7 +392,7 @@ class Services extends Component {
           if (bef.length >= pp) {
             bef = [
               ...bef.slice(0, 0),
-              ...bef.slice(0, bef.length - result[r].length)
+              ...bef.slice(0, bef.length - pp - result[r].length)
             ]
           }
 
@@ -898,7 +929,7 @@ class Services extends Component {
                 </Grid.Row>
 
                 <Divider />
-                <Grid.Row style={{ padding: '2rem' }}>
+                <Grid.Row style={this.state.live_panel_style}>
                   {this.state.activeService.meta.is_active === true ? (
                     <>
                       <Grid.Column width={10} style={{ margin: 0, padding: 0 }}>
@@ -910,8 +941,10 @@ class Services extends Component {
                             <code
                               style={{
                                 fontSize: 36,
-                                fontWeight: 200,
-                                color: 'lightgreen'
+                                fontWeight: 300,
+                                color: 'lightgrey',
+                                filter: `drop-shadow(0px -1px 5px rgba(5, 255, 5, ${this
+                                  .state.live_users / 20}))`
                               }}
                             >
                               {this.state.live_users}
@@ -933,14 +966,20 @@ class Services extends Component {
                             padding: 3,
                             overflowX: 'hidden',
                             overflowY: 'auto',
-                            height: 400,
+                            height:
+                              this.state.live_panel_style_mode === 'normal'
+                                ? 400
+                                : 800,
+                            maxHeight:
+                              this.state.live_panel_style_mode === 'normal'
+                                ? 600
+                                : 980,
                             backgroundAttachment: 'local',
-                            maxHeight: 600,
                             backgroundColor: this.state.colorCode + 85,
                             backgroundImage: "url('/message_live_back.png')",
 
                             backgroundSize: 512,
-                            lineHeight: '0.3em'
+                            lineHeight: '0.4em'
                           }}
                         >
                           {this.state.incoming_mo[
@@ -985,11 +1024,16 @@ class Services extends Component {
                                       </span>{' '}
                                       <span
                                         style={{
-                                          color: 'white',
+                                          color:
+                                            this.state.lives.indexOf(
+                                              im.national_number
+                                            ) === -1
+                                              ? 'grey'
+                                              : 'lightgreen',
                                           fontWeight: 800
                                         }}
                                       >
-                                        {im.national_number}
+                                        {msisdn_prettefy(im.national_number)}
                                       </span>{' '}
                                     </span>
                                   </pre>
@@ -1001,7 +1045,7 @@ class Services extends Component {
 
                       <Grid.Column width={3} style={{ margin: 0, padding: 0 }}>
                         <h3
-                          style={{ color: 'green', fontWeight: 200 }}
+                          style={{ color: 'lightgreen', fontWeight: 300 }}
                           align="center"
                         >
                           + Sub
@@ -1015,15 +1059,22 @@ class Services extends Component {
                             borderRight: 'none',
                             overflowX: 'hidden',
                             overflowY: 'auto',
-                            maxHeight: 600,
-                            height: 400,
+
+                            height:
+                              this.state.live_panel_style_mode === 'normal'
+                                ? 400
+                                : 800,
+                            maxHeight:
+                              this.state.live_panel_style_mode === 'normal'
+                                ? 600
+                                : 980,
                             padding: 3,
                             backgroundAttachment: 'local',
                             backgroundColor: this.state.colorCode + 75,
                             backgroundImage: "url('/message_live_back2.png')",
 
                             backgroundSize: 64,
-                            lineHeight: '0.3em'
+                            lineHeight: '0.4em'
                           }}
                         >
                           {this.state.incoming_event[
@@ -1052,11 +1103,16 @@ class Services extends Component {
                                       </span>{' '}
                                       <span
                                         style={{
-                                          color: 'white',
+                                          color:
+                                            this.state.lives.indexOf(
+                                              ev.msisdn
+                                            ) === -1
+                                              ? 'lightgrey'
+                                              : 'lightgreen',
                                           fontWeight: 800
                                         }}
                                       >
-                                        {ev.msisdn}
+                                        {msisdn_prettefy(ev.msisdn)}
                                       </span>{' '}
                                     </pre>
                                   )
@@ -1066,11 +1122,29 @@ class Services extends Component {
                       </Grid.Column>
                       <Grid.Column width={3} style={{ margin: 0, padding: 0 }}>
                         <h3
-                          style={{ color: 'red', fontWeight: 200 }}
+                          style={{ color: 'red', fontWeight: 300 }}
                           align="center"
                         >
                           - Unsub
                           <span style={{ color: 'white' }}>scriptions</span>
+                          <span
+                            style={{
+                              float: 'right',
+                              marginTop: -20,
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <em onClick={this.toggleLivePanelFullscreen}>
+                              <Icon
+                                name={
+                                  this.state.live_panel_style_mode === 'full'
+                                    ? 'compress'
+                                    : 'expand'
+                                }
+                                color="yellow"
+                              />
+                            </em>
+                          </span>
                         </h3>
                         <div
                           style={{
@@ -1079,15 +1153,22 @@ class Services extends Component {
                             borderTop: `2px solid red`,
                             overflowX: 'hidden',
                             overflowY: 'auto',
-                            maxHeight: 600,
-                            height: 400,
+
+                            height:
+                              this.state.live_panel_style_mode === 'normal'
+                                ? 400
+                                : 800,
+                            maxHeight:
+                              this.state.live_panel_style_mode === 'normal'
+                                ? 600
+                                : 980,
                             padding: 3,
                             backgroundAttachment: 'local',
                             backgroundColor: this.state.colorCode + 65,
                             backgroundImage: "url('/message_live_back3.png')",
 
                             backgroundSize: 96,
-                            lineHeight: '0.3em'
+                            lineHeight: '0.4em'
                           }}
                         >
                           {this.state.incoming_event[
@@ -1113,11 +1194,16 @@ class Services extends Component {
                                       </span>{' '}
                                       <span
                                         style={{
-                                          color: 'white',
+                                          color:
+                                            this.state.lives.indexOf(
+                                              ev.msisdn
+                                            ) === -1
+                                              ? 'lightgrey'
+                                              : 'lightgreen',
                                           fontWeight: 800
                                         }}
                                       >
-                                        {ev.msisdn}
+                                        {msisdn_prettefy(ev.msisdn)}
                                       </span>{' '}
                                     </pre>
                                   )
