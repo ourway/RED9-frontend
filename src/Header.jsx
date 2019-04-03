@@ -292,23 +292,25 @@ class Header extends Component {
                       style={{
                         clear: 'both',
                         fontSize: 14,
-                        paddingBottom: 10,
+                        fontWeight: 400,
+                        paddingBottom: 20,
                         color: 'lightgrey',
                         opacity: 0.6
                       }}
                     >
                       Proccessed /
-                      <code style={{ fontSize: 18, color: 'gold' }}>
+                      <code style={{ fontSize: 18, color: 'pink' }}>
                         {this.state.message_count}
                       </code>
                       / messages.
                     </small>
                     <br />
-                    <hr style={{ opacity: 0.25 }} />
+                    <hr style={{ opacity: 0 }} />
+                    <hr style={{ opacity: 0 }} />
                     {
                       //env.company === 'SabaIdea' ? ' ' : env.company
                     }
-                    <strong style={{ fontWeight: 800 }}>
+                    <strong style={{ fontWeight: 800, fontFamily: 'lato' }}>
                       {' '}
                       {env.product !== 'RED9' ? (
                         <span style={{ borderBottom: '1px dashed #cccccc33' }}>
@@ -331,7 +333,7 @@ class Header extends Component {
                             style={{
                               color: '#fff',
                               fontWeight: 200,
-                              fontSize: '2.5em',
+                              fontSize: '3.5em',
                               filter: 'drop-shadow(1px 1px 20px white)',
                               animation:
                                 'neon2 6.7s ease-in-out infinite alternate'
@@ -403,7 +405,7 @@ class Header extends Component {
                           {this.state.stats.yesterday.subscriptions}
                         </small>
                         /
-                        <small style={{ color: 'orange' }}>
+                        <small style={{ color: 'red' }}>
                           {this.state.stats.yesterday.unsubscriptions}
                         </small>{' '}
                         <Icon
@@ -444,7 +446,7 @@ class Header extends Component {
                           {this.state.stats.overall.subscriptions}
                         </small>
                         /
-                        <small style={{ color: 'orange' }}>
+                        <small style={{ color: 'red' }}>
                           {this.state.stats.overall.unsubscriptions}
                         </small>{' '}
                         <Icon
@@ -548,14 +550,22 @@ class Header extends Component {
                   <Grid.Column width={11}>
                     <Step.Group
                       size="mini"
-                      style={{ WebkitFilter: 'invert(90%)', opacity: 0.75 }}
+                      style={{ WebkitFilter: 'invert(80%)', opacity: 0.6 }}
                     >
                       <Step active={this.state.service.name === DASH}>
                         <Icon name="vcard" />
                         <Step.Content>
                           <Step.Title>
-                            <Link className="companyName" to="/profile">
-                              {this.state.company}
+                            <Link
+                              style={{
+                                color: 'velvet',
+                                fontSize: 16,
+                                fontFamily: 'Lato'
+                              }}
+                              className="dark"
+                              to="/profile"
+                            >
+                              {S(this.state.company).capitalize().s}
                             </Link>
                           </Step.Title>
                           <Step.Description>Active Client</Step.Description>
@@ -570,6 +580,11 @@ class Header extends Component {
                         <Step.Content>
                           <Step.Title>
                             <Link
+                              style={{
+                                color: 'black',
+                                fontSize: 16,
+                                fontFamily: 'Lato'
+                              }}
                               to={`/services/${
                                 this.state.service.meta
                                   ? this.state.service.meta.uuid
@@ -589,6 +604,11 @@ class Header extends Component {
                         <Step.Content>
                           <Step.Title>
                             <Link
+                              style={{
+                                color: 'velvet',
+                                fontSize: 16,
+                                fontFamily: 'Lato'
+                              }}
                               to={`/apps/${
                                 this.state.app.name ? this.state.app.uuid : ''
                               }`}

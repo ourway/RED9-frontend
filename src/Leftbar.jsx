@@ -189,7 +189,7 @@ class Leftbar extends Component {
               <List.Item key={n} color="orange" className="">
                 <h5
                   style={{
-                    color: '#f2711d',
+                    color: 'red',
                     backgroundColor: '#1a2127',
                     fontWeight: 300
                   }}
@@ -206,7 +206,7 @@ class Leftbar extends Component {
               color="black"
               className="menuListItem"
               style={{
-                backgroundColor: is_activepath ? '#daac03' : 'transparent'
+                backgroundColor: is_activepath ? '#ccc' : 'transparent'
               }}
             >
               <Link to={mode !== 'disabled' ? `/${p}` : '#'} className={mode}>
@@ -216,7 +216,7 @@ class Leftbar extends Component {
                 />
                 <span
                   style={{
-                    fontWeight: is_activepath ? 400 : 200,
+                    fontWeight: is_activepath ? 400 : 300,
                     color: is_activepath ? '#313131' : 'lightgrey',
                     width: '100%'
                   }}

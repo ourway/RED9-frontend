@@ -200,7 +200,7 @@ class Home extends Component {
           {this.state.services.map((s, i) => {
             return (
               <List.Item key={s.uuid}>
-                <Icon name="dot circle" color="yellow" />{' '}
+                <Icon name="dot circle" color="red" />{' '}
                 <Link to={`/services/${s.uuid}`}>{s.name.toUpperCase()}</Link>
                 <br />
                 <small style={{ color: 'lightgrey', float: 'left' }}>

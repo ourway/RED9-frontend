@@ -181,23 +181,6 @@ class Login extends Component {
                   name="Login_Form"
                   className="form-signin"
                 >
-                  <small
-                    style={{
-                      clear: 'both',
-                      fontSize: 14,
-                      paddingBottom: 10,
-                      color: 'grey',
-                      opacity: 0.6
-                    }}
-                  >
-                    Proccessed /
-                    <code style={{ fontSize: 18, color: '#515151' }}>
-                      {this.state.message_count}
-                    </code>
-                    / messages.
-                  </small>
-                  <br />
-
                   <small style={{ color: 'grey' }}>
                     Verison <b>{env.product_version.split('/')[0]}</b>
                     {env.product_version.split('/')[1]}
@@ -211,18 +194,74 @@ class Login extends Component {
                     <br />
                   </small>
 
-                  <Image src={`/${env.logo}-login.png`} size="tiny" inline />
+                  <small
+                    style={{
+                      clear: 'both',
+                      fontSize: 14,
+                      paddingBottom: 10,
+                      color: 'grey',
+                      opacity: 0.6
+                    }}
+                  >
+                    Proccessed /
+                    <code style={{ fontSize: 24, color: 'teal' }}>
+                      {this.state.message_count}
+                    </code>
+                    / messages.
+                  </small>
+
+                  <hr style={{ opacity: 0 }} />
+                  <Image
+                    src={`/${env.logo}-login.png`}
+                    size="small"
+                    inline
+                    style={{ verticalAlign: 'baseline' }}
+                  />
+
                   <strong className="ms-font-l ms-fontColor-black">
                     {' '}
                     &nbsp;
-                    {env.company === 'SabaIdea' ? '' : env.company}
-                    <strong style={{ fontWeight: 800 }}>
-                      {env.product}
-                    </strong>{' '}
-                    Authentication
+                    {
+                      //env.company === 'SabaIdea' ? '' : env.company
+                    }
+                    <strong style={{ fontWeight: 800, fontFamily: 'lato' }}>
+                      {' '}
+                      {env.product !== 'RED9' ? (
+                        <span style={{ borderBottom: '1px dashed #cccccc33' }}>
+                          {env.product}
+                        </span>
+                      ) : (
+                        <span style={{ borderBottom: '1px dashed #cccccc33' }}>
+                          <b
+                            style={{
+                              color: '#cc0000',
+                              fontWeight: 800,
+                              fontSize: '8em'
+                            }}
+                          >
+                            RED
+                          </b>
+                          <span
+                            style={{
+                              color: '#000',
+                              fontWeight: 200,
+                              fontSize: '12.5em',
+                              filter: 'drop-shadow(1px 1px 20px white)'
+                            }}
+                          >
+                            9
+                          </span>
+                          Authentication
+                        </span>
+                      )}
+                    </strong>
+                    <br />
                   </strong>
+                  <br />
+                  <hr style={{ opacity: 0 }} />
 
                   <hr className="colorgraph" />
+                  <br />
                   <br />
 
                   <section style={{ margin: 'auto', width: '70%' }}>

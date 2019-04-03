@@ -83,6 +83,7 @@ class Services extends Component {
       incoming_mo_notif: {},
       incoming_event_notif: {},
       live_users: 0,
+      lives: [],
       incoming_event: {},
       testSmsResult: {},
       overview: [],
@@ -287,6 +288,7 @@ class Services extends Component {
     }
 
     this.toggleLivePanelFullscreen = () => {
+      window.scrollTo(0, 0)
       this.setState({
         live_panel_style_mode:
           this.state.live_panel_style_mode === 'normal' ? 'full' : 'normal',
@@ -658,15 +660,30 @@ class Services extends Component {
                   onClick={this.handleServiceClick}
                 >
                   <Icon
-                    style={{ marginRight: 3 }}
+                    style={{
+                      marginRight: 3,
+                      filter:
+                        this.state.activeService.meta.uuid === s.meta.uuid
+                          ? 'drop-shadow(0px 0px 10px red)'
+                          : 'none'
+                    }}
                     name={s.meta.is_active === true ? 'circle' : 'toggle off'}
                     color={
                       this.state.activeService.meta.uuid === s.meta.uuid
-                        ? 'green'
+                        ? 'red'
                         : 'grey'
                     }
                   />{' '}
-                  {i < 4 ? S(s.name).capitalize().s : s.name.slice(0, 2)}
+                  <span
+                    style={{
+                      color:
+                        this.state.activeService.meta.uuid === s.meta.uuid
+                          ? 'white'
+                          : 'grey'
+                    }}
+                  >
+                    {i < 4 ? S(s.name).capitalize().s : s.name.slice(0, 2)}
+                  </span>
                   {this.state.incoming_mo_notif[s.meta.uuid] === true ? (
                     <span
                       style={{
@@ -679,7 +696,7 @@ class Services extends Component {
                         position: 'absolute',
                         top: 5,
                         right: 5,
-                        color: 'gold'
+                        color: 'white'
                       }}
                     />
                   ) : null}
@@ -688,7 +705,7 @@ class Services extends Component {
                       style={{
                         width: 3,
                         height: 3,
-                        backgroundColor: 'orange',
+                        backgroundColor: 'red',
                         radius: '50%',
                         boxShadow: '0px 1px 6px yellow',
                         fontSize: 8,
@@ -842,7 +859,7 @@ class Services extends Component {
                           </Table.Cell>
 
                           <Table.Cell textAlign="center">
-                            <code style={{ fontSize: 24, color: 'gold' }}>
+                            <code style={{ fontSize: 24, color: 'white' }}>
                               {this.state.activeService.short_code}
                             </code>
                           </Table.Cell>
@@ -863,7 +880,13 @@ class Services extends Component {
                                 (app, i) => {
                                   return (
                                     <Link key={i} to={'/apps'}>
-                                      <Button style={{ marginTop: 3 }}>
+                                      <Button
+                                        style={{
+                                          marginTop: 3,
+                                          fontWeight: 400
+                                        }}
+                                        color="black"
+                                      >
                                         {app.name}
                                       </Button>
                                     </Link>
@@ -988,18 +1011,30 @@ class Services extends Component {
                             ? this.state.incoming_mo[
                                 this.state.activeService.meta.uuid
                               ].map((im, i) => {
+                                let islive =
+                                  this.state.lives.indexOf(
+                                    im.national_number
+                                  ) !== -1
+
                                 return (
                                   <pre
                                     key={i}
                                     style={{
-                                      fontWeight: 400
+                                      fontWeight: 400,
+                                      padding: 7,
+                                      background: 'rgba(0,0,0,0.4)',
+                                      margin: 0,
+                                      overflow: 'hidden',
+                                      borderBottom: `1px dotted ${
+                                        islive === true ? 'teal' : 'darkred'
+                                      }`
                                     }}
                                   >
                                     {' '}
                                     <span style={{ color: 'grey' }}>
                                       >
                                     </span>{' '}
-                                    <span style={{ color: 'lightgrey' }}>
+                                    <span style={{ color: 'grey' }}>
                                       {im.date}
                                     </span>
                                     <span style={{ color: 'grey' }}>
@@ -1009,7 +1044,11 @@ class Services extends Component {
                                     <span style={{ float: 'right' }}>
                                       <span
                                         style={{
-                                          color: 'gold',
+                                          color:
+                                            islive === true
+                                              ? 'white'
+                                              : 'lightgrey',
+                                          padding: 2,
                                           direction: 'rtl',
                                           textAlign: 'right',
                                           fontFamily: 'Lato',
@@ -1025,12 +1064,11 @@ class Services extends Component {
                                       <span
                                         style={{
                                           color:
-                                            this.state.lives.indexOf(
-                                              im.national_number
-                                            ) === -1
+                                            islive === false
                                               ? 'grey'
                                               : 'lightgreen',
-                                          fontWeight: 800
+                                          fontWeight:
+                                            islive === true ? 800 : 400
                                         }}
                                       >
                                         {msisdn_prettefy(im.national_number)}
@@ -1141,7 +1179,7 @@ class Services extends Component {
                                     ? 'compress'
                                     : 'expand'
                                 }
-                                color="yellow"
+                                color="red"
                               />
                             </em>
                           </span>
@@ -1216,7 +1254,7 @@ class Services extends Component {
                 </Grid.Row>
                 <Divider />
 
-                <Grid.Row>
+                <Grid.Row style={{ display: 'none' }}>
                   <Grid.Column width={1}>
                     <Header as="h6" icon color="orange">
                       <Icon name="travel" circular inverted />
