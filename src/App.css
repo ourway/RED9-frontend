@@ -549,3 +549,22 @@ width: 100%;
 border: 1px solid #515151;
 }
 
+@keyframes neon1 {
+      from {
+	filter: drop-shadow(1px 1px 10px darkred)
+                }
+                  to {
+	filter: drop-shadow(1px 1px 20px red)
+                            }
+                            }
+
+
+@keyframes neon2{
+      from {
+	filter: drop-shadow(1px 1px 10px lightgrey)
+                }
+                  to {
+	filter: drop-shadow(1px 1px 20px white)
+                            }
+                            }
+

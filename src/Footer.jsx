@@ -79,10 +79,13 @@ class Footer extends Component {
                 &nbsp; Proudly <b>MADE IN IRAN</b>
               </span>
               <br />
-              <span style={{ opacity: 0.5, marginLeft: 32 }}>
+              <span style={{ opacity: 1, marginLeft: 32 }}>
                 {' '}
                 &nbsp; /Designed and developed by
-                <a style={{ fontWeight: 400 }} href={`mailto:${fafan}`}>
+                <a
+                  style={{ fontWeight: 400, color: 'lightgreen' }}
+                  href={`mailto:${fafan}`}
+                >
                   {' '}
                   {atob(env.author)}
                 </a>

@@ -266,12 +266,17 @@ class Header extends Component {
       >
         <Grid centered doubling padded>
           <Grid.Row>
-            <Grid.Column computer={4} mobile={12} tablet={4}>
+            <Grid.Column
+              computer={6}
+              mobile={12}
+              tablet={6}
+              style={{ paddingLeft: '2em' }}
+            >
               <Link to="/">
                 <strong className="ms-font-xxl ms-fontColor-neutralLight">
                   <Image
                     src={`/${env.logo}.png`}
-                    size="tiny"
+                    size="small"
                     style={{ verticalAlign: 'sub' }}
                     inline
                   />
@@ -300,7 +305,9 @@ class Header extends Component {
                     </small>
                     <br />
                     <hr style={{ opacity: 0.25 }} />
-                    {env.company === 'SabaIdea' ? ' ' : env.company}
+                    {
+                      //env.company === 'SabaIdea' ? ' ' : env.company
+                    }
                     <strong style={{ fontWeight: 800 }}>
                       {' '}
                       {env.product !== 'RED9' ? (
@@ -309,10 +316,27 @@ class Header extends Component {
                         </span>
                       ) : (
                         <span style={{ borderBottom: '1px dashed #cccccc33' }}>
-                          <b style={{ color: '#cc0000', fontWeight: 800 }}>
+                          <b
+                            style={{
+                              color: '#cc0000',
+                              fontWeight: 800,
+                              fontSize: '2em',
+                              animation:
+                                'neon1 7.5s ease-in-out infinite alternate'
+                            }}
+                          >
                             RED
                           </b>
-                          <span style={{ color: '#fff', fontWeight: 200 }}>
+                          <span
+                            style={{
+                              color: '#fff',
+                              fontWeight: 200,
+                              fontSize: '2.5em',
+                              filter: 'drop-shadow(1px 1px 20px white)',
+                              animation:
+                                'neon2 6.7s ease-in-out infinite alternate'
+                            }}
+                          >
                             9
                           </span>
                         </span>
@@ -346,7 +370,7 @@ class Header extends Component {
             </Grid.Column>
 
             <Grid.Column
-              computer={11}
+              computer={10}
               only="computer tablet"
               verticalAlign="middle"
               textAlign="right"
@@ -494,8 +518,7 @@ class Header extends Component {
                       </Statistic>
                     ) : null}
 
-                    {this.state.wappush_revenue !== 0 &&
-                    this.state.reporter !== 'true' ? (
+                    {this.state.wappush_revenue > 0 ? (
                       <Statistic
                         className={
                           this.state.service.name !== DASH
