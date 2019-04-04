@@ -322,9 +322,8 @@ class Header extends Component {
                             style={{
                               color: '#cc0000',
                               fontWeight: 800,
-                              fontSize: '2em',
-                              animation:
-                                'neon1 7.5s ease-in-out infinite alternate'
+                              filter: 'drop-shadow(1px 1px 20px red)',
+                              fontSize: '2em'
                             }}
                           >
                             RED
@@ -334,9 +333,7 @@ class Header extends Component {
                               color: '#fff',
                               fontWeight: 200,
                               fontSize: '3.5em',
-                              filter: 'drop-shadow(1px 1px 20px white)',
-                              animation:
-                                'neon2 6.7s ease-in-out infinite alternate'
+                              filter: 'drop-shadow(1px 1px 20px white)'
                             }}
                           >
                             9

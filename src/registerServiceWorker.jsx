@@ -56,12 +56,14 @@ function registerValidSW(swUrl) {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              alert('New version is available; please refresh.')
+              alert(
+                'New RED9 version is available; please refresh your browser'
+              )
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
-              console.log('Content is cached for offline use.')
+              console.debug('Content is cached for offline use.')
             }
           }
         }

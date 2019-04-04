@@ -204,7 +204,7 @@ class Login extends Component {
                     }}
                   >
                     Proccessed /
-                    <code style={{ fontSize: 24, color: 'teal' }}>
+                    <code style={{ fontSize: 24, color: 'darkred' }}>
                       {this.state.message_count}
                     </code>
                     / messages.
@@ -236,7 +236,7 @@ class Login extends Component {
                             style={{
                               color: '#cc0000',
                               fontWeight: 800,
-                              fontSize: '8em'
+                              fontSize: '4em'
                             }}
                           >
                             RED
@@ -245,7 +245,7 @@ class Login extends Component {
                             style={{
                               color: '#000',
                               fontWeight: 200,
-                              fontSize: '12.5em',
+                              fontSize: '6.5em',
                               filter: 'drop-shadow(1px 1px 20px white)'
                             }}
                           >
@@ -382,15 +382,6 @@ class Login extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column>
-              <div>
-                <iframe
-                  title="server http logs"
-                  className="logs"
-                  src="https://wolf.red9.ir/goaccess"
-                />
-              </div>
-
-              <hr />
               <div>
                 <iframe
                   title="server status"

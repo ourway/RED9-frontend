@@ -30,11 +30,10 @@ iframe.monitor{
 	outline: none;
 	display: block;
 	border: 5px dotted #ccc;
-	transform: scale3d(0.75, 0.75, 1);
 	box-shadow: 5px 6px 10px #ccc;
 	overflow: hidden;
-	width: 90%;
-	height: 640px;
+	width: 99%;
+	height: 1080px;
 	margin: auto;
 }
 
@@ -170,7 +169,7 @@ a.disabled span {
 	background: transparent;
 	color: #dad7c7;
 	border: 1px solid #191c21;
-	text-shadow: 0px 2px 2px #1b2128;
+
 }
 
 
