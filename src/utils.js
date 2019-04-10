@@ -58,6 +58,7 @@ selectService$
     next: s => {
       const serviceData = {
         name: s.name,
+        short_code: s.short_code,
         colorCode: s.colorCode,
         wappush: s.wappush,
         ftp_key: s.meta.ftp_key,

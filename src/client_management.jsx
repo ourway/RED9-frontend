@@ -308,7 +308,7 @@ class ClientManagement extends Component {
 
             <Menu.Item>
               <Input
-                size="tiny"
+                size="mini"
                 onChange={this.handleFilterClients}
                 value={this.state.filter}
                 transparent

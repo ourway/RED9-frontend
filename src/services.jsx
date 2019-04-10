@@ -173,7 +173,7 @@ class Services extends Component {
       testSmsResult: {},
       incoming_mo_notif: {
         ...this.state.incoming_mo_notif,
-        [uuid]: false
+        [data.short_code]: false
       },
 
       incoming_event_notif: {
@@ -200,25 +200,29 @@ class Services extends Component {
       return true
     })[0] || { name: 'N/A' }
     selectApp$.next(app)
-    this.doCalcLiveUsers(uuid)
+    clearInterval(this.liveUserInterval)
+    this.doCalcLiveUsers(data.short_code)
   }
 
-  doCalcLiveUsers = uuid => {
+  doCalcLiveUsers = shortcode => {
     this.liveUserInterval = setInterval(() => {
       let lives = []
-      let live = (this.state.incoming_mo[uuid] || []).reduce((cur, msg) => {
-        const nowepoch = new Date().getTime()
-        if (nowepoch - msg.epoch < 60 * 1000) {
-          if (lives.indexOf(msg.national_number) === -1) {
-            lives.push(msg.national_number)
-            return cur + 1
+      let live = (this.state.incoming_mo[shortcode] || []).reduce(
+        (cur, msg) => {
+          const nowepoch = new Date().getTime()
+          if (nowepoch - msg.epoch < 60 * 1000) {
+            if (lives.indexOf(msg.national_number) === -1) {
+              lives.push(msg.national_number)
+              return cur + 1
+            } else {
+              return cur
+            }
           } else {
             return cur
           }
-        } else {
-          return cur
-        }
-      }, 0)
+        },
+        0
+      )
       this.setState({
         live_users: live,
         lives: lives
@@ -281,7 +285,7 @@ class Services extends Component {
   componentDidMount() {
     const service = store.get('service')
     if (service) {
-      this.doCalcLiveUsers(service.meta.uuid)
+      this.doCalcLiveUsers(service.short_code)
     }
     if (service && !this.state.activeService.meta.uuid) {
       this.setState({ activeService: service })
@@ -328,18 +332,18 @@ class Services extends Component {
         let result = {}
 
         rawmsgs.map((msg, i) => {
-          const sid = msg.service_id
+          const shortcode = msg.shortcode
           if (msg.message.match(/sms|otp|ussd|unsub/) === null) {
             const m = {
               ...msg,
-              message: msg.message.slice(0, 48).replace(/\n/g, '. '),
+              message: msg.message.slice(0, 64).replace(/\n/g, '. '),
               date: new Date().toLocaleTimeString(),
               epoch: new Date().getTime()
             }
-            if (!result[sid]) {
-              result[sid] = []
+            if (!result[shortcode]) {
+              result[shortcode] = []
             }
-            result[sid].push(m)
+            result[shortcode].push(m)
           }
           return result
         })
@@ -353,7 +357,7 @@ class Services extends Component {
           this.setState({
             incoming_mo_notif: {
               ...this.state.incoming_mo_notif,
-              [r]: r === this.state.activeService.meta.uuid ? false : true
+              [r]: r === this.state.activeService.short_code ? false : true
             },
             incoming_mo: {
               ...this.state.incoming_mo,
@@ -684,7 +688,7 @@ class Services extends Component {
                   >
                     {i < 4 ? S(s.name).capitalize().s : s.name.slice(0, 2)}
                   </span>
-                  {this.state.incoming_mo_notif[s.meta.uuid] === true ? (
+                  {this.state.incoming_mo_notif[s.short_code] === true ? (
                     <span
                       style={{
                         width: 3,
@@ -1006,10 +1010,10 @@ class Services extends Component {
                           }}
                         >
                           {this.state.incoming_mo[
-                            this.state.activeService.meta.uuid
+                            this.state.activeService.short_code
                           ]
                             ? this.state.incoming_mo[
-                                this.state.activeService.meta.uuid
+                                this.state.activeService.short_code
                               ].map((im, i) => {
                                 let islive =
                                   this.state.lives.indexOf(
@@ -1022,32 +1026,42 @@ class Services extends Component {
                                     style={{
                                       fontWeight: 400,
                                       padding: 7,
-                                      background: 'rgba(0,0,0,0.4)',
+                                      background: 'rgba(40,50,40,0.5)',
                                       margin: 0,
                                       overflow: 'hidden',
-                                      borderBottom: `1px dotted ${
-                                        islive === true ? 'teal' : 'darkred'
+                                      borderBottom: `1px dashed ${
+                                        islive === true ? '#333' : 'black'
                                       }`
                                     }}
                                   >
-                                    {' '}
-                                    <span style={{ color: 'grey' }}>
-                                      >
-                                    </span>{' '}
+                                    <Icon
+                                      name="clock outline"
+                                      color="grey"
+                                      size="small"
+                                    />
                                     <span style={{ color: 'grey' }}>
                                       {im.date}
                                     </span>
-                                    <span style={{ color: 'grey' }}>
-                                      {' '}
-                                      MESSAGE:
+                                    {' | '}
+                                    <span
+                                      style={{
+                                        color:
+                                          islive === false
+                                            ? 'grey'
+                                            : 'lightgrey',
+                                        fontWeight: islive === true ? 800 : 400
+                                      }}
+                                    >
+                                      {msisdn_prettefy(im.national_number)}{' '}
+                                      {im.city}
                                     </span>{' '}
                                     <span style={{ float: 'right' }}>
                                       <span
                                         style={{
                                           color:
                                             islive === true
-                                              ? 'white'
-                                              : 'lightgrey',
+                                              ? 'lightgreen'
+                                              : 'grey',
                                           padding: 2,
                                           direction: 'rtl',
                                           textAlign: 'right',
@@ -1055,24 +1069,8 @@ class Services extends Component {
                                           fontSize: 15
                                         }}
                                       >
-                                        {im.message}
+                                        {im.message}{' '}
                                       </span>
-                                      <span style={{ color: 'grey' }}>
-                                        {' '}
-                                        FROM:
-                                      </span>{' '}
-                                      <span
-                                        style={{
-                                          color:
-                                            islive === false
-                                              ? 'grey'
-                                              : 'lightgreen',
-                                          fontWeight:
-                                            islive === true ? 800 : 400
-                                        }}
-                                      >
-                                        {msisdn_prettefy(im.national_number)}
-                                      </span>{' '}
                                     </span>
                                   </pre>
                                 )

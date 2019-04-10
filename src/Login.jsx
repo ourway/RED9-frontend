@@ -380,17 +380,7 @@ class Login extends Component {
               </Card>
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <div>
-                <iframe
-                  title="server status"
-                  className="monitor"
-                  src={env.monitor}
-                />
-              </div>
-            </Grid.Column>
-          </Grid.Row>
+          <Grid.Row />
         </Grid>
 
         <Footer />
