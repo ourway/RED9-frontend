@@ -26,7 +26,7 @@ import {
 
 import { Socket } from 'phoenix/priv/static/phoenix'
 
-import registerServiceWorker from './registerServiceWorker'
+//import registerServiceWorker from './registerServiceWorker'
 
 let socket_connection = new Socket('wss://wolf.red9.ir/socket', {
   params: { token: 'start' }
@@ -106,14 +106,12 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-registerServiceWorker()
-//
-//
+//registerServiceWorker()
 
 navigator.serviceWorker.getRegistrations().then(function(registrations) {
   for (let registration of registrations) {
-    console.debug(registration)
-    //registration.unregister()
+    //console.debug(registration)
+    registration.unregister()
   }
 })
 
