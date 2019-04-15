@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import store from 'store'
-import sample from 'lodash/sample'
 import { debounceTime } from 'rxjs/operators'
 import {
   sendLoginRequest,
@@ -13,6 +12,8 @@ import {
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Grid } from 'semantic-ui-react'
 import Footer from './Footer'
+import Shine from './Shine'
+import Showcase from './Showcase'
 import { Card, Image, Loader, Dimmer, Segment } from 'semantic-ui-react'
 import { env } from './config'
 import { CompoundButton } from 'office-ui-fabric-react/lib/Button'
@@ -38,8 +39,6 @@ class Login extends Component {
     this.doStudio54Login = this.doStudio54Login.bind(this)
     this.handleUUID = this.handleUUID.bind(this)
     this.sendLoginRequest = sendLoginRequest.bind(this)
-    this.loadDayquote = this.loadDayquote.bind(this)
-    this.startQuoteInterval = this.startQuoteInterval.bind(this)
   }
 
   componentWillMount() {
@@ -60,40 +59,6 @@ class Login extends Component {
     clearTimeout(this.quoteStartTimeout)
   }
 
-  loadDayquote() {
-    let self = this
-
-    if (this.state.quotes.length === 0) {
-      this.setState({
-        isLoadingDayquote: true
-      })
-      fetch('/quotes.json').then(r => {
-        r.json().then(data => {
-          this.setState({
-            quotes: data,
-            dayquote: sample(data)
-          })
-          self.loadTimeout = setTimeout(() => {
-            self.setState({
-              isLoadingDayquote: false
-            })
-          }, 1000)
-        })
-      })
-    } else {
-      this.setState({
-        dayquote: sample(this.state.quotes)
-      })
-    }
-  }
-
-  startQuoteInterval = () => {
-    const t = 24000
-    return setInterval(() => {
-      this.loadDayquote()
-    }, t)
-  }
-
   componentDidMount() {
     if (this.state.only_report === true) {
       reporterSignal.next('OK')
@@ -107,14 +72,6 @@ class Login extends Component {
     store.clearAll()
     store.set('reporter', btoa(this.state.only_report))
     titleChangeSignal.next('Login')
-    this.quoteStartTimeout = setTimeout(() => {
-      this.loadDayquote()
-    }, 100)
-
-    this.quoteLoadInterval = this.startQuoteInterval()
-    if (this.state.uuid) {
-      this.doLogin()
-    }
   }
 
   handleUUID = e => {
@@ -167,9 +124,10 @@ class Login extends Component {
           </Loader>
         </Dimmer>
 
-        <Grid style={{ paddingBottom: 196 }} padded verticalAlign="middle">
+        <Grid style={{ paddingBottom: 0 }} padded verticalAlign="middle">
           <Grid.Row>
-            <Grid.Column computer={8} tablet="10" mobile="16">
+            <Grid.Column computer={1} tablet="1" mobile="1" />
+            <Grid.Column computer={6} tablet="8" mobile="16">
               <div
                 style={{ margin: 10, padding: 40 }}
                 className="ms-clearfix wrapper ms-slideRightIn10"
@@ -181,19 +139,6 @@ class Login extends Component {
                   name="Login_Form"
                   className="form-signin"
                 >
-                  <small style={{ color: 'grey' }}>
-                    Verison <b>{env.product_version.split('/')[0]}</b>
-                    {env.product_version.split('/')[1]}
-                    {` | `}
-                    Code Name:{' '}
-                    <u>
-                      <code style={{ fontSize: 12 }}>{env.codename}</code>
-                    </u>
-                    {` | `}
-                    Endpoint: {env.API_BASE}
-                    <br />
-                  </small>
-
                   <small
                     style={{
                       clear: 'both',
@@ -213,9 +158,12 @@ class Login extends Component {
                   <hr style={{ opacity: 0 }} />
                   <Image
                     src={`/${env.logo}-login.png`}
-                    size="small"
                     inline
-                    style={{ verticalAlign: 'baseline' }}
+                    style={{
+                      verticalAlign: 'baseline',
+                      width: '5em',
+                      filter: 'grayscale(100%)'
+                    }}
                   />
 
                   <strong className="ms-font-l ms-fontColor-black">
@@ -236,7 +184,7 @@ class Login extends Component {
                             style={{
                               color: '#cc0000',
                               fontWeight: 800,
-                              fontSize: '4em'
+                              fontSize: '3em'
                             }}
                           >
                             RED
@@ -245,34 +193,43 @@ class Login extends Component {
                             style={{
                               color: '#000',
                               fontWeight: 200,
-                              fontSize: '6.5em',
+                              fontSize: '4.5em',
                               filter: 'drop-shadow(1px 1px 20px white)'
                             }}
                           >
                             9
                           </span>
-                          Authentication
                         </span>
                       )}
                     </strong>
                     <br />
+                    <small style={{ color: 'grey' }}>
+                      Verison <b>{env.product_version.split('/')[0]}</b>
+                      {env.product_version.split('/')[1]}
+                      {` | `}
+                      Code Name:{' '}
+                      <u>
+                        <code style={{ fontSize: 12 }}>{env.codename}</code>
+                      </u>
+                      {` | `}
+                      Endpoint: {env.API_BASE}
+                      <br />
+                    </small>
                   </strong>
                   <br />
-                  <hr style={{ opacity: 0 }} />
 
-                  <hr className="colorgraph" />
-                  <br />
                   <br />
 
-                  <section style={{ margin: 'auto', width: '70%' }}>
+                  <Segment attach="top" style={{ margin: 'auto' }}>
                     <Label>
                       Enter your 128-bit{' '}
                       <b style={{ color: 'teal' }}>Client Key</b>:
                     </Label>
+
                     <TextField
                       onChange={this.handleUUID}
                       value={this.state.uuid}
-                      autoComplete="false"
+                      autoComplete="true"
                       required={true}
                       autoFocus={true}
                       type="password"
@@ -280,10 +237,10 @@ class Login extends Component {
                     />
 
                     <br />
-
                     <CompoundButton
                       primary={true}
                       onClick={this.doLogin}
+                      style={{ backgroundColor: '#cc0000' }}
                       secondaryText={`to ${env.company} ${env.product}`}
                       disabled={this.state.activateButton === false}
                       checked={false}
@@ -319,13 +276,12 @@ class Login extends Component {
                         </CompoundButton>
                       </span>
                     ) : null}
-                  </section>
+                  </Segment>
                 </form>
 
                 <br />
                 <br />
                 <br />
-                <hr />
                 <p>
                   <small>
                     If you need a new client-key, please
@@ -341,46 +297,19 @@ class Login extends Component {
                 </p>
               </div>
             </Grid.Column>
-            <Grid.Column computer={8} tablet="6" mobile="16">
-              <Card color="blue" centered fluid>
-                <Card.Content>
-                  <Card.Header>
-                    <small>Welcome to </small>{' '}
-                    <b>
-                      {env.company} {env.product}
-                    </b>
-                  </Card.Header>
-                  <Card.Meta>Shine your day</Card.Meta>
-                  <Card.Description
-                    style={{ lineHeight: '1em' }}
-                    className="ms-font-xxl ms-fontColor-themePrimary"
-                  >
-                    <Image floated="right" size="small" src="/horse.png" />
-
-                    <Dimmer
-                      active={this.state.isLoadingDayquote === true}
-                      inverted
-                    >
-                      <Loader indeterminate>
-                        let me inspire you to help you get through your day
-                      </Loader>
-                    </Dimmer>
-
-                    <small>{this.state.dayquote.quoteText}</small>
-                    <br />
-                    <br />
-                    <b>
-                      <small>{this.state.dayquote.quoteAuthor}</small>
-                    </b>
-                  </Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                  <div />
-                </Card.Content>
-              </Card>
+            <Grid.Column computer={1} tablet="1" mobile="1" />
+            <Grid.Column computer={7} tablet="7" mobile="16">
+              <Showcase />
+            </Grid.Column>
+            <hr />
+          </Grid.Row>
+          <Grid.Row style={{ backgroundColor: '#cc0000' }}>
+            <Grid.Column computer={3} tablet="16" mobile="16" />
+            <Grid.Column computer={10} tablet="16" mobile="16">
+              <Grid.Column computer={3} tablet="16" mobile="16" />
+              <Shine />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row />
         </Grid>
 
         <Footer />

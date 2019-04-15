@@ -429,8 +429,40 @@ footer {
 	padding-left: 5px !important;
 }
 
+
+.ui.card.shine > .content > .meta {
+	color: white;
+
+}
+
+.ui.card.shine > .content > .description {
+	color: white;
+
+}
+
+
+.ui.card> .content {
+	transition: background-image 2s ease;
+
+}
+
+
+
+.ui.card.shine {
+	background-Color: transparent;
+	border: none;
+	color: white;
+	box-shadow: none;
+
+}
+
+.ui.card.shine:hover {
+	border: none;
+	box-shadow: none;
+
+}
+
 .ui.card {
-	opacity: 0.75;
 	transition: opacity 200ms linear;
 
 }

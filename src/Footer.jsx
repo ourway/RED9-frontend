@@ -9,7 +9,7 @@ class Footer extends Component {
       .reverse()
       .join('')
     return (
-      <footer style={{ marginTop: 20, clear: 'both' }}>
+      <footer style={{ marginTop: 0, clear: 'both' }}>
         <div style={{}}>
           <div
             style={{
