@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-import sample from 'lodash/sample'
-import { Card, Image, Dimmer, Loader } from 'semantic-ui-react'
-import { env } from './config'
+import { Card } from 'semantic-ui-react'
 
 class Shine extends Component {
   constructor(props) {
@@ -40,8 +38,6 @@ class Shine extends Component {
             backgroundSize: 'cover',
             height: 400
           }}
-          bordered
-          centered
         />
       </Card>
     )

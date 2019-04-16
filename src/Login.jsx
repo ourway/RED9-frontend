@@ -14,7 +14,7 @@ import { Grid } from 'semantic-ui-react'
 import Footer from './Footer'
 import Shine from './Shine'
 import Showcase from './Showcase'
-import { Card, Image, Loader, Dimmer, Segment } from 'semantic-ui-react'
+import { Image, Loader, Dimmer, Segment } from 'semantic-ui-react'
 import { env } from './config'
 import { CompoundButton } from 'office-ui-fabric-react/lib/Button'
 import { Label } from 'office-ui-fabric-react/lib/Label'
@@ -62,6 +62,10 @@ class Login extends Component {
   componentDidMount() {
     if (this.state.only_report === true) {
       reporterSignal.next('OK')
+    }
+
+    if (this.state.uuid) {
+      this.doLogin()
     }
     this.redirectSubscription = redirectSignal.subscribe({
       next: (t, history) => {
@@ -229,7 +233,6 @@ class Login extends Component {
                     <TextField
                       onChange={this.handleUUID}
                       value={this.state.uuid}
-                      autoComplete="true"
                       required={true}
                       autoFocus={true}
                       type="password"
@@ -240,6 +243,7 @@ class Login extends Component {
                     <CompoundButton
                       primary={true}
                       onClick={this.doLogin}
+                      autoComplete="false"
                       style={{ backgroundColor: '#cc0000' }}
                       secondaryText={`to ${env.company} ${env.product}`}
                       disabled={this.state.activateButton === false}

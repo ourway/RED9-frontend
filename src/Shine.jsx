@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 
 import sample from 'lodash/sample'
 import { Card, Image, Dimmer, Loader } from 'semantic-ui-react'
-import { env } from './config'
 
 class Shine extends Component {
   constructor(props) {
