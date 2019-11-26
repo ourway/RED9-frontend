@@ -179,10 +179,10 @@ class Leftbar extends Component {
               ? 'disabled'
               : ''
             : need_app.includes(i)
-              ? this.state.selected_app === null
-                ? 'disabled'
-                : ''
+            ? this.state.selected_app === null
+              ? 'disabled'
               : ''
+            : ''
 
           if (p.indexOf(':') > -1) {
             return (

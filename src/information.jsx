@@ -38,9 +38,7 @@ class Information extends Component {
 
             <li>
               IMI Delivery Reports:{' '}
-              <code>{`${env.SELF_IP}:${
-                env.SELF_PORT
-              }/delivery/IMI/<CORRELATOR>`}</code>{' '}
+              <code>{`${env.SELF_IP}:${env.SELF_PORT}/delivery/IMI/<CORRELATOR>`}</code>{' '}
               <small>
                 {' '}
                 correlator is message correlator and must be defined by IMI SDP

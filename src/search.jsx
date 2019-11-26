@@ -85,13 +85,7 @@ class FTPRenewal extends Component {
               )<Divider />
               <Icon name="code" color="orange" />
               <code className="red9_samples">
-                {`curl -X POST '${
-                  env.FTP_BASE
-                }/query/user_renewal_history?access_token=${
-                  this.props.activeService.meta.ftp_key
-                }&start_date=${this.state.last90j}&end_date=${
-                  this.state.nowj
-                }' -d '{ "user":"${this.props.query}" }' `}
+                {`curl -X POST '${env.FTP_BASE}/query/user_renewal_history?access_token=${this.props.activeService.meta.ftp_key}&start_date=${this.state.last90j}&end_date=${this.state.nowj}' -d '{ "user":"${this.props.query}" }' `}
               </code>
               <Divider />
               <Statistic color="green" inverted size="small">

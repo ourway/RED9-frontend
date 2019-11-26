@@ -120,9 +120,7 @@ export const serviceParams = [
   {
     name: 'renewal_url',
     type: 'url',
-    placeholder: `https://myserver.net/${env.company}-${
-      env.product
-    }/renewal/<%=national_number%>`,
+    placeholder: `https://myserver.net/${env.company}-${env.product}/renewal/<%=national_number%>`,
     editable: true,
     description:
       'A valid URL for posting unsubscription renewal notifications.',

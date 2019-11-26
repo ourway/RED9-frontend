@@ -816,9 +816,7 @@ class Services extends Component {
                     <Table
                       className="backtransition"
                       style={{
-                        background: `linear-gradient(transparent, ${
-                          this.state.colorCode
-                        }77)`
+                        background: `linear-gradient(transparent, ${this.state.colorCode}77)`
                       }}
                       inverted
                       celled
@@ -1323,9 +1321,7 @@ class Services extends Component {
                                       Correlator:{' '}
                                       <Link
                                         className="dark"
-                                        to={`/messaging/status/${
-                                          this.state.testSmsResult.correlator
-                                        }`}
+                                        to={`/messaging/status/${this.state.testSmsResult.correlator}`}
                                       >
                                         <small style={{ color: 'darkgreen' }}>
                                           {this.state.testSmsResult.correlator}

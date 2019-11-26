@@ -25,9 +25,7 @@ class Unavailable extends Component {
               fontWeight: 400
             }}
             header="451 / Unavailable For Legal Reasons"
-            description={`${env.company} ${
-              env.product
-            } is only available in Iran.
+            description={`${env.company} ${env.product} is only available in Iran.
             To protect our customers, we log all communications.  
             Your browser ${browser.name} 
             reports that you are connecting outside Iran.  

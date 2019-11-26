@@ -390,9 +390,7 @@ class App extends Component {
         <Segment basic floated="right">
           <Icon name="bug" color="grey" />
           <a
-            href={`mailto:${env.bug_report_email}?subject=${env.company}-${
-              env.product
-            }/ Bug Report`}
+            href={`mailto:${env.bug_report_email}?subject=${env.company}-${env.product}/ Bug Report`}
           >
             <small>Report a bug</small>
           </a>

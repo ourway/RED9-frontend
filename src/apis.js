@@ -97,9 +97,7 @@ export const ftpServiceLive = (ftp_key, overall) => {
   const postfix =
     overall === true ? '&start_date=2017-01-01&end_date=2040-01-01' : ''
   return fetch(
-    `${
-      env.FTP_BASE
-    }/query/service_aggreg_info?access_token=${ftp_key}${postfix}`,
+    `${env.FTP_BASE}/query/service_aggreg_info?access_token=${ftp_key}${postfix}`,
     opts
   )
 }
@@ -233,9 +231,7 @@ export const ftpRenewalHistory = (ftp_key, msisdn, jst, jen) => {
     body: JSON.stringify({ user: msisdn })
   }
   return fetch(
-    `${
-      env.FTP_BASE
-    }/query/user_renewal_history?access_token=${ftp_key}&start_date=${jst}&end_date=${jen}`,
+    `${env.FTP_BASE}/query/user_renewal_history?access_token=${ftp_key}&start_date=${jst}&end_date=${jen}`,
     opts
   )
 }
@@ -245,9 +241,7 @@ export const ftpGetChargingSubscribersCount = ftp_key => {
     method: 'GET'
   }
   return fetch(
-    `${
-      env.FTP_BASE
-    }/query/users_in_service?access_token=${ftp_key}&status=all&only_count=true`,
+    `${env.FTP_BASE}/query/users_in_service?access_token=${ftp_key}&status=all&only_count=true`,
     opts
   )
 }
@@ -331,9 +325,7 @@ export const deleteReaction = (client_key, name) => {
 }
 
 export const getFTPAggregateReport = (ftp_key, sdate, edate) => {
-  const url = `${
-    env.FTP_BASE
-  }/query/service_aggreg_detailed_info?access_token=${ftp_key}&start_date=${sdate}&end_date=${edate}`
+  const url = `${env.FTP_BASE}/query/service_aggreg_detailed_info?access_token=${ftp_key}&start_date=${sdate}&end_date=${edate}`
 
   let opts = {
     method: 'GET'
@@ -428,9 +420,7 @@ export const getSubscribers = (client_key, service_name) => {
     headers: authHeaders
   }
   return fetch(
-    `${
-      env.API_BASE
-    }/api/client/history?service=${service_name}&limit=1000000&offset=0&country_code=98`,
+    `${env.API_BASE}/api/client/history?service=${service_name}&limit=1000000&offset=0&country_code=98`,
     opts
   )
 }

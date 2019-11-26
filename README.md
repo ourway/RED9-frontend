@@ -1,6 +1,5 @@
 # RED9 - Service Delivery Platform for Iran Telecommunications
-
-![Image description](public/red9-1.png)
+![Screenshot](public/red9-2.png)
 
 
 

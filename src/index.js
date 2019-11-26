@@ -122,9 +122,7 @@ const is_devmode = process.env.NODE_ENV === 'development'
 if (is_devmode === false) {
   const cst = 'color: green; font-size:19px;font-family:monospace'
   console.debug(
-    `Hey geek friend!  ${env.company} ${
-      env.product
-    } (based on RED9) is using Erlang technology on backend.  If you h` +
+    `Hey geek friend!  ${env.company} ${env.product} (based on RED9) is using Erlang technology on backend.  If you h` +
       'ave any problems hacking it, please contact me at farsheed.ashouri at gmail  ;-)'
   )
   console.debug(
@@ -137,8 +135,6 @@ if (is_devmode === false) {
   console.debug('%c\\/   \\__,_|_|  |___/_| |_|\\___|\\___|\\__,_|', cst)
   console.debug('                                                 ')
   console.info(
-    `Copyright 2016-Present | ${env.copyright_company} | licenced to ${
-      env.company
-    } with ♥ | Designed and implemented by Farsheed Ashouri`
+    `Copyright 2016-Present | ${env.copyright_company} | licenced to ${env.company} with ♥ | Designed and implemented by Farsheed Ashouri`
   )
 }

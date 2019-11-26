@@ -37,9 +37,7 @@ class NotSupportedBrowser extends Component {
             }}
             header="406 / Not Supported Browser"
             meta={`${browser.name} ${browser.version} browser is not supprted`}
-            description={`${env.company} ${
-              env.product
-            } is a modern application. Please use Google Chrome, Apple Safari, Vivaldi, Opera or Microsoft Edge to use it.
+            description={`${env.company} ${env.product} is a modern application. Please use Google Chrome, Apple Safari, Vivaldi, Opera or Microsoft Edge to use it.
     `}
             extra={extra}
           />

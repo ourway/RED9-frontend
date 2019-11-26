@@ -332,9 +332,7 @@ class Applications extends Component {
                           : null
                       }
                       transparent
-                      placeholder={`https://example.org/sdp/${env.company}-${
-                        env.product
-                      }/MO`}
+                      placeholder={`https://example.org/sdp/${env.company}-${env.product}/MO`}
                       value={a.mo_url}
                     />
                   </Table.Cell>
@@ -526,9 +524,7 @@ class Applications extends Component {
   	-H 'Content-Type: application/json' \\
   	-H 'api-key: ${this.state.selected.apikeys[0].key}' \\
   	-d '{
-  		"message": "We like to think of ${env.company} ${
-                      env.product
-                    } as the Dieter Rams of VAS platforms",
+  		"message": "We like to think of ${env.company} ${env.product} as the Dieter Rams of VAS platforms",
   		"national_number": ${env.company_contact_gsm},
   		"country_code": 98
 }'
@@ -556,9 +552,7 @@ class Applications extends Component {
   	-H 'Content-Type: application/json' \\
   	-H 'api-key: ${this.state.selected.apikeys[0].key}' \\
   	-d '{
-            "message": "We like to think of ${env.company} ${
-                      env.product
-                    } as the Dieter Rams of VAS platforms",
+            "message": "We like to think of ${env.company} ${env.product} as the Dieter Rams of VAS platforms",
             "template": null
 }'
 `}

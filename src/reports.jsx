@@ -284,9 +284,7 @@ class Reports extends Component {
                               onClick={() => {
                                 downloadAs(
                                   data,
-                                  `${
-                                    this.state.service.name
-                                  }_${method}_activations_history`
+                                  `${this.state.service.name}_${method}_activations_history`
                                 )
                               }}
                             />
@@ -356,9 +354,7 @@ class Reports extends Component {
                               onClick={() => {
                                 downloadAs(
                                   data,
-                                  `${
-                                    this.state.service.name
-                                  }_${method}_deactivations_history`
+                                  `${this.state.service.name}_${method}_deactivations_history`
                                 )
                               }}
                             />

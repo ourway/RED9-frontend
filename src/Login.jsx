@@ -290,9 +290,7 @@ class Login extends Component {
                   <small>
                     If you need a new client-key, please
                     <a
-                      href={`mailto:${
-                        env.company_email
-                      }?subject=Service%20Delivery%20Platform`}
+                      href={`mailto:${env.company_email}?subject=Service%20Delivery%20Platform`}
                     >
                       <span style={{ color: 'teal' }}> contact us</span>
                     </a>
